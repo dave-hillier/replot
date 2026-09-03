@@ -46,7 +46,8 @@
     "dev": "vite",
     "docs:dev": "tsx docs/scripts/ensure-bundle.ts && tsx docs/scripts/build-api-data.ts && vite --config docs/vite.docs.config.ts",
     "docs:build": "yarn bundle && tsx docs/scripts/build-api-data.ts && vite build --config docs/vite.docs.config.ts",
-    "docs:preview": "vite preview --config docs/vite.docs.config.ts"
+    "docs:preview": "vite preview --config docs/vite.docs.config.ts",
+    "parity": "tsx scripts/parity.ts"
   },
   "sideEffects": [
     "./src/index.js",

@@ -114,6 +114,18 @@ rm -rf test/output
 yarn test
 ```
 
+### Parity with Observable Plot
+
+The snapshots in `test/output` are Replot’s own, so a green run shows that Replot’s output has not changed, not that it matches Observable Plot. To check that, compare the snapshots against the ones committed in an Observable Plot checkout (expected as a sibling directory, `../observablehq-plot`, or pass `--upstream`):
+
+```bash
+yarn parity                       # every plot, summarised by cause
+yarn parity --filter tip          # plots whose name contains "tip"
+yarn parity --show tipDotFacets   # unified diff of one plot
+```
+
+The comparison canonicalises both sides (attribute order, generated ids and class names, numeric precision, whitespace), so what remains is a real structural or attribute difference. The per-plot line names what differs, for example `g +74` for extra wrapper groups or `image[href] −1, image[xlink:href] +1` for a renamed attribute. With `--allow <file> --fail` it exits non-zero when any plot not listed in the JSON array in that file differs, which lets CI hold the line on known divergences.
+
 ## Documentation
 
 When submitting a pull request, please remember to update Replot’s documentation to reflect changes to the public API. You are also welcome to edit Replot’s [CHANGELOG.md](./CHANGELOG.md) to assist with writing future release notes. In addition, please reference any related [issues](https://github.com/dave-hillier/replot/issues) (or discussions) in your pull request description.
