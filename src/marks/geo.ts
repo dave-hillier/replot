@@ -88,7 +88,7 @@ export class Geo extends Mark {
     const transform = transformProp(this, scales);
     const paths = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const d = (R ? path.pointRadius(R[i])(G[i]) : path(G[i])) ?? undefined;
       const pathEl = h("path", {key: k, ...direct, ...channel, d}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);

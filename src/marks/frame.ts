@@ -74,7 +74,7 @@ export class Frame extends Mark {
         ry: ry ?? undefined
       });
     }
-    const titled = withTitleChild(channels, 0, null);
+    const titled = withTitleChild(this, channels, 0, null);
     if (titled) element = h(Fragment, null, element, titled);
     return withHrefWrap(channels, this.target, 0, element);
   }

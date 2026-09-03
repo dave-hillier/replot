@@ -136,7 +136,7 @@ class LinearRegression extends Mark {
     const elements: ReactNode[] = [];
     groups.forEach((G, k) => {
       const lineChannel = groupChannelStyleProps(G, {...channels, fill: null, fillOpacity: null});
-      const lineTitled = withTitleChild(channels, G[0], null);
+      const lineTitled = withTitleChild(this, channels, G[0], null);
       const dLine = (this as any)._renderLine(G, X, Y);
       if (showBand) {
         const bandChannel = groupChannelStyleProps(G, {

@@ -166,7 +166,7 @@ export class AbstractBar extends Mark {
     const at = (v: any, i: number) => (typeof v === "function" ? v(i) : v);
     const rects = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const xi = at(x, i);
       const yi = at(y, i);
       const wi = at(w, i);

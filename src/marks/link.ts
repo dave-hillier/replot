@@ -142,7 +142,7 @@ export class Link extends Mark {
     const paths = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
       const markers = markerAttrs(i);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, ...markers, d: dOf(i)}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);
     });

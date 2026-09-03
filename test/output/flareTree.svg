@@ -15,10 +15,10 @@
   </style>
   <g aria-label="link" fill="none" stroke-width="1.5" stroke-opacity="0.5" stroke-miterlimit="1" transform="translate(0.5,0.5)">
     <defs>
-      <marker id="plot-m-arrow-ndjhwp" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto" fill="none" stroke="#636363" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <marker id="plot-m-arrow-ndjhwp" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto" fill="none" stroke="#636363" stroke-dasharray="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M-1.5,-3l3,3l-3,3"></path>
       </marker>
-      <marker id="plot-m-arrow-f9tin8" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto" fill="none" stroke="#bdbdbd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <marker id="plot-m-arrow-f9tin8" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto" fill="none" stroke="#bdbdbd" stroke-dasharray="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M-1.5,-3l3,3l-3,3"></path>
       </marker>
     </defs>

@@ -346,7 +346,7 @@ export class Rect extends Mark {
         })();
     const items = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const el = elementOf(i, k, {...direct, ...channel}, titled);
       return withHrefWrap(channels, this.target, i, el);
     });

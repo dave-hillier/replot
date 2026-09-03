@@ -338,7 +338,7 @@ export class Raster extends AbstractRaster {
       ...direct,
       xlinkHref: canvas.toDataURL()
     });
-    const titled = withTitleChild(values, 0, null);
+    const titled = withTitleChild(this, values, 0, null);
     if (titled) imageEl = h(Fragment, null, imageEl, titled);
     imageEl = withHrefWrap(values, this.target, 0, imageEl);
     return h("g", {...indirect, ...transform}, imageEl);

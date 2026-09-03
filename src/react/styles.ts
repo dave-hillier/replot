@@ -57,23 +57,15 @@ export function directStyleProps(mark: Record<string, any>): Record<string, any>
 }
 
 // Converts per-element channel values at index i into SVG attribute props,
-// mirroring applyChannelStyles from style.js.
+// mirroring applyChannelStyles from style.js. The href channel is not a
+// style: withHrefWrap (styles-jsx.tsx) wraps the element in an <a> instead.
 export function channelStyleProps(
   i: number,
   values: Record<string, any>,
   _options?: {tip?: boolean}
 ): Record<string, any> {
   const props: Record<string, any> = {};
-  const {
-    ariaLabel: AL,
-    fill: F,
-    fillOpacity: FO,
-    stroke: S,
-    strokeOpacity: SO,
-    strokeWidth: SW,
-    opacity: O,
-    href: H
-  } = values;
+  const {ariaLabel: AL, fill: F, fillOpacity: FO, stroke: S, strokeOpacity: SO, strokeWidth: SW, opacity: O} = values;
   if (AL) props["aria-label"] = AL[i];
   if (F) props.fill = F[i];
   if (FO) props.fillOpacity = FO[i];
@@ -81,7 +73,6 @@ export function channelStyleProps(
   if (SO) props.strokeOpacity = SO[i];
   if (SW) props.strokeWidth = SW[i];
   if (O) props.opacity = O[i];
-  if (H) props.href = H[i];
   return props;
 }
 

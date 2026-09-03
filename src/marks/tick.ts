@@ -93,7 +93,7 @@ class AbstractTick extends Mark {
     };
     const lines = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const color = S ? S[i] : this.stroke;
       const markerAttrs = markerAttrsFor(color);
       const lineEl = h(

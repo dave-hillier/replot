@@ -966,15 +966,20 @@ describe("transformProp", () => {
 
 describe("withTitleChild", () => {
   it("returns the original children when there is no title channel", () => {
-    assert.strictEqual(withTitleChild({}, 0, null), null);
+    assert.strictEqual(withTitleChild({}, {}, 0, null), null);
   });
   it("emits a <title> child when the title channel has a non-empty value", () => {
-    const html = renderToStaticMarkup(<g>{withTitleChild({title: ["hello"]}, 0, null)}</g>);
+    const html = renderToStaticMarkup(<g>{withTitleChild({}, {title: ["hello"]}, 0, null)}</g>);
     assert.ok(html.includes("<title>hello</title>"), `got ${html}`);
   });
   it("skips empty title values", () => {
-    assert.strictEqual(withTitleChild({title: [""]}, 0, null), null);
-    assert.strictEqual(withTitleChild({title: [null]}, 0, null), null);
+    assert.strictEqual(withTitleChild({}, {title: [""]}, 0, null), null);
+    assert.strictEqual(withTitleChild({}, {title: [null]}, 0, null), null);
+  });
+  it("omits the title when the mark has a tip, as the imperative applyChannelStyles does", () => {
+    assert.strictEqual(withTitleChild({tip: true}, {title: ["hello"]}, 0, null), null);
+    assert.strictEqual(withTitleChild({tip: "x"}, {title: ["hello"]}, 0, null), null);
+    assert.strictEqual(withTitleChild({tip: {anchor: "top"}}, {title: ["hello"]}, 0, null), null);
   });
 });
 

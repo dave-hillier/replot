@@ -11,7 +11,16 @@ type Channel<T> = ArrayLike<T> | undefined;
 
 // Returns a <title> child if a title channel has a non-empty value at index i.
 // Pass any pre-existing children alongside; the title is rendered as a sibling.
-export function withTitleChild(channels: {title?: Channel<string>}, i: number, children?: ReactNode): ReactNode {
+// When the mark has a tip, the title is omitted (as upstream's
+// applyChannelStyles does): the tip displays it, and a native <title> tooltip
+// would otherwise compete with it on hover.
+export function withTitleChild(
+  mark: {tip?: unknown},
+  channels: {title?: Channel<string>},
+  i: number,
+  children?: ReactNode
+): ReactNode {
+  if (mark.tip) return children;
   const T = channels.title;
   if (!T) return children;
   const v = T[i];

@@ -214,7 +214,7 @@ export class Arrow extends Mark {
       const d = buildPath(i);
       if (d == null) return null;
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, d}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);
     });

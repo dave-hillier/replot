@@ -75,34 +75,34 @@
   </g>
   <g aria-label="line" fill="none" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" transform="translate(0.5,0.5)">
     <defs>
-      <marker id="plot-m-circle-fill-7f4ipz" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#6cc5b0" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-7f4ipz" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#6cc5b0" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-1dni5zd" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#9c6b4e" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-1dni5zd" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#9c6b4e" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-1s3swov" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#97bbf5" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-1s3swov" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#97bbf5" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-mip" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#efb118" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-mip" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#efb118" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-1u8th5n" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#ff725c" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-1u8th5n" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#ff725c" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-u46602" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#ff8ab7" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-u46602" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#ff8ab7" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-1v7gu5s" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#3ca951" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-1v7gu5s" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#3ca951" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-suh0t9" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#4269d0" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-suh0t9" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#4269d0" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-2u5k34" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#a463f2" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-2u5k34" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#a463f2" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
-      <marker id="plot-m-circle-fill-1vb62xz" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#9498a0" stroke="var(--plot-background)" stroke-width="1.5">
+      <marker id="plot-m-circle-fill-1vb62xz" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="#9498a0" stroke="var(--plot-background)" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
     </defs>

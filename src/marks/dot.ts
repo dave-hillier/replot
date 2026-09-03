@@ -212,7 +212,7 @@ export class Dot extends (Mark as unknown as new (...args: any[]) => RenderableM
           d: `${p}`
         });
       }
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       if (titled) element = h("g", {key: k}, element, titled);
       return withHrefWrap(channels, this.target, i, element);
     });

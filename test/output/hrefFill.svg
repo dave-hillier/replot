@@ -26,6 +26,6 @@
     <text transform="translate(330,370)" y="0.71em">0</text>
   </g>
   <g aria-label="text" fill="red" transform="translate(0.5,0.5)"><a href="https://google.com/search?q=12345" fill="inherit">
-      <text href="https://google.com/search?q=12345" transform="translate(330,195)" y="0.32em">click me</text>
+      <text transform="translate(330,195)" y="0.32em">click me</text>
     </a></g>
 </svg>

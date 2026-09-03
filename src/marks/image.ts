@@ -207,7 +207,7 @@ export class Image extends Mark {
       }
       const clip = R ? `circle(${R[i]}px)` : r !== undefined ? `circle(${r}px)` : null;
       if (clip != null) props.clipPath = clip;
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const imgEl = h("image", props, titled);
       return withHrefWrap(channels, this.target, i, imgEl);
     });

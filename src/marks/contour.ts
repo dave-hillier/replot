@@ -143,7 +143,7 @@ export class Contour extends AbstractRaster {
     for (const i of index) {
       const channel = channelStyleProps(i, channels);
       let element: ReactNode = h("path", {key: i, ...direct, ...channel, d: path(G[i]) ?? undefined});
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       if (titled) element = h(Fragment, {key: i}, element, titled);
       element = withHrefWrap(channels, this.target, i, element);
       children.push(element);

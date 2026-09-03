@@ -81,6 +81,7 @@ function renderMarker(name: MarkerName, color: string, id: string): ReactElement
         orient={name === "arrow" ? "auto" : "auto-start-reverse"}
         fill="none"
         stroke={color}
+        strokeDasharray="none"
         strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -106,6 +107,7 @@ function renderMarker(name: MarkerName, color: string, id: string): ReactElement
         markerHeight={6.67}
         fill={filled ? color : "var(--plot-background)"}
         stroke={filled ? "var(--plot-background)" : color}
+        strokeDasharray="none"
         strokeWidth={1.5}
       >
         <circle r={3} />
@@ -121,6 +123,7 @@ function renderMarker(name: MarkerName, color: string, id: string): ReactElement
       markerHeight={6}
       orient={tickOrient[name] as any}
       stroke={color}
+      strokeDasharray="none"
     >
       <path d="M0,-3v6" />
     </marker>

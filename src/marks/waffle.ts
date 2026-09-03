@@ -95,7 +95,7 @@ function waffleRenderJSX(mark: any, index: any, scales: any, values: any, dimens
     "defs",
     null,
     indexes.map((i) => {
-      const {"aria-label": _al, href: _hr, ...rectStyles} = channelStyleProps(i, values);
+      const {"aria-label": _al, ...rectStyles} = channelStyleProps(i, values);
       return h(
         "pattern",
         {key: i, id: `${patternId}-${i}`, width: cx, height: cy, patternUnits: "userSpaceOnUse"},
@@ -124,7 +124,7 @@ function waffleRenderJSX(mark: any, index: any, scales: any, values: any, dimens
         stroke: mark.stroke == null ? undefined : "none",
         "aria-label": ariaLabel
       },
-      withTitleChild(values, i, null)
+      withTitleChild(mark, values, i, null)
     );
     return withHrefWrap(values, mark.target, i, pathEl);
   });

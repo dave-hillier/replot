@@ -99,7 +99,7 @@ export class Density extends Mark {
     const direct = directStyleProps(this);
     const paths = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, d: path(contours[i]) ?? undefined}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);
     });

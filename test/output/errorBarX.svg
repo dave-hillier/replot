@@ -123,7 +123,7 @@
   </g>
   <g aria-label="rule" stroke="currentColor" transform="translate(0,9.5)">
     <defs>
-      <marker id="plot-m-tick-chl8st" viewBox="-3 -3 6 6" markerWidth="6" markerHeight="6" orient="auto" stroke="currentColor">
+      <marker id="plot-m-tick-chl8st" viewBox="-3 -3 6 6" markerWidth="6" markerHeight="6" orient="auto" stroke="currentColor" stroke-dasharray="none">
         <path d="M0,-3v6"></path>
       </marker>
     </defs>

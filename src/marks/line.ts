@@ -197,7 +197,7 @@ export class Line extends Mark {
         const endUrl = markerUrl(this.markerEnd, color);
         if (endUrl) markerAttrs.markerEnd = endUrl;
       }
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, ...markerAttrs, d: dOf(G)}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);
     });

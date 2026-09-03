@@ -69,7 +69,7 @@ export class Cell extends (AbstractBar as {new (...args: any[]): RenderableMark}
     const transform = transformProp(this, {}, 0, 0);
     const rects = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const x = at(xOf, i);
       const y = at(yOf, i);
       const w = at(wOf, i);

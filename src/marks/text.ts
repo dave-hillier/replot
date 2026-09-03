@@ -346,7 +346,7 @@ export class Text extends Mark {
           children.push(h("title", {key: "overflow-title"}, T[i]));
         }
       }
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       if (titled) children.push(titled);
       const textEl = h("text", textProps, ...children);
       return withHrefWrap(channels, this.target, i, textEl);

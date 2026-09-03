@@ -183,7 +183,7 @@ export class Area extends Mark {
     const groups = Array.from(groupIndex(index, [X1, Y1, X2, Y2], this, channels) as Iterable<number[]>);
     const paths = groups.map((G, k) => {
       const channel = groupChannelStyleProps(G, channels);
-      const titled = withTitleChild(channels, G[0], null);
+      const titled = withTitleChild(this, channels, G[0], null);
       const d = generator(G as any) ?? undefined;
       const pathEl = h("path", {key: k, ...direct, ...channel, d}, titled);
       return withHrefWrap(channels, this.target, G[0], pathEl);

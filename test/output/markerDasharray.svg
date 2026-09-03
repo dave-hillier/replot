@@ -18,10 +18,10 @@
       <marker id="plot-m-dot-chl8st" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="currentColor" stroke="none">
         <circle r="2.5"></circle>
       </marker>
-      <marker id="plot-m-arrow-chl8st" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <marker id="plot-m-arrow-chl8st" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto" fill="none" stroke="currentColor" stroke-dasharray="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M-1.5,-3l3,3l-3,3"></path>
       </marker>
-      <marker id="plot-m-circle-stroke-chl8st" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="var(--plot-background)" stroke="currentColor" stroke-width="1.5">
+      <marker id="plot-m-circle-stroke-chl8st" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" fill="var(--plot-background)" stroke="currentColor" stroke-dasharray="none" stroke-width="1.5">
         <circle r="3"></circle>
       </marker>
     </defs>

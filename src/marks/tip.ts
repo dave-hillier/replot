@@ -360,7 +360,7 @@ export class Tip extends (Mark as {new (...args: any[]): Mark}) {
         textEl
       );
 
-      const titled = withTitleChild(values, i, null);
+      const titled = withTitleChild(this, values, i, null);
       const node = titled ? h("g", {key: k}, inner, titled) : inner;
       return withHrefWrap(values, this.target, i, node);
     });

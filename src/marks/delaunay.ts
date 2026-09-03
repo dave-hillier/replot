@@ -151,7 +151,7 @@ class DelaunayLink extends MarkBase {
         c.point(X2[ni], Y2[ni]);
         c.lineEnd();
         const channel = channelStyleProps(ni, newChannels);
-        const titled = withTitleChild(newChannels, ni, null);
+        const titled = withTitleChild(this, newChannels, ni, null);
         const color = newChannels.stroke ? newChannels.stroke[ni] : this.stroke;
         const markerAttrs = markerAttrsFor(color);
         const pathEl = h("path", {key: k, ...direct, ...channel, ...markerAttrs, d: `${p}`}, titled);
@@ -210,7 +210,7 @@ class AbstractDelaunayMark extends MarkBase {
       const i = subIndex[0];
       const d = (this as any)._render(delaunay, dimensions);
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key, ...direct, ...channel, d}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);
     };
@@ -292,7 +292,7 @@ class Voronoi extends MarkBase {
     const direct = directStyleProps(this);
     const paths = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, d: C[i]}, titled);
       return withHrefWrap(channels, this.target, i, pathEl);
     });
