@@ -3,7 +3,69 @@ import {composeRender} from "../mark.js";
 import {isArray} from "../options.js";
 import {applyFrameAnchor} from "../style.js";
 
-const states = new WeakMap();
+const states = new WeakMap(); // ownerSVGElement → per-plot pointer state
+const handledEvents = new WeakSet();
+
+// Three pieces of upstream’s closure are lifted out as pure functions below so
+// that the React entry point (src/react/interactions/pointerHitTest.ts) and the
+// imperative closure in this file share one implementation and cannot drift.
+// Upstream’s own closure calls them, so re-syncing this file against a future
+// Observable Plot release stays a small diff.
+
+// For faceting, we want to compute the local coordinates of each point, which
+// means subtracting out the facet translation, if any. (It’s tempting to do this
+// using the local coordinates in SVG, but that’s complicated by mark-specific
+// transforms such as dx and dy.) Also, since band scales return the upper bound
+// of the band, we have to offset by half the bandwidth.
+export function pointerOffsets(index, scales, dimensions) {
+  const {x, y, fx, fy} = scales;
+  let tx = fx ? fx(index.fx) - dimensions.marginLeft : 0;
+  let ty = fy ? fy(index.fy) - dimensions.marginTop : 0;
+  if (x?.bandwidth) tx += x.bandwidth() / 2;
+  if (y?.bandwidth) ty += y.bandwidth() / 2;
+  return [tx, ty];
+}
+
+// The order of precedence for the pointer position is: px & py; the middle of x1
+// & y1 and x2 & y2; or x1 & y1 (e.g., area); or lastly x & y. If a dimension is
+// unspecified, the frame anchor is used.
+export function pointerAnchors(mark, values, dimensions) {
+  const [cx, cy] = applyFrameAnchor(mark, dimensions);
+  const {px: PX, py: PY} = values;
+  return [PX ? (i) => PX[i] : anchorX(values, cx), PY ? (i) => PY[i] : anchorY(values, cy)];
+}
+
+// Select the closest point to the mouse in the current facet; for pointerX or
+// pointerY, the orthogonal component of the distance is squashed, selecting
+// primarily on the dominant dimension. Across facets, use unsquashed distance to
+// determine the winner.
+//
+// xp and yp must already be corrected for facets and band scales (see
+// pointerOffsets), because the kpx/kpy margin test compares them against the
+// dimensions’ margins in that same corrected space.
+//
+// A datum missing a coordinate yields undefined from px(j) or py(j), hence NaN
+// for rj, and `NaN <= ri` is false — that is precisely how upstream excludes it.
+// Never coerce with `?? 0`: that would place the datum at the origin and let it
+// win the search.
+export function pointerSearch(index, px, py, xp, yp, kx, ky, maxRadius, dimensions) {
+  const kpx = xp < dimensions.marginLeft || xp > dimensions.width - dimensions.marginRight ? 1 : kx;
+  const kpy = yp < dimensions.marginTop || yp > dimensions.height - dimensions.marginBottom ? 1 : ky;
+  let ii = null;
+  let ri = maxRadius * maxRadius;
+  for (const j of index) {
+    const dx = kpx * (px(j) - xp);
+    const dy = kpy * (py(j) - yp);
+    const rj = dx * dx + dy * dy;
+    if (rj <= ri) (ii = j), (ri = rj);
+  }
+  if (ii != null && (kx !== 1 || ky !== 1)) {
+    const dx = px(ii) - xp;
+    const dy = py(ii) - yp;
+    ri = dx * dx + dy * dy;
+  }
+  return {ii, ri};
+}
 
 function pointerK(kx, ky, {x, y, px, py, maxRadius = 40, channels, render, ...options} = {}) {
   maxRadius = +maxRadius;
@@ -28,75 +90,55 @@ function pointerK(kx, ky, {x, y, px, py, maxRadius = 40, channels, render, ...op
 
       // Isolate state per-pointer, per-plot; if the pointer is reused by
       // multiple marks, they will share the same state (e.g., sticky modality).
+      // The pool maps renderIndex → {ii, ri, render} for marks competing for
+      // the pointer (e.g., tips); only the closest point is shown.
       let state = states.get(svg);
-      if (!state) states.set(svg, (state = {sticky: false, roots: [], renders: []}));
+      if (!state) {
+        state = {sticky: false, roots: [], renders: [], pool: this.pool ? {map: new Map()} : null};
+        states.set(svg, state);
+      }
 
       // This serves as a unique identifier of the rendered mark per-plot; it is
       // used to record the currently-rendered elements (state.roots) so that we
       // can tell when a rendered element is clicked on.
       let renderIndex = state.renders.push(render) - 1;
 
-      // For faceting, we want to compute the local coordinates of each point,
-      // which means subtracting out the facet translation, if any. (It’s
-      // tempting to do this using the local coordinates in SVG, but that’s
-      // complicated by mark-specific transforms such as dx and dy.) Also, since
-      // band scales return the upper bound of the band, we have to offset by
-      // half the bandwidth.
-      const {x, y, fx, fy} = scales;
-      let tx = fx ? fx(index.fx) - dimensions.marginLeft : 0;
-      let ty = fy ? fy(index.fy) - dimensions.marginTop : 0;
-      if (x?.bandwidth) tx += x.bandwidth() / 2;
-      if (y?.bandwidth) ty += y.bandwidth() / 2;
+      const [tx, ty] = pointerOffsets(index, scales, dimensions);
 
       // For faceting, we also need to record the closest point per facet per
       // mark (!), since each facet has its own pointer event listeners; we only
       // want the closest point across facets to be visible.
       const faceted = index.fi != null;
-      let facetState;
+      let facetPool;
       if (faceted) {
-        let facetStates = state.facetStates;
-        if (!facetStates) state.facetStates = facetStates = new Map();
-        facetState = facetStates.get(this);
-        if (!facetState) facetStates.set(this, (facetState = new Map()));
+        let facetPools = state.facetPools;
+        if (!facetPools) state.facetPools = facetPools = new Map();
+        facetPool = facetPools.get(this);
+        if (!facetPool) facetPools.set(this, (facetPool = {map: new Map()}));
       }
 
-      // The order of precedence for the pointer position is: px & py; the
-      // middle of x1 & y1 and x2 & y2; or x1 & y1 (e.g., area); or lastly x &
-      // y. If a dimension is unspecified, the frame anchor is used.
-      const [cx, cy] = applyFrameAnchor(this, dimensions);
-      const {px: PX, py: PY} = values;
-      const px = PX ? (i) => PX[i] : anchorX(values, cx);
-      const py = PY ? (i) => PY[i] : anchorY(values, cy);
+      const [px, py] = pointerAnchors(this, values, dimensions);
 
       let i; // currently focused index
       let g; // currently rendered mark
       let s; // currently rendered stickiness
-      let f; // current animation frame
 
-      // When faceting, if more than one pointer would be visible, only show
-      // this one if it is the closest. We defer rendering using an animation
-      // frame to allow all pointer events to be received before deciding which
-      // mark to render; although when hiding, we render immediately.
+      // When pooling or faceting, if more than one pointer would be visible,
+      // only show the closest. We defer rendering using an animation frame to
+      // allow all pointer events to be received before deciding which mark to
+      // render; although when hiding, we render immediately.
+      const pool = state.pool ?? facetPool;
       function update(ii, ri) {
-        if (faceted) {
-          if (f) f = cancelAnimationFrame(f);
-          if (ii == null) facetState.delete(index.fi);
-          else {
-            facetState.set(index.fi, ri);
-            f = requestAnimationFrame(() => {
-              f = null;
-              for (const [fi, r] of facetState) {
-                if (r < ri || (r === ri && fi < index.fi)) {
-                  ii = null;
-                  break;
-                }
-              }
-              render(ii);
-            });
-            return;
-          }
-        }
-        render(ii);
+        if (!pool) return void render(ii);
+        if (ii == null) render(ii);
+        pool.map.set(renderIndex, {ii, ri, render});
+        if (pool.frame !== undefined) cancelAnimationFrame(pool.frame);
+        pool.frame = requestAnimationFrame(() => {
+          pool.frame = undefined;
+          let best = null;
+          for (const c of pool.map.values()) if (!best || c.ri < best.ri) best = c;
+          for (const c of pool.map.values()) c.render(c === best ? c.ii : null);
+        });
       }
 
       function render(ii) {
@@ -127,7 +169,7 @@ function pointerK(kx, ky, {x, y, px, py, maxRadius = 40, channels, render, ...op
 
         // Dispatch the value. When simultaneously exiting this facet and
         // entering a new one, prioritize the entering facet.
-        if (!(i == null && facetState?.size > 1)) {
+        if (!(i == null && facetPool?.map.size > 1)) {
           const value = i == null ? null : isArray(data) ? data[i] : data.get(i);
           context.dispatchValue(value);
         }
@@ -135,39 +177,22 @@ function pointerK(kx, ky, {x, y, px, py, maxRadius = 40, channels, render, ...op
         return r;
       }
 
-      // Select the closest point to the mouse in the current facet; for
-      // pointerX or pointerY, the orthogonal component of the distance is
-      // squashed, selecting primarily on the dominant dimension. Across facets,
-      // use unsquashed distance to determine the winner.
       function pointermove(event) {
         if (state.sticky || (event.pointerType === "mouse" && event.buttons === 1)) return; // dragging
         let [xp, yp] = pointof(event);
         (xp -= tx), (yp -= ty); // correct for facets and band scales
-        const kpx = xp < dimensions.marginLeft || xp > dimensions.width - dimensions.marginRight ? 1 : kx;
-        const kpy = yp < dimensions.marginTop || yp > dimensions.height - dimensions.marginBottom ? 1 : ky;
-        let ii = null;
-        let ri = maxRadius * maxRadius;
-        for (const j of index) {
-          const dx = kpx * (px(j) - xp);
-          const dy = kpy * (py(j) - yp);
-          const rj = dx * dx + dy * dy;
-          if (rj <= ri) (ii = j), (ri = rj);
-        }
-        if (ii != null && (kx !== 1 || ky !== 1)) {
-          const dx = px(ii) - xp;
-          const dy = py(ii) - yp;
-          ri = dx * dx + dy * dy;
-        }
+        const {ii, ri} = pointerSearch(index, px, py, xp, yp, kx, ky, maxRadius, dimensions);
         update(ii, ri);
       }
 
       function pointerdown(event) {
+        if (handledEvents.has(event)) return; // ignore same event on a shared pointer
+        handledEvents.add(event);
         if (event.pointerType !== "mouse") return;
         if (i == null) return; // not pointing
         if (state.sticky && state.roots.some((r) => r?.contains(event.target))) return; // stay sticky
         if (state.sticky) (state.sticky = false), state.renders.forEach((r) => r(null)); // clear all pointers
         else (state.sticky = true), render(i);
-        event.stopImmediatePropagation(); // suppress other pointers
       }
 
       function pointerleave(event) {
@@ -187,9 +212,19 @@ function pointerK(kx, ky, {x, y, px, py, maxRadius = 40, channels, render, ...op
       return render(null);
     }, render)
   };
-  // Tag the pointer render so the React MarkSlot can recognize pointer-driven
-  // marks (which render only the selected datum) vs custom render-prop marks.
-  if (typeof pointerResult.render === "function") pointerResult.render.pointer = true;
+  // Replot-only tags. The React entry point never executes the closure above —
+  // it reimplements the interaction on top of the pure helpers — so these tags
+  // are how it recovers the state that composeRender otherwise buries.
+  if (typeof pointerResult.render === "function") {
+    pointerResult.render.pointer = true;
+    // kx/ky are pointerK parameters and maxRadius is destructured off the
+    // options, so this is the only place the React hit test can reach them.
+    pointerResult.render.pointerK = {kx, ky, maxRadius};
+    // composeRender wraps the user’s own render option inside the (unreachable)
+    // pointer closure; the React path supplies its own pointer behaviour and
+    // then runs this one itself.
+    pointerResult.render.userRender = render ?? null;
+  }
   return pointerResult;
 }
 

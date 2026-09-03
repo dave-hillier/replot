@@ -126,6 +126,20 @@ yarn parity --show tipDotFacets   # unified diff of one plot
 
 The comparison canonicalises both sides (attribute order, generated ids and class names, numeric precision, whitespace), so what remains is a real structural or attribute difference. The per-plot line names what differs, for example `g +74` for extra wrapper groups or `image[href] −1, image[xlink:href] +1` for a renamed attribute. With `--allow <file> --fail` it exits non-zero when any plot not listed in the JSON array in that file differs, which lets CI hold the line on known divergences.
 
+### The parity allow list
+
+`parity-allow.json` is a JSON array naming every plot that currently differs from upstream. It is a ratchet, not a target: it records the parity debt as it stands today so that any *new* divergence is caught immediately.
+
+```bash
+yarn parity --allow parity-allow.json --fail
+```
+
+That is the command CI runs. It exits non-zero as soon as a plot that is not named in the file differs, so a change that breaks parity on a previously-identical plot fails the build.
+
+Entries should only ever be **removed**, as a change brings a plot back into line with upstream; remove them in the same commit that fixes the plot. Do not add an entry to make a build green — a new differing plot is a regression to fix, not debt to record. Note the one blind spot: a plot already on the list stays green even if its diff grows, so read the per-plot `+`/`−` counts in `yarn parity` output when working on a listed plot.
+
+Run `yarn test:mocha` before `yarn parity`, so the comparison sees the snapshots the current tree actually produces (adopt any `*-changed` files first).
+
 ## Documentation
 
 When submitting a pull request, please remember to update Replot’s documentation to reflect changes to the public API. You are also welcome to edit Replot’s [CHANGELOG.md](./CHANGELOG.md) to assist with writing future release notes. In addition, please reference any related [issues](https://github.com/dave-hillier/replot/issues) (or discussions) in your pull request description.
