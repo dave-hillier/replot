@@ -143,7 +143,7 @@ describe("pointer faceting", () => {
       return renderJSX(index, ...rest);
     };
 
-    buildStaticPlotSvg(computePlot({width: 400, height: 400, marks: [mark]}), 0);
+    buildStaticPlotSvg(computePlot({width: 400, height: 400, marks: [mark]}));
 
     // The trailing call is the walker's ARIA-promotion probe: upstream reads the
     // attributes it hoists off the first facet's DOM node, which the walker

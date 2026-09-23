@@ -12,7 +12,13 @@ import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 // is where a pointer transform loses its interactivity. Pointer-consumer marks
 // (Tip, crosshair) therefore render empty, matching <MarkSlot>'s at-rest
 // default.
-export function buildStaticPlotSvg(computed: any, warnings: number, classNameProp?: string): ReactNode {
+//
+// The returned <svg> does NOT carry the ⚠️ warning indicator: renderMarksWith
+// invokes every mark's renderJSX eagerly, so the warnings those raise land in
+// the global counter while this element is being built, and the caller has to
+// drain afterwards (and after the legends, which can warn too) and append the
+// indicator itself — see withWarningIndicator.
+export function buildStaticPlotSvg(computed: any, classNameProp?: string): ReactElement {
   const {className, ariaLabel, ariaDescription, dimensions} = computed;
   const {width, height} = dimensions;
   const styleText = `:where(.${className}) {
@@ -26,7 +32,11 @@ export function buildStaticPlotSvg(computed: any, warnings: number, classNamePro
 :where(.${className} tspan) {
   white-space: pre;
 }`;
-  const clipReg = createClipRegistry();
+  // The plot's context is handed to the registry so a mark that emits its own
+  // <clipPath> defs (the difference mark) allocates its ids from this render's
+  // counter rather than from style.js's module-global one — see
+  // ClipRegistry.clipId.
+  const clipReg = createClipRegistry(computed.context);
   registerClips(computed, clipReg);
   const marks = renderMarksWith(
     computed,
@@ -34,19 +44,6 @@ export function buildStaticPlotSvg(computed: any, warnings: number, classNamePro
       staticRenderOne(mark, index, values, dims, scales, context, key, clipReg, facetTransform),
     clipReg
   );
-  const warningIndicator =
-    warnings > 0
-      ? h(
-          "text",
-          {x: width, y: 20, dy: "-1em", textAnchor: "end", fontFamily: "initial"},
-          "⚠️",
-          h(
-            "title",
-            null,
-            `${warnings.toLocaleString("en-US")} warning${warnings === 1 ? "" : "s"}. Please check the console.`
-          )
-        )
-      : null;
   return h(
     "svg",
     {
@@ -63,8 +60,7 @@ export function buildStaticPlotSvg(computed: any, warnings: number, classNamePro
     },
     h("style", null, styleText),
     ...clipReg.defs,
-    ...marks,
-    warningIndicator
+    ...marks
   );
 }
 

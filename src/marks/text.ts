@@ -4,6 +4,7 @@ import {nonempty} from "../defined.js";
 import {formatDefault} from "../format.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import type {Interval} from "../interval.js";
 import type {Data, FrameAnchor, MarkOptions} from "../mark.js";
 import {Mark} from "../mark.js";
@@ -352,7 +353,7 @@ export class Text extends Mark {
       const titled = withTitleChild(this, channels, i, null);
       if (titled) children.push(titled);
       const textEl = h("text", textProps, ...children);
-      return withHrefWrap(channels, this.target, i, textEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, textEl), i);
     });
     return h("g", {...indirect, ...indirectText, ...transform}, texts);
   }

@@ -9,6 +9,7 @@ import {isCollapsed} from "../scales.js";
 import {impliedString} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {maybeIdentityX, maybeIdentityY} from "../transforms/identity.js";
 import {maybeTrivialIntervalX, maybeTrivialIntervalY} from "../transforms/interval.js";
 import type {StackOptions} from "../transforms/stack.js";
@@ -348,7 +349,7 @@ export class Rect extends Mark {
       const channel = channelStyleProps(i, channels);
       const titled = withTitleChild(this, channels, i, null);
       const el = elementOf(i, k, {...direct, ...channel}, titled);
-      return withHrefWrap(channels, this.target, i, el);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, el), i);
     });
     return h("g", {...indirect, ...transform}, items);
   }

@@ -12,6 +12,7 @@ import {applyFrameAnchor, groupZ} from "../style.js";
 import {initializer} from "../transforms/basic.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 // Mark's runtime constructor takes (data, channels, transform, defaults), but the
 // public .d.ts declares Mark with a zero-arg constructor; cast for super(...) typing.
@@ -101,7 +102,7 @@ export class Density extends Mark {
       const channel = channelStyleProps(i, channels);
       const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, d: path(contours[i]) ?? undefined}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }

@@ -8,6 +8,7 @@ import {
   computeFrameAnchor
 } from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import type {ChannelValue, ChannelValueIntervalSpec, ChannelValueSpec} from "../channel.js";
 import {negative, positive} from "../defined.js";
 import type {Interval} from "../interval.js";
@@ -224,7 +225,7 @@ export class Dot extends (Mark as unknown as new (...args: any[]) => RenderableM
           title
         );
       }
-      return withHrefWrap(channels, this.target, i, element);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, element), i);
     });
     return h("g", {...indirect, ...transform}, items);
   }

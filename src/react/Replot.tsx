@@ -1,5 +1,4 @@
 import {
-  Children,
   cloneElement,
   Fragment,
   isValidElement,
@@ -12,7 +11,12 @@ import {
   type ReactElement
 } from "react";
 import {computePlot} from "../plot.js";
-import type {MarkOptions} from "../mark.js";
+import type {ChannelValue} from "../channel.js";
+import type {ColorLegendOptions, OpacityLegendOptions, SymbolLegendOptions} from "../legends.js";
+import type {Data, MarkOptions} from "../mark.js";
+import type {ProjectionFactory, ProjectionImplementation, ProjectionName, ProjectionOptions} from "../projection.js";
+import type {ScaleDefaults, ScaleOptions} from "../scales.js";
+import {exposeScales} from "../scales.js";
 import {consumeWarnings} from "../warnings.js";
 import {PlotContext, type PlotContextValue} from "./PlotContext.js";
 import {markEventNames, useMark, type MarkEventHandlers, type MarkFactory} from "./useMark.js";
@@ -21,9 +25,11 @@ import {computeAnchors, pointerKOf} from "./interactions/pointerHitTest.js";
 import {createPointerStore, type PointerStore} from "./interactions/pointerStore.js";
 import {buildAutoLegends, LegendDisplay} from "./legends/Legend.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
-import {domToJsx, isDomNode} from "./domToJsx.js";
+import {domToJsx, isDomNode, parseStyleString} from "./domToJsx.js";
+import {datumIndexOf} from "./perDatum.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 import {FigureLayout} from "./FigureLayout.js";
+import {warningIndicatorElement} from "./warningIndicator.js";
 
 // <Plot> renders a JSX <svg> populated entirely by each mark's renderJSX();
 // there is no imperative (d3-selection) render fallback.
@@ -44,56 +50,96 @@ import {FigureLayout} from "./FigureLayout.js";
 // effect also records this commit's order and the layout effect below
 // reconciles the two (#145). Three registries share that machinery: marks,
 // scales, legends.
-export interface ReplotProps {
+//
+// The plot's options are the imperative plot()'s options, so a plot can move
+// between the two entry points without its options changing type: a scale prop
+// is a ScaleOptions, a projection prop is what plot() takes for projection, and
+// the scale defaults (round, nice, clamp, zero, align, padding, axis, grid,
+// legend, label, inset…) come from ScaleDefaults, which PlotOptions itself
+// extends. Two things differ:
+//
+//  - `marks` is absent rather than optional. This entry point takes its marks
+//    as CHILDREN, and computePlot is handed the constructed children LAST (see
+//    the compute effect), so a marks prop would be overwritten and ignored.
+//    Leaving it out makes a silently ignored prop a compile error instead.
+//  - `figure` widens. Upstream's boolean asks only whether to wrap; this entry
+//    point also decides WHEN, because a plot with auto-legends or a title has a
+//    figure to show only once those have resolved.
+//
+// There is deliberately no [key: string]: any index signature. There used to
+// be, and it left every prop above untyped: a misspelled prop, a prop given the
+// wrong type, and a prop belonging to the imperative API only all type-checked
+// and were then ignored at runtime.
+//
+// The types below are declared here rather than by importing PlotOptions, which
+// checked code cannot reach: PlotOptions lives in src/plot.d.ts, and the
+// implementation file src/plot.ts has the same basename, so TypeScript resolves
+// "./plot.js" to the implementation and drops the declaration — its resolver
+// says so out loud ("plot.d.ts has a '.d.ts' extension - stripping it" → "plot.ts
+// exists - use it as a name resolution result"). Importing PlotOptions from
+// checked code therefore fails; src/transforms/basic.d.ts has been importing it
+// — and failing — since the rename, invisibly, because errors inside declaration
+// files are hidden by skipLibCheck. Until that is sorted out this interface
+// mirrors PlotOptions property by property, and PlotFacetOptions is assembled
+// from the parts of it that ARE reachable.
+//
+// The projection options, with the `type` name also accepted as a plain string.
+// ProjectionOptions declares `type?: ProjectionName | ProjectionFactory`, but a
+// projection name computed at runtime is a string, which no member of that
+// union accepts: test/plots/projection-domain-ratio.tsx passes one through its
+// own `type: string | (() => any)` helper. `string & Record<never, never>` is a
+// string that leaves the known names suggested by editors; a name that is not
+// known fails where it is resolved, as it does today ("unknown projection: …").
+type ReplotProjectionOptions = Omit<ProjectionOptions, "type"> & {
+  type?: ProjectionName | ProjectionFactory | (string & Record<never, never>);
+};
+
+export interface ReplotProps extends ScaleDefaults {
   children?: ReactNode;
+  // Dimensions and margins, as in PlotOptions.
   width?: number;
   height?: number;
+  aspectRatio?: number | boolean | null;
   margin?: number;
   marginTop?: number;
   marginRight?: number;
   marginBottom?: number;
   marginLeft?: number;
-  aspectRatio?: number | boolean;
-  x?: any;
-  y?: any;
-  color?: any;
-  opacity?: any;
-  r?: any;
-  symbol?: any;
-  length?: any;
-  fx?: any;
-  fy?: any;
-  inset?: number;
-  insetTop?: number;
-  insetRight?: number;
-  insetBottom?: number;
-  insetLeft?: number;
-  round?: boolean;
-  nice?: boolean | number;
-  clamp?: boolean;
-  zero?: boolean;
-  align?: number;
-  padding?: number;
-  label?: string;
-  projection?: any;
-  facet?: any;
+  // The scale props, typed as PlotOptions types them: ScaleOptions, with the
+  // legend options of the scales that have a legend.
+  x?: ScaleOptions;
+  y?: ScaleOptions;
+  r?: ScaleOptions;
+  color?: ScaleOptions & ColorLegendOptions;
+  opacity?: ScaleOptions & OpacityLegendOptions;
+  symbol?: ScaleOptions & SymbolLegendOptions;
+  length?: ScaleOptions;
+  fx?: ScaleOptions;
+  fy?: ScaleOptions;
+  projection?: ReplotProjectionOptions | ProjectionName | ProjectionFactory | ProjectionImplementation | null;
+  // PlotFacetOptions: its margins are the mark margins, its grid and label are
+  // the scale defaults, and its data/x/y are the top-level facet channels.
+  facet?: Pick<MarkOptions, "margin" | "marginTop" | "marginRight" | "marginBottom" | "marginLeft"> &
+    Pick<ScaleDefaults, "grid" | "label"> & {data?: Data; x?: ChannelValue; y?: ChannelValue};
+  // The remaining top-level options, as in PlotOptions. The title, subtitle and
+  // caption may be a DOM node as well as a string — the figure layout renders
+  // one from its markup rather than mounting it.
   className?: string;
-  style?: any;
-  ariaLabel?: string;
-  ariaDescription?: string;
-  axis?: any;
-  grid?: any;
+  style?: string | Partial<CSSStyleDeclaration> | null;
+  ariaLabel?: string | null;
+  ariaDescription?: string | null;
   clip?: MarkOptions["clip"];
-  title?: string;
-  subtitle?: string;
-  caption?: string;
-  // Controls the <figure> wrapper. "auto" (default) wraps only when there's a
-  // title/subtitle/caption/legend to show; "always" forces it; "never"
-  // suppresses it even when those are present. Booleans are accepted as
-  // legacy aliases for "always"/"never".
+  title?: string | Node | null;
+  subtitle?: string | Node | null;
+  caption?: string | Node | null;
+  document?: Document;
+  // "auto" (default) wraps only when there's a title/subtitle/caption/legend to
+  // show; "always" forces it; "never" suppresses it even when those are
+  // present. Booleans are accepted as legacy aliases for "always"/"never".
   figure?: boolean | "auto" | "always" | "never";
+  // Reports the pointer selection. Not a plot option: it is how this entry
+  // point exposes the dispatchValue upstream reports on the context.
   onValue?: (value: any) => void;
-  [key: string]: any;
 }
 
 interface Registration {
@@ -133,7 +179,6 @@ type Mode =
       computed: any;
       onSvgRef: (svg: SVGSVGElement | null) => void;
       pointerEnabled: boolean;
-      warnings: number;
     };
 
 export function Replot({
@@ -462,21 +507,25 @@ export function Replot({
     resolvedRef.current = nextResolved;
     setResolved(nextResolved);
 
-    // Drain the global warning counter just as the imperative plot() does, so
-    // the warn() dedupe state (lastMessage) doesn't leak across plots and we
-    // can render the ⚠️ indicator. computePlot emits warnings during mark
-    // initialization above.
-    const warnings = consumeWarnings();
-
+    // NOTE the warning counter is deliberately NOT drained here. computePlot is
+    // only the first of the two phases that can warn: its marks warn while they
+    // RENDER, which has not happened yet at this point in the effect. Draining
+    // here would count the compute-phase warnings and leave the rest in the
+    // counter for the next plot to claim. <WarningIndicator> drains instead,
+    // after the whole render phase.
+    //
+    // The exposed scales are built here, once per computed plot, and carried on
+    // the mode: the root element GETS them through a ref callback, which React
+    // calls on every commit (the callback is a fresh closure each render), so
+    // building the lookup function there would hand out a new one every time.
+    // Upstream's plot() sets figure.scale = exposeScales(…) once (plot.js:343).
+    const scale = exposeScales(computed.scales.scales, computed.context);
     const onSvgRef = (svg: SVGSVGElement | null) => {
       if (!svg) return;
-      // Expose scale on the svg, matching imperative API.
-      (svg as any).scale = computed.scales?.scales ?? null;
-      if (classNameProp) svg.classList.add(classNameProp);
-      // Apply the plot-level style option to the <svg>, mirroring
-      // applyInlineStyles on the imperative path (string or object).
-      if (typeof style === "string") svg.setAttribute("style", style);
-      else if (style != null) Object.assign(svg.style, style as any);
+      // The only property the plot writes on its root element, and not a style
+      // or a class: it IS the API. plot.scale("x") resolves a scale and throws
+      // on an unknown name, exactly as the imperative plot()'s root does.
+      (svg as any).scale = scale;
     };
 
     // Carry the plot's root element onto the NEW context's figureHolder here,
@@ -494,14 +543,14 @@ export function Replot({
     }
 
     const pointerEnabled = computed.marks.some(isPointerConsumer);
-    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled, warnings});
+    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled});
     // No dependency array: the inputs key above is the guard, and it is taken
     // over the registries as the reconciliation above just ordered them.
   });
 
   // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
-  // through the compute effect's own ref callback (which applies the className
-  // and the plot-level style), so this wrapper records it on the way past.
+  // through the compute effect's own ref callback (which exposes the scales on
+  // it), so this wrapper records it on the way past.
   const setSvgElement = (svg: SVGSVGElement | null) => {
     svgElementRef.current = svg;
     if (mode.kind === "jsx") mode.onSvgRef(svg);
@@ -579,6 +628,13 @@ export function Replot({
   // with fresh state, which is how a plot recovers from a fixed prop.
   if (error !== null) throw error;
 
+  // The plot-level style option, as a prop on the <svg>. React needs an object,
+  // so a string — upstream sets the whole style attribute from one,
+  // applyInlineStyles in style.js — is parsed into one. A prop, rather than a
+  // merge onto the node from a ref callback, is what lets React clear a key
+  // that a later render drops from the option.
+  const svgStyle = typeof style === "string" ? parseStyleString(style) : style;
+
   // In figure mode, wrap the plot in a div.plot-host inside the figure to
   // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
   // > figcaption). In non-figure mode, return the SVG directly (matching the
@@ -590,10 +646,10 @@ export function Replot({
         computed={mode.computed}
         svgRef={setSvgElement}
         className={classNameProp}
+        style={svgStyle}
         pointerEnabled={mode.pointerEnabled}
         pointerStore={pointerStore}
         onValueRef={onValueRef}
-        warnings={mode.warnings}
         getHandlers={getMarkHandlers}
       />
     ) : (
@@ -661,15 +717,46 @@ function containsFunctionChild(node: unknown): boolean {
   return typeof node === "function" || (Array.isArray(node) && node.some(containsFunctionChild));
 }
 
+// The ⚠️ warning indicator, and the only thing on the React path that drains
+// the global warning counter. It has to be a component of its own, rendered
+// last inside the <svg> after the marks, because the warnings it counts are
+// raised while the marks RENDER: their renderJSX runs in the render phase this
+// component is part of, and layout effects run only once that phase is over, so
+// the drain belongs in an effect of a child that comes after them. Draining in
+// the compute effect instead — which is what this replaces — missed every
+// warning raised while rendering and left it for the next plot to claim.
+//
+// It drains ONCE PER COMPUTED PLOT, guarded by a ref holding that computed
+// object, because its own state update re-renders it in a second pass: without
+// the guard, that pass would drain an already-empty counter, set the count back
+// to zero and take the indicator out of the DOM again. The update is local to
+// this component, so the marks are not re-rendered by it and cannot warn again
+// — which is what makes showing a render-time warning safe rather than a loop.
+//
+// The effect therefore has NO dependency array on purpose. The ref, not a deps
+// list, is what makes the redundant passes (this component's own re-render, and
+// StrictMode's simulated remount, which re-runs every effect it created) cheap
+// no-ops; a deps list would only add a way to get this wrong.
+function WarningIndicator({computed}: {computed: any}) {
+  const [warnings, setWarnings] = useState(0);
+  const drainedRef = useRef<any>(null);
+  useLayoutEffect(() => {
+    if (drainedRef.current === computed) return;
+    drainedRef.current = computed;
+    setWarnings(consumeWarnings());
+  });
+  return warningIndicatorElement(computed, warnings);
+}
+
 // Renders the whole plot as a JSX <svg> tree.
 function PlotSvg({
   computed,
   svgRef,
   className: classNameProp,
+  style,
   pointerEnabled,
   pointerStore,
   onValueRef,
-  warnings,
   getHandlers
 }: any) {
   const {className, ariaLabel, ariaDescription, dimensions} = computed;
@@ -690,27 +777,19 @@ function PlotSvg({
 :where(.${className} tspan) {
   white-space: pre;
 }`;
-  // Render the ⚠️ warning indicator after the marks, matching the imperative
-  // plot() (font-family="initial" fixes emoji rendering in Chrome).
-  const warningIndicator =
-    warnings > 0 ? (
-      <text x={width} y={20} dy="-1em" textAnchor="end" fontFamily="initial">
-        {"⚠️"}
-        <title>{`${warnings.toLocaleString("en-US")} warning${
-          warnings === 1 ? "" : "s"
-        }. Please check the console.`}</title>
-      </text>
-    ) : null;
   // Allocate clip-path defs up front (pre-pass) so they're known before the
-  // marks that reference them are rendered, then render them in the <svg>.
-  const clipReg = createClipRegistry();
+  // marks that reference them are rendered, then render them in the <svg>. The
+  // plot's context is handed over so a mark that emits its own <clipPath> defs
+  // (the difference mark) allocates its ids from this render's counter rather
+  // than from style.js's module-global one — see ClipRegistry.clipId.
+  const clipReg = createClipRegistry(computed.context);
   registerClips(computed, clipReg);
   const inner = (
     <>
       <style>{styleText}</style>
       {clipReg.defs}
       {renderMarks(computed, clipReg, getHandlers)}
-      {warningIndicator}
+      <WarningIndicator computed={computed} />
     </>
   );
   return (
@@ -728,6 +807,11 @@ function PlotSvg({
       aria-description={ariaDescription ?? undefined}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
+      // Last, and so last in the serialized element: React writes attributes in
+      // prop order, and upstream's plot() applies the style option after the
+      // svg's attributes are set (plot.js:278), which puts the style attribute
+      // at the end there too.
+      style={style}
     >
       {pointerEnabled ? (
         <PointerRoot store={pointerStore} svgRef={internalSvgRef} onValueRef={onValueRef}>
@@ -1024,11 +1108,11 @@ function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandl
   }
   if (jsx == null) return null;
   // Per-mark event handlers attach as React event props (no DOM-structure
-  // change): per element when the mark renders one element per datum,
-  // mark-level otherwise. Presence changes rebuild the plot (stamped), so
-  // this render-time decision stays in sync with the registration.
+  // change): per element where the mark tags its per-datum elements, mark-level
+  // otherwise. Presence changes rebuild the plot (stamped), so this render-time
+  // decision stays in sync with the registration.
   const handlers = getHandlers?.(mark);
-  if (handlers) jsx = attachMarkHandlers(jsx, arrayIndex, markData, handlers, () => getHandlers(mark));
+  if (handlers) jsx = attachMarkHandlers(jsx, markData, handlers, () => getHandlers(mark));
   return <>{clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx}</>;
 }
 
@@ -1134,7 +1218,7 @@ function PointerMarkSlot({
   // that wrapper, which is the root this slot renders.
   if (!sel.sticky) jsx = defaultPointerEventsNone(jsx) as ReactElement;
   const handlers = getHandlers?.(mark);
-  if (handlers) jsx = attachMarkHandlers(jsx, renderIndex, markData, handlers, () => getHandlers(mark));
+  if (handlers) jsx = attachMarkHandlers(jsx, markData, handlers, () => getHandlers(mark));
   let out = (clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx) as ReactElement;
   // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
   // drop the attributes now carried by the shared parent and take the facet's
@@ -1165,34 +1249,40 @@ function plainIndex(index: any): any {
   return Object.assign(Array.from(index as any), {fx, fy, fi});
 }
 
-// Attaches the registered handlers to a mark's rendered JSX. Marks that
-// render one element per datum (dot, bar, rect, cell, text, tick, …) emit
-// their per-datum elements as the direct children of the mark's root <g>, in
-// filtered-index order — so when the child count matches the index length,
-// each child gets handlers with its datum index closed over. Otherwise
-// (grouped marks like line/area render one path per series, and some marks
-// nest further) the handlers attach at the mark level with datum/index
-// undefined. Handler identity is read through `live` at dispatch time, so
-// identity-only updates (which don't rebuild the plot) still take effect.
+// Attaches the registered handlers to a mark's rendered JSX. A mark that
+// renders one element per datum tags each element with its datum's index
+// (perDatum.ts); those children get handlers with their datum and index closed
+// over, and any other child — a marker <defs>, a grouped mark's per-series
+// path, a text child — is left untagged and so is covered by the mark-level
+// handler on the root instead, with datum/index undefined. The child count is
+// deliberately not consulted: a line with markers on three points in two
+// series has as many children as data, which is how a <defs> came to be handed
+// datum 0 and every series path shifted by one.
+//
+// The children are read raw rather than through Children.toArray, which
+// rewrites each element's key and so hands back objects that are not the ones
+// the mark tagged. Handler identity is read through `live` at dispatch time,
+// so identity-only updates (which don't rebuild the plot) still take effect.
 function attachMarkHandlers(
   jsx: ReactElement,
-  index: number[] | null,
   data: any,
   attached: MarkEventHandlers,
   live: () => MarkEventHandlers | undefined
 ): ReactElement {
   if (!isValidElement(jsx)) return jsx;
-  const children = Children.toArray((jsx.props as any).children);
-  if (index != null && children.length === index.length && children.every((c) => isValidElement(c))) {
-    return cloneElement(
-      jsx,
-      undefined,
-      children.map((child, k) =>
-        cloneElement(child as ReactElement, handlerProps(attached, live, data?.[index[k]], index[k]))
-      )
-    );
+  const children = (jsx.props as any).children;
+  const list = Array.isArray(children) ? children : [children];
+  if (!list.some((child) => datumIndexOf(child) !== undefined)) {
+    return cloneElement(jsx, handlerProps(attached, live, undefined, undefined));
   }
-  return cloneElement(jsx, handlerProps(attached, live, undefined, undefined));
+  return cloneElement(
+    jsx,
+    undefined,
+    list.map((child) => {
+      const i = datumIndexOf(child);
+      return i === undefined ? child : cloneElement(child as ReactElement, handlerProps(attached, live, data?.[i], i));
+    })
+  );
 }
 
 function handlerProps(

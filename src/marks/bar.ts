@@ -15,6 +15,7 @@ import {rectInsets, rectRadii, roundedRectPath} from "./rect.js";
 import {createElement as h, type ReactNode} from "react";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /** Options for the barX and barY marks. */
 interface BarOptions extends MarkOptions, InsetOptions, RectCornerOptions, StackOptions {
@@ -188,7 +189,7 @@ export class AbstractBar extends Mark {
             },
             titled
           );
-      return withHrefWrap(channels, this.target, i, rectEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, rectEl), i);
     });
     return h("g", {...indirect, ...transform}, rects);
   }
