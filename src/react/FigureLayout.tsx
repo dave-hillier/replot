@@ -8,9 +8,11 @@ import {domToJsx, isDomNode} from "./domToJsx.js";
 // (see its `figure` prop); this component owns the structure once that's
 // decided, keeping document layout separate from scale computation.
 export interface FigureLayoutProps {
-  title?: string;
-  subtitle?: string;
-  caption?: string;
+  // A slot's content is usually a string, but may also be a DOM node to be
+  // rendered from its markup (an HTML title built imperatively); see SlotHeader.
+  title?: string | Node | null;
+  subtitle?: string | Node | null;
+  caption?: string | Node | null;
   autoLegends: ReactNode;
   explicitLegends: ReactNode;
   plotElement: ReactNode;

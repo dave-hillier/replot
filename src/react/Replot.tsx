@@ -12,7 +12,11 @@ import {
   type ReactElement
 } from "react";
 import {computePlot} from "../plot.js";
-import type {MarkOptions} from "../mark.js";
+import type {ChannelValue} from "../channel.js";
+import type {ColorLegendOptions, OpacityLegendOptions, SymbolLegendOptions} from "../legends.js";
+import type {Data, MarkOptions} from "../mark.js";
+import type {ProjectionFactory, ProjectionImplementation, ProjectionName, ProjectionOptions} from "../projection.js";
+import type {ScaleDefaults, ScaleOptions} from "../scales.js";
 import {exposeScales} from "../scales.js";
 import {consumeWarnings} from "../warnings.js";
 import {PlotContext, type PlotContextValue} from "./PlotContext.js";
@@ -46,56 +50,96 @@ import {warningIndicatorElement} from "./warningIndicator.js";
 // effect also records this commit's order and the layout effect below
 // reconciles the two (#145). Three registries share that machinery: marks,
 // scales, legends.
-export interface ReplotProps {
+//
+// The plot's options are the imperative plot()'s options, so a plot can move
+// between the two entry points without its options changing type: a scale prop
+// is a ScaleOptions, a projection prop is what plot() takes for projection, and
+// the scale defaults (round, nice, clamp, zero, align, padding, axis, grid,
+// legend, label, inset…) come from ScaleDefaults, which PlotOptions itself
+// extends. Two things differ:
+//
+//  - `marks` is absent rather than optional. This entry point takes its marks
+//    as CHILDREN, and computePlot is handed the constructed children LAST (see
+//    the compute effect), so a marks prop would be overwritten and ignored.
+//    Leaving it out makes a silently ignored prop a compile error instead.
+//  - `figure` widens. Upstream's boolean asks only whether to wrap; this entry
+//    point also decides WHEN, because a plot with auto-legends or a title has a
+//    figure to show only once those have resolved.
+//
+// There is deliberately no [key: string]: any index signature. There used to
+// be, and it left every prop above untyped: a misspelled prop, a prop given the
+// wrong type, and a prop belonging to the imperative API only all type-checked
+// and were then ignored at runtime.
+//
+// The types below are declared here rather than by importing PlotOptions, which
+// checked code cannot reach: PlotOptions lives in src/plot.d.ts, and the
+// implementation file src/plot.ts has the same basename, so TypeScript resolves
+// "./plot.js" to the implementation and drops the declaration — its resolver
+// says so out loud ("plot.d.ts has a '.d.ts' extension - stripping it" → "plot.ts
+// exists - use it as a name resolution result"). Importing PlotOptions from
+// checked code therefore fails; src/transforms/basic.d.ts has been importing it
+// — and failing — since the rename, invisibly, because errors inside declaration
+// files are hidden by skipLibCheck. Until that is sorted out this interface
+// mirrors PlotOptions property by property, and PlotFacetOptions is assembled
+// from the parts of it that ARE reachable.
+//
+// The projection options, with the `type` name also accepted as a plain string.
+// ProjectionOptions declares `type?: ProjectionName | ProjectionFactory`, but a
+// projection name computed at runtime is a string, which no member of that
+// union accepts: test/plots/projection-domain-ratio.tsx passes one through its
+// own `type: string | (() => any)` helper. `string & Record<never, never>` is a
+// string that leaves the known names suggested by editors; a name that is not
+// known fails where it is resolved, as it does today ("unknown projection: …").
+type ReplotProjectionOptions = Omit<ProjectionOptions, "type"> & {
+  type?: ProjectionName | ProjectionFactory | (string & Record<never, never>);
+};
+
+export interface ReplotProps extends ScaleDefaults {
   children?: ReactNode;
+  // Dimensions and margins, as in PlotOptions.
   width?: number;
   height?: number;
+  aspectRatio?: number | boolean | null;
   margin?: number;
   marginTop?: number;
   marginRight?: number;
   marginBottom?: number;
   marginLeft?: number;
-  aspectRatio?: number | boolean;
-  x?: any;
-  y?: any;
-  color?: any;
-  opacity?: any;
-  r?: any;
-  symbol?: any;
-  length?: any;
-  fx?: any;
-  fy?: any;
-  inset?: number;
-  insetTop?: number;
-  insetRight?: number;
-  insetBottom?: number;
-  insetLeft?: number;
-  round?: boolean;
-  nice?: boolean | number;
-  clamp?: boolean;
-  zero?: boolean;
-  align?: number;
-  padding?: number;
-  label?: string;
-  projection?: any;
-  facet?: any;
+  // The scale props, typed as PlotOptions types them: ScaleOptions, with the
+  // legend options of the scales that have a legend.
+  x?: ScaleOptions;
+  y?: ScaleOptions;
+  r?: ScaleOptions;
+  color?: ScaleOptions & ColorLegendOptions;
+  opacity?: ScaleOptions & OpacityLegendOptions;
+  symbol?: ScaleOptions & SymbolLegendOptions;
+  length?: ScaleOptions;
+  fx?: ScaleOptions;
+  fy?: ScaleOptions;
+  projection?: ReplotProjectionOptions | ProjectionName | ProjectionFactory | ProjectionImplementation | null;
+  // PlotFacetOptions: its margins are the mark margins, its grid and label are
+  // the scale defaults, and its data/x/y are the top-level facet channels.
+  facet?: Pick<MarkOptions, "margin" | "marginTop" | "marginRight" | "marginBottom" | "marginLeft"> &
+    Pick<ScaleDefaults, "grid" | "label"> & {data?: Data; x?: ChannelValue; y?: ChannelValue};
+  // The remaining top-level options, as in PlotOptions. The title, subtitle and
+  // caption may be a DOM node as well as a string — the figure layout renders
+  // one from its markup rather than mounting it.
   className?: string;
-  style?: any;
-  ariaLabel?: string;
-  ariaDescription?: string;
-  axis?: any;
-  grid?: any;
+  style?: string | Partial<CSSStyleDeclaration> | null;
+  ariaLabel?: string | null;
+  ariaDescription?: string | null;
   clip?: MarkOptions["clip"];
-  title?: string;
-  subtitle?: string;
-  caption?: string;
-  // Controls the <figure> wrapper. "auto" (default) wraps only when there's a
-  // title/subtitle/caption/legend to show; "always" forces it; "never"
-  // suppresses it even when those are present. Booleans are accepted as
-  // legacy aliases for "always"/"never".
+  title?: string | Node | null;
+  subtitle?: string | Node | null;
+  caption?: string | Node | null;
+  document?: Document;
+  // "auto" (default) wraps only when there's a title/subtitle/caption/legend to
+  // show; "always" forces it; "never" suppresses it even when those are
+  // present. Booleans are accepted as legacy aliases for "always"/"never".
   figure?: boolean | "auto" | "always" | "never";
+  // Reports the pointer selection. Not a plot option: it is how this entry
+  // point exposes the dispatchValue upstream reports on the context.
   onValue?: (value: any) => void;
-  [key: string]: any;
 }
 
 interface Registration {
