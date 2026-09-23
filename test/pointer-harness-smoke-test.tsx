@@ -3,7 +3,7 @@
 // these assertions into test/pointer-selection-test.tsx and delete this file.
 // Keep it small — it is not the place to grow pointer coverage.
 import assert from "assert";
-import {Dot, Replot} from "../src/react/index.js";
+import {Dot, Replot} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {
   hover,

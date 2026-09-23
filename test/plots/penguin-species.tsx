@@ -1,5 +1,5 @@
 import type {ReactNode} from "react";
-import {Replot, BarY, BarX, Text, RuleY, RuleX, groupX, groupZ, stackX} from "../../src/react/index.js";
+import {Replot, BarY, BarX, Text, RuleY, RuleX, groupX, groupZ, stackX} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {svg} from "htl";
 

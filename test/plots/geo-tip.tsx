@@ -1,4 +1,4 @@
-import {Replot, Geo, Text, centroid, geoCentroid} from "../../src/react/index.js";
+import {Replot, Geo, Text, centroid, geoCentroid} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {feature} from "topojson-client";
 

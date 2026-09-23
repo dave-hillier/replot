@@ -1,4 +1,4 @@
-import {Replot, Dot} from "../../src/react/index.js";
+import {Replot, Dot} from "../../src/react/api.js";
 
 export async function shorthandDot() {
   const timeSeries = [

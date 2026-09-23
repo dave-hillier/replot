@@ -8,7 +8,7 @@
 // cases are what pins that it runs at all, and that it runs with the pointer's
 // own selection rather than the mark's whole index.
 import assert from "assert";
-import {Dot, Replot, pointer} from "../src/react/index.js";
+import {Dot, Replot, pointer} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {click, hover, mountPlot, type PointerHarness} from "./pointer-harness.js";
 

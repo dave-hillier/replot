@@ -1,4 +1,4 @@
-import {Replot, Raster, Dot} from "../../src/react/index.js";
+import {Replot, Raster, Dot} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 // Test for floating point precision issue in interpolateBarycentric.

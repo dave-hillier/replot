@@ -1,4 +1,4 @@
-import {Replot, Frame, Dot, dodgeX} from "../../src/react/index.js";
+import {Replot, Frame, Dot, dodgeX} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 // Country code to continent; coverage limited to sport=boxing.

@@ -1,4 +1,4 @@
-import {Replot, Arrow, shiftX as shiftXTransform, shiftY as shiftYTransform} from "../../src/react/index.js";
+import {Replot, Arrow, shiftX as shiftXTransform, shiftY as shiftYTransform} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export async function shiftX() {

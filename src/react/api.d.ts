@@ -1,2 +1,2 @@
 // Type declarations for replot/react
-export * from "./index.js";
+export * from "./api.js";

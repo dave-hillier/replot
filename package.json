@@ -18,8 +18,8 @@
       "default": "./src/index.ts"
     },
     "./react": {
-      "types": "./src/react/index.d.ts",
-      "default": "./src/react/index.tsx"
+      "types": "./src/react/api.d.ts",
+      "default": "./src/react/api.tsx"
     }
   },
   "types": "src/index.d.ts",

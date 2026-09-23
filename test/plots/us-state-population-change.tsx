@@ -1,4 +1,4 @@
-import {Replot, BarX, RuleX, AxisY, GridX} from "../../src/react/index.js";
+import {Replot, BarX, RuleX, AxisY, GridX} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export async function usStatePopulationChange() {

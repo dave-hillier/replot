@@ -15,7 +15,7 @@
 // the report changes with it.
 import assert from "assert";
 import {useState} from "react";
-import {BarY, Dot, GroupX, Replot} from "../src/react/index.js";
+import {BarY, Dot, GroupX, Replot} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {click, hover, mountPlot, tipGroups, tipTexts, type PointerHarness} from "./pointer-harness.js";
 

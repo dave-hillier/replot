@@ -1,4 +1,4 @@
-import {Replot, DotX} from "../../src/react/index.js";
+import {Replot, DotX} from "../../src/react/api.js";
 
 export async function logDegenerate() {
   return (

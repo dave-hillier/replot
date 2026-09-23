@@ -11,7 +11,7 @@ import assert from "assert";
 import {computePlot} from "../src/plot.js";
 import {pointer} from "../src/interactions/pointer.js";
 import {dot} from "../src/marks/dot.js";
-import {Dot, Replot, Tip} from "../src/react/index.js";
+import {Dot, Replot, Tip} from "../src/react/api.js";
 import {buildStaticPlotSvg} from "../src/react/renderStatic.js";
 import jsdomit from "./jsdom.js";
 import {hover, mountPlot, tipGroups, tipTexts, type PointerHarness} from "./pointer-harness.js";

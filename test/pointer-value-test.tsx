@@ -9,7 +9,7 @@
 // onValue prop beside it, and it must follow the same contract: these cases
 // are what pins that.
 import assert from "assert";
-import {Crosshair, Dot, Replot} from "../src/react/index.js";
+import {Crosshair, Dot, Replot} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {hover, leave, mountPlot, type PointerHarness} from "./pointer-harness.js";
 

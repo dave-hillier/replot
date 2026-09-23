@@ -1,4 +1,4 @@
-import {Replot, BarX, Text, RuleX, stackX, valueof} from "../../src/react/index.js";
+import {Replot, BarX, Text, RuleX, stackX, valueof} from "../../src/react/api.js";
 
 export async function npmVersions() {
   const versions = [

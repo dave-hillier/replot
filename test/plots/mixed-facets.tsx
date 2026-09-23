@@ -1,4 +1,4 @@
-import {Replot, BarY, RuleY} from "../../src/react/index.js";
+import {Replot, BarY, RuleY} from "../../src/react/api.js";
 
 export async function mixedFacets() {
   const data = [

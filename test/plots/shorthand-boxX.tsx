@@ -1,4 +1,4 @@
-import {Replot, BoxX} from "../../src/react/index.js";
+import {Replot, BoxX} from "../../src/react/api.js";
 
 export async function shorthandBoxX() {
   const numbers = [

@@ -1,5 +1,5 @@
-import {Replot, Image, dodgeY} from "../../src/react/index.js";
-import type {ImageProps} from "../../src/react/index.js";
+import {Replot, Image, dodgeY} from "../../src/react/api.js";
+import type {ImageProps} from "../../src/react/api.js";
 
 async function kitten({
   x = (d, i) => i % 5,

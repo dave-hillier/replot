@@ -1,4 +1,4 @@
-import {Replot, CellX} from "../../src/react/index.js";
+import {Replot, CellX} from "../../src/react/api.js";
 
 export async function highCardinalityOrdinal() {
   return (

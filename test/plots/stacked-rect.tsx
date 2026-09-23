@@ -1,4 +1,4 @@
-import {Replot, RectX} from "../../src/react/index.js";
+import {Replot, RectX} from "../../src/react/api.js";
 
 export async function stackedRect() {
   return (

@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import {Replot, Dot, stampOptions} from "../src/react/index.js";
+import {Replot, Dot, stampOptions} from "../src/react/api.js";
 
 const data = [
   {x: 1, y: 2},

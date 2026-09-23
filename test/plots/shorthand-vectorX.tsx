@@ -1,4 +1,4 @@
-import {Replot, VectorX} from "../../src/react/index.js";
+import {Replot, VectorX} from "../../src/react/api.js";
 
 export async function shorthandVectorX() {
   const numbers = [

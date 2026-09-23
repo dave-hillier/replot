@@ -1,4 +1,4 @@
-import {Replot, BarX, Frame} from "../../src/react/index.js";
+import {Replot, BarX, Frame} from "../../src/react/api.js";
 
 export async function tickFormatEmptyDomain() {
   return (

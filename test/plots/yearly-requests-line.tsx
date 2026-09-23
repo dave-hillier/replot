@@ -1,4 +1,4 @@
-import {Replot, Line} from "../../src/react/index.js";
+import {Replot, Line} from "../../src/react/api.js";
 
 export async function yearlyRequestsLine() {
   const requests = [

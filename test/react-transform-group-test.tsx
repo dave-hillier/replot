@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 import {act} from "react";
 import * as d3 from "d3";
 import jsdomit from "./jsdom.js";
-import {Replot, BarX, BarY, Cell, Line, RuleY, group, groupX, groupY, groupZ} from "../src/react/index.js";
+import {Replot, BarX, BarY, Cell, Line, RuleY, group, groupX, groupY, groupZ} from "../src/react/api.js";
 import {Group, GroupX, GroupY, GroupZ} from "../src/react/transforms/Group.js";
 
 const penguins = [

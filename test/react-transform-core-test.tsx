@@ -27,7 +27,7 @@ import {
   mapTransform,
   window as windowFn,
   windowMap
-} from "../src/react/index.js";
+} from "../src/react/api.js";
 
 const sales = [
   {date: "Mon", fruit: "apples", units: 30},

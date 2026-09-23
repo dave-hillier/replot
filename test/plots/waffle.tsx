@@ -1,15 +1,4 @@
-import {
-  Replot,
-  WaffleX,
-  WaffleY,
-  RuleX,
-  RuleY,
-  AxisX,
-  AxisY,
-  identity,
-  pointer,
-  groupX
-} from "../../src/react/index.js";
+import {Replot, WaffleX, WaffleY, RuleX, RuleY, AxisX, AxisY, identity, pointer, groupX} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {svg} from "htl";
 

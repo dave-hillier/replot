@@ -1,4 +1,4 @@
-import {Replot, Frame, RuleY, AxisX, GridX, Dot, Line, windowY} from "../../src/react/index.js";
+import {Replot, Frame, RuleY, AxisX, GridX, Dot, Line, windowY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export async function electricityDemand() {

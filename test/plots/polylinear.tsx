@@ -1,4 +1,4 @@
-import {Replot, BarX, DotX, TextX} from "../../src/react/index.js";
+import {Replot, BarX, DotX, TextX} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 const times = [

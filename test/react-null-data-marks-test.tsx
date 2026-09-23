@@ -48,7 +48,7 @@ import {
   VectorX,
   VectorY,
   VoronoiMesh
-} from "../src/react/index.js";
+} from "../src/react/api.js";
 
 async function renderSvg(node) {
   const container = (globalThis as any).document.createElement("div");

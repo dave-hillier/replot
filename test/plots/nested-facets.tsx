@@ -1,4 +1,4 @@
-import {Replot, AxisFx, Frame, Dot} from "../../src/react/index.js";
+import {Replot, AxisFx, Frame, Dot} from "../../src/react/api.js";
 import * as Plot_ from "replot";
 import * as d3 from "d3";
 

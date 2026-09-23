@@ -1,4 +1,4 @@
-import {Replot, Dot, LineY, RuleX, pointer, pointerX} from "../../src/react/index.js";
+import {Replot, Dot, LineY, RuleX, pointer, pointerX} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {PointerViewof} from "./viewof.js";
 

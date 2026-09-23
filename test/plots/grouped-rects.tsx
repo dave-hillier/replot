@@ -1,4 +1,4 @@
-import {Replot, RectY, groupX} from "../../src/react/index.js";
+import {Replot, RectY, groupX} from "../../src/react/api.js";
 
 export async function groupedRects() {
   return (

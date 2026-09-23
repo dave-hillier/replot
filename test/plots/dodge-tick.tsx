@@ -1,4 +1,4 @@
-import {Replot, TickX, dodgeY} from "../../src/react/index.js";
+import {Replot, TickX, dodgeY} from "../../src/react/api.js";
 
 export async function dodgeTick() {
   return (

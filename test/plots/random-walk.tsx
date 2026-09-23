@@ -1,4 +1,4 @@
-import {Replot, LineY, mapY} from "../../src/react/index.js";
+import {Replot, LineY, mapY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 const random = () => d3.randomNormal.source(d3.randomLcg(42))();

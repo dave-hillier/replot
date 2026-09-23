@@ -3,7 +3,7 @@ import assert from "assert";
 import React, {act, useState} from "react";
 import ReactDOM from "react-dom/client";
 import it from "../jsdom.js";
-import {Replot, DifferenceY} from "../../src/react/index.js";
+import {Replot, DifferenceY} from "../../src/react/api.js";
 
 const data = [
   {x: 0, y1: 1, y2: 2},

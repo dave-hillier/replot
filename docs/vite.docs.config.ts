@@ -48,7 +48,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "replot/react": path.resolve(__dirname, "../src/react/index.tsx"),
+      "replot/react": path.resolve(__dirname, "../src/react/api.tsx"),
       replot: path.resolve(__dirname, "../src/index.js")
     },
     dedupe: ["react", "react-dom"]

@@ -1,4 +1,4 @@
-import {Replot, Area} from "../../src/react/index.js";
+import {Replot, Area} from "../../src/react/api.js";
 
 export async function shorthandArea() {
   const timeSeries = [

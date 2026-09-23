@@ -1,4 +1,4 @@
-import {Replot, RectY} from "../../src/react/index.js";
+import {Replot, RectY} from "../../src/react/api.js";
 
 export async function autoHeightEmpty() {
   return (

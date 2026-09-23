@@ -8,7 +8,7 @@ import {
   windowY,
   shiftX,
   mapX
-} from "../../src/react/index.js";
+} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 async function readStocks(start = 0, end = Infinity) {

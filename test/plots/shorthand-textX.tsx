@@ -1,4 +1,4 @@
-import {Replot, TextX} from "../../src/react/index.js";
+import {Replot, TextX} from "../../src/react/api.js";
 
 export async function shorthandTextX() {
   const numbers = [

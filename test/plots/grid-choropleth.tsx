@@ -1,4 +1,4 @@
-import {Replot, Cell, Text, Rect, groupY} from "../../src/react/index.js";
+import {Replot, Cell, Text, Rect, groupY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export async function gridChoropleth() {
