@@ -205,6 +205,14 @@ Or the imperative API:
 import * as Replot from "replot";
 ```
 
+The imperative API renders statically. `Replot.plot` returns a detached SVG
+element and attaches no pointer listeners, so marks that depend on the pointer,
+such as a `tip` or a `crosshair`, render with nothing selected, and the returned
+element never gets a `.value` or a bubbling `input` event. Upstream Observable
+Plot is interactive here. In Replot that behaviour belongs to the React API,
+which mounts a real React root and reports the selection through the `onValue`
+prop on `<Replot>`.
+
 ## Based on Observable Plot
 
 Replot is a fork of [Observable Plot](https://observablehq.com/plot/), ported to provide a first-class React component API. See the [Observable Plot documentation](https://observablehq.com/plot/) for full details on scales, marks, transforms, and projections.
