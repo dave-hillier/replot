@@ -65,8 +65,10 @@ Replot’s unit tests are written with [Mocha](https://mochajs.org).
 If you like, you can also run Mocha in watch mode for a specific file, so that unit tests re-run automatically when you make changes. For example:
 
 ```bash
-yarn run mocha --conditions=mocha --parallel --watch test/marks/bar-test.js
+TZ=America/Los_Angeles yarn tsx node_modules/.bin/mocha --watch test/marks/bar-test.js
 ```
+
+The tests import `replot`, which package.json maps to `src/index.js`, a file that exists only as the TypeScript source `src/index.ts`; tsx resolves that, which is why Mocha has to run through it here, as it does in `yarn test:mocha`.
 
 ### Snapshot tests
 
