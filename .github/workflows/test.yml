@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  # The Observable Plot commit whose committed snapshots are the parity oracle
+  # (v0.6.17-41-g1c6b239d). Bumping it means refreshing parity-allow.json in the
+  # same commit: yarn parity --allow parity-allow.json --update.
+  UPSTREAM_COMMIT: 1c6b239d1e42eb5c0d8c5b09f51b0c6ce51bea69
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -33,3 +39,29 @@ jobs:
         with:
           name: test-output-changes
           path: test/output/*-changed.*
+
+  # A green test job says Replot's snapshots have not changed; it does not say
+  # they match Observable Plot's. This job compares the committed snapshots
+  # with upstream's at the pinned commit, and fails on any plot that differs in
+  # a way parity-allow.json does not already record.
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      # Upstream's snapshots are the whole oracle, so fetch its test/output at
+      # that one commit: shallow, blobless (no file contents until the checkout
+      # asks for them) and sparse.
+      - name: Fetch the pinned Observable Plot snapshots
+        run: |
+          git init ../observablehq-plot
+          git -C ../observablehq-plot remote add origin https://github.com/observablehq/plot.git
+          git -C ../observablehq-plot config core.sparseCheckout true
+          echo 'test/output/*' > ../observablehq-plot/.git/info/sparse-checkout
+          git -C ../observablehq-plot fetch --depth 1 --filter=blob:none origin "$UPSTREAM_COMMIT"
+          git -C ../observablehq-plot checkout FETCH_HEAD
+      - run: yarn -s parity --upstream ../observablehq-plot --allow parity-allow.json --fail
