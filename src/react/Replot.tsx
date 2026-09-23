@@ -13,6 +13,7 @@ import {
 } from "react";
 import {computePlot} from "../plot.js";
 import type {MarkOptions} from "../mark.js";
+import {exposeScales} from "../scales.js";
 import {consumeWarnings} from "../warnings.js";
 import {PlotContext, type PlotContextValue} from "./PlotContext.js";
 import {markEventNames, useMark, type MarkEventHandlers, type MarkFactory} from "./useMark.js";
@@ -21,7 +22,7 @@ import {computeAnchors, pointerKOf} from "./interactions/pointerHitTest.js";
 import {createPointerStore, type PointerStore} from "./interactions/pointerStore.js";
 import {buildAutoLegends, LegendDisplay} from "./legends/Legend.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
-import {domToJsx, isDomNode} from "./domToJsx.js";
+import {domToJsx, isDomNode, parseStyleString} from "./domToJsx.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 import {FigureLayout} from "./FigureLayout.js";
 import {warningIndicatorElement} from "./warningIndicator.js";
@@ -468,15 +469,19 @@ export function Replot({
     // here would count the compute-phase warnings and leave the rest in the
     // counter for the next plot to claim. <WarningIndicator> drains instead,
     // after the whole render phase.
+    //
+    // The exposed scales are built here, once per computed plot, and carried on
+    // the mode: the root element GETS them through a ref callback, which React
+    // calls on every commit (the callback is a fresh closure each render), so
+    // building the lookup function there would hand out a new one every time.
+    // Upstream's plot() sets figure.scale = exposeScales(…) once (plot.js:343).
+    const scale = exposeScales(computed.scales.scales, computed.context);
     const onSvgRef = (svg: SVGSVGElement | null) => {
       if (!svg) return;
-      // Expose scale on the svg, matching imperative API.
-      (svg as any).scale = computed.scales?.scales ?? null;
-      if (classNameProp) svg.classList.add(classNameProp);
-      // Apply the plot-level style option to the <svg>, mirroring
-      // applyInlineStyles on the imperative path (string or object).
-      if (typeof style === "string") svg.setAttribute("style", style);
-      else if (style != null) Object.assign(svg.style, style as any);
+      // The only property the plot writes on its root element, and not a style
+      // or a class: it IS the API. plot.scale("x") resolves a scale and throws
+      // on an unknown name, exactly as the imperative plot()'s root does.
+      (svg as any).scale = scale;
     };
 
     // Carry the plot's root element onto the NEW context's figureHolder here,
@@ -500,8 +505,8 @@ export function Replot({
   });
 
   // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
-  // through the compute effect's own ref callback (which applies the className
-  // and the plot-level style), so this wrapper records it on the way past.
+  // through the compute effect's own ref callback (which exposes the scales on
+  // it), so this wrapper records it on the way past.
   const setSvgElement = (svg: SVGSVGElement | null) => {
     svgElementRef.current = svg;
     if (mode.kind === "jsx") mode.onSvgRef(svg);
@@ -579,6 +584,13 @@ export function Replot({
   // with fresh state, which is how a plot recovers from a fixed prop.
   if (error !== null) throw error;
 
+  // The plot-level style option, as a prop on the <svg>. React needs an object,
+  // so a string — upstream sets the whole style attribute from one,
+  // applyInlineStyles in style.js — is parsed into one. A prop, rather than a
+  // merge onto the node from a ref callback, is what lets React clear a key
+  // that a later render drops from the option.
+  const svgStyle = typeof style === "string" ? parseStyleString(style) : style;
+
   // In figure mode, wrap the plot in a div.plot-host inside the figure to
   // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
   // > figcaption). In non-figure mode, return the SVG directly (matching the
@@ -590,6 +602,7 @@ export function Replot({
         computed={mode.computed}
         svgRef={setSvgElement}
         className={classNameProp}
+        style={svgStyle}
         pointerEnabled={mode.pointerEnabled}
         pointerStore={pointerStore}
         onValueRef={onValueRef}
@@ -696,6 +709,7 @@ function PlotSvg({
   computed,
   svgRef,
   className: classNameProp,
+  style,
   pointerEnabled,
   pointerStore,
   onValueRef,
@@ -749,6 +763,11 @@ function PlotSvg({
       aria-description={ariaDescription ?? undefined}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
+      // Last, and so last in the serialized element: React writes attributes in
+      // prop order, and upstream's plot() applies the style option after the
+      // svg's attributes are set (plot.js:278), which puts the style attribute
+      // at the end there too.
+      style={style}
     >
       {pointerEnabled ? (
         <PointerRoot store={pointerStore} svgRef={internalSvgRef} onValueRef={onValueRef}>

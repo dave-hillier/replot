@@ -1,4 +1,5 @@
-import React, {useLayoutEffect, useRef, type ReactNode, type RefObject} from "react";
+import React, {type ReactNode, type RefObject} from "react";
+import {domToJsx, isDomNode} from "./domToJsx.js";
 
 // Document-layout half of <Plot>: wraps the rendered plot in a <figure> with
 // optional <h2> title, <h3> subtitle, legends, and a <figcaption>, mirroring
@@ -52,24 +53,13 @@ export function FigureLayout({
 }
 
 // Renders a title/subtitle/caption slot. Content is usually a string but may be
-// a DOM Node (e.g. an HTML title built imperatively); in that case it's mounted
-// via replaceChildren rather than as a React child.
+// a DOM Node (e.g. an HTML title built imperatively) or a React element; either
+// way it is rendered as an ordinary React child. A DOM node is converted to
+// elements from its markup rather than mounted by hand: React cannot render a
+// node as a child, and mounting it in a layout effect (replaceChildren) would
+// take the slot's contents out of React's hands — it detaches the text node
+// React itself put there, so React keeps updating a node nobody can see, and it
+// moves a caller's node out of its own parent.
 function SlotHeader({as: Tag, content, style: styleProp}: {as: any; content: any; style?: any}) {
-  const ref = useRef<HTMLElement | null>(null);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (content && typeof (content as any).nodeType === "number") {
-      el.replaceChildren(content as Node);
-    } else {
-      el.replaceChildren();
-      if (content != null) el.appendChild(document.createTextNode(String(content)));
-    }
-  }, [content]);
-  const isNode = content && typeof (content as any).nodeType === "number";
-  return (
-    <Tag ref={ref} style={styleProp}>
-      {isNode ? null : content}
-    </Tag>
-  );
+  return <Tag style={styleProp}>{isDomNode(content) ? domToJsx(content) : content}</Tag>;
 }

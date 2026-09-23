@@ -129,10 +129,10 @@ describe("#145 mark z-order follows children order", () => {
     }
     const {container, cleanup} = await mount(<Harness />);
     try {
-      assert.strictEqual(svgOf(container).scale.y.type, "linear");
+      assert.strictEqual(svgOf(container).scale("y").type, "linear");
       await act(async () => setShow(true));
       await act(async () => {});
-      assert.strictEqual(svgOf(container).scale.y.type, "linear");
+      assert.strictEqual(svgOf(container).scale("y").type, "linear");
     } finally {
       await cleanup();
     }
@@ -273,7 +273,7 @@ describe("#148 registration phase and plot context identity", () => {
     );
     try {
       assert.strictEqual(markOrder(container), "line,rect,rect,rect");
-      assert.strictEqual(svgOf(container).scale.y.type, "linear");
+      assert.strictEqual(svgOf(container).scale("y").type, "linear");
       assert.strictEqual(container.querySelectorAll(".plot-legend").length, 1, "expected the legend to survive");
       assert.ok(container.querySelector("figure"), "expected the legend to force figure mode");
     } finally {
