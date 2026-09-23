@@ -2120,24 +2120,12 @@
       </g>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,284)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(200,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(200,284)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(400,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(400,284)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
+  <g aria-label="tip" transform="translate(0.5,0.5)">
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,284)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(200,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(200,284)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(400,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(400,284)" pointer-events="none"></g>
   </g>
 </svg>

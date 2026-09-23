@@ -1199,15 +1199,9 @@
       </g>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="voronoi" fill-opacity="0.2" stroke-miterlimit="1" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(200,0)">
-      <g aria-label="voronoi" fill-opacity="0.2" stroke-miterlimit="1" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(400,0)">
-      <g aria-label="voronoi" fill-opacity="0.2" stroke-miterlimit="1" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
+  <g aria-label="voronoi" transform="translate(0.5,0.5)">
+    <g fill-opacity="0.2" stroke-miterlimit="1" transform="translate(0,0)" pointer-events="none"></g>
+    <g fill-opacity="0.2" stroke-miterlimit="1" transform="translate(200,0)" pointer-events="none"></g>
+    <g fill-opacity="0.2" stroke-miterlimit="1" transform="translate(400,0)" pointer-events="none"></g>
   </g>
 </svg>

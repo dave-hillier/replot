@@ -2640,12 +2640,8 @@
       </g>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="rule" stroke="red" transform="translate(0.5,0)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,184)">
-      <g aria-label="rule" stroke="red" transform="translate(0.5,0)" pointer-events="none"></g>
-    </g>
+  <g aria-label="rule" transform="translate(0.5,0)">
+    <g stroke="red" transform="translate(0,0)" pointer-events="none"></g>
+    <g stroke="red" transform="translate(0,184)" pointer-events="none"></g>
   </g>
 </svg>

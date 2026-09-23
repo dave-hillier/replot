@@ -2101,12 +2101,8 @@
       </g>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(40,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(305,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(40,0.5)" pointer-events="none"></g>
-    </g>
+  <g aria-label="tip" transform="translate(40,0.5)">
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(305,0)" pointer-events="none"></g>
   </g>
 </svg>

@@ -403,48 +403,20 @@
       </g>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,87)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,174)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,261)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,348)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,435)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,522)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,609)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,696)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,783)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,870)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,957)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,1044)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,1131)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
+  <g aria-label="tip" transform="translate(0.5,0.5)">
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,87)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,174)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,261)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,348)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,435)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,522)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,609)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,696)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,783)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,870)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,957)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,1044)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,1131)" pointer-events="none"></g>
   </g>
 </svg>
