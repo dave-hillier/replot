@@ -702,8 +702,11 @@ function PlotSvg({
       </text>
     ) : null;
   // Allocate clip-path defs up front (pre-pass) so they're known before the
-  // marks that reference them are rendered, then render them in the <svg>.
-  const clipReg = createClipRegistry();
+  // marks that reference them are rendered, then render them in the <svg>. The
+  // plot's context is handed over so a mark that emits its own <clipPath> defs
+  // (the difference mark) allocates its ids from this render's counter rather
+  // than from style.js's module-global one — see ClipRegistry.clipId.
+  const clipReg = createClipRegistry(computed.context);
   registerClips(computed, clipReg);
   const inner = (
     <>

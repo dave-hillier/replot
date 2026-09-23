@@ -26,7 +26,11 @@ export function buildStaticPlotSvg(computed: any, warnings: number, classNamePro
 :where(.${className} tspan) {
   white-space: pre;
 }`;
-  const clipReg = createClipRegistry();
+  // The plot's context is handed to the registry so a mark that emits its own
+  // <clipPath> defs (the difference mark) allocates its ids from this render's
+  // counter rather than from style.js's module-global one — see
+  // ClipRegistry.clipId.
+  const clipReg = createClipRegistry(computed.context);
   registerClips(computed, clipReg);
   const marks = renderMarksWith(
     computed,

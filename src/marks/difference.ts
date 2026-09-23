@@ -10,7 +10,6 @@ import {identity, indexOf} from "../options.js";
 // @ts-expect-error - internal helpers not in .d.ts
 import {isNoneish, labelof, maybeColorChannel, maybeValue, valueof} from "../options.js";
 import {inferScaleOrder} from "../scales.js";
-import {getClipId} from "../style.js";
 import {area} from "./area.js";
 import {line} from "./line.js";
 
@@ -243,13 +242,6 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
   const f2 = `${f}2`;
   const k1 = `${k}1`;
   const k2 = `${k}2`;
-  // Clip ids are allocated once per facet and group, on this mark's first
-  // render, and reused thereafter. The JSX paths render a mark again whenever
-  // React re-renders the plot — an unrelated state change above it re-renders
-  // the marks without recomputing them — so allocating inside the render would
-  // rewrite every clipPath id and every clip-path ref on each pass. Upstream
-  // never had to cache: its imperative render runs once per mark.
-  const idsByFacet = new Map<number, string[]>();
   return (index: any, scales: any, channels: any, dimensions: any, context: any, next: any): ReactNode => {
     const {[f1]: F1, [f2]: F2} = channels;
     const K1 = new Float32Array(F1.length);
@@ -262,14 +254,8 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
     const gChildren = Children.toArray((gNode as any)?.props?.children).filter(isValidElement);
     const out: ReactNode[] = [];
     const n = Math.min(clipChildren.length, gChildren.length);
-    // Each facet renders the mark with its own index, and so needs its own
-    // clip ids; `fi` is set by the facet render loop, and is undefined (0) for
-    // an unfaceted mark.
-    const fi = (index as any)?.fi ?? 0;
-    let ids = idsByFacet.get(fi);
-    if (ids === undefined) idsByFacet.set(fi, (ids = []));
     for (let i = 0; i < n; i++) {
-      const id = ids[i] ?? (ids[i] = getClipId());
+      const id = clipIdOf(context);
       const clipChild = clipChildren[i] as ReactElement;
       const gChild = gChildren[i] as ReactElement;
       out.push(h("clipPath", {key: `cp-${i}`, id}, clipChild));
@@ -277,4 +263,20 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
     }
     return cloneElement(gNode, gNode.props as any, ...out);
   };
+}
+
+// The id for one of this mark's own <clipPath> defs, taken from the clip
+// registry of the render that is building the <svg>. Each facet and each of
+// the two areas takes its own id, in render order, which is deterministic for
+// a given computed plot — so the ids neither collide with the frame clip's (a
+// difference plot always has one: the differenced line is clip: true) nor
+// change when React re-renders the marks without recomputing them. Both render
+// paths create the registry before rendering any mark and expose it on the
+// plot's context, which is what a renderJSX is given; assert rather than fall
+// back to style.js's module-global counter, which is the collision this
+// replaced.
+function clipIdOf(context: any): string {
+  const registry = context?.clipRegistry;
+  if (registry == null) throw new Error("difference: no clip registry on the plot context");
+  return registry.clipId();
 }
