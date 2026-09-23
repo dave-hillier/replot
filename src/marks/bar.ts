@@ -5,7 +5,6 @@ import type {Data, MarkOptions} from "../mark.js";
 import {Mark} from "../mark.js";
 import {hasXY, identity, indexOf} from "../options.js";
 import {isCollapsed} from "../scales.js";
-import {applyTransform} from "../style.js";
 import {maybeIdentityX, maybeIdentityY} from "../transforms/identity.js";
 import {maybeIntervalX, maybeIntervalY} from "../transforms/interval.js";
 import type {StackOptions} from "../transforms/stack.js";
@@ -210,9 +209,6 @@ export class AbstractBar extends Mark {
     const bandwidth = Y && y ? y.bandwidth() : height - marginTop - marginBottom;
     return Math.max(0, bandwidth - insetTop - insetBottom);
   }
-  _transform(_selection: any, _mark: any, _scales: any): void {
-    // overridden in subclasses
-  }
   _transformScales(_scales: any): any {
     return {};
   }
@@ -232,9 +228,6 @@ export class BarX extends AbstractBar {
       options,
       defaults
     );
-  }
-  _transform(selection: any, mark: any, {x}: any) {
-    selection.call(applyTransform, mark, {x}, 0, 0);
   }
   _transformScales({x}: any): any {
     return {x};
@@ -265,9 +258,6 @@ export class BarY extends AbstractBar {
       options,
       defaults
     );
-  }
-  _transform(selection: any, mark: any, {y}: any) {
-    selection.call(applyTransform, mark, {y}, 0, 0);
   }
   _transformScales({y}: any): any {
     return {y};
