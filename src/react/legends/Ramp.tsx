@@ -12,6 +12,7 @@ import {createContext} from "../../context.js";
 import {map, maybeNumberChannel} from "../../options.js";
 import {interpolatePiecewise} from "../../scales/quantitative.js";
 import {impliedString, maybeClassName} from "../../style.js";
+import {legendStyleSheet, rampStyle} from "./legendStyles.js";
 
 // Mirrors the option bag accepted by the imperative `legendRamp(color, options)`.
 // The first positional argument (`color`) is exposed here as the `scale` prop;
@@ -169,7 +170,7 @@ export function Ramp(props: RampProps) {
       viewBox={`0 0 ${width} ${height}`}
       style={styleAttr}
     >
-      <style>{rampStyle(className)}</style>
+      {legendStyleSheet(rampStyle(className))}
       {filterId ? (
         <filter id={filterId}>
           <feFlood floodColor={filterColor} />
@@ -192,19 +193,6 @@ export function Ramp(props: RampProps) {
       ) : null}
     </svg>
   );
-}
-
-function rampStyle(className: string): string {
-  return `:where(.${className}-ramp) {
-  display: block;
-  height: auto;
-  height: intrinsic;
-  max-width: 100%;
-  overflow: visible;
-}
-:where(.${className}-ramp text) {
-  white-space: pre;
-}`;
 }
 
 // Constructs the data URL for a 256x1 canvas filled by `interpolator(t)`.
