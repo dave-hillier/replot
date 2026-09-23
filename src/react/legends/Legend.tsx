@@ -17,13 +17,18 @@ import {ColorSwatches, Swatches, SymbolSwatches} from "./Swatches.js";
 //     scale key is present (color, opacity, or symbol).
 //   - Plot-scoped: nest inside a <Plot> and use `scale="<name>"` to resolve
 //     a named scale from the parent's computed scaleDescriptors.
-export type LegendProps = LegendScales;
+// `scale` is the second form's prop and not a scale of its own, so it is
+// declared here rather than in LegendScales (which upstream's imperative
+// legend() takes, and which has no plot to resolve a name against).
+export type LegendProps = LegendScales & {scale?: string};
 
 export function Legend(props: LegendProps) {
   const ctx = useContext(PlotContext);
   const id = useId();
   const register = ctx?.registerLegend;
   const unregister = ctx?.unregisterLegend;
+  const serverRender = ctx?.serverRender;
+  const registration = () => register?.(id, stampOptions("legend", null, props as Record<string, unknown>), props);
   // Inside a <Plot>, register instead of rendering: the Plot renders the
   // visible <LegendDisplay> in its figure slot, so a Legend is promoted no
   // matter how it's composed (memo, wrapper components, fragments).
@@ -31,8 +36,14 @@ export function Legend(props: LegendProps) {
   // unmount runs the cleanup below without re-rendering, so a render-phase
   // registration would be lost; this depless effect re-registers every
   // commit, idempotently under the stable useId.
+  // A server render registers while it renders instead, as marks and scales do
+  // (useMark): no effect runs there, and an explicit legend that never
+  // registers is a legend the figure slot never shows.
+  if (serverRender) registration();
   useLayoutEffect(() => {
-    if (register) register(id, stampOptions("legend", null, props as Record<string, unknown>), props);
+    // Unconditional, and never run on a server render; see useMark.
+    if (serverRender) return;
+    registration();
   });
   useLayoutEffect(() => {
     if (!unregister) return;

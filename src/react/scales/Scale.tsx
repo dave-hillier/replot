@@ -76,11 +76,23 @@ export interface ScaleFacetProps {
 // re-render to follow it, so a render-phase registration is simply lost. The
 // depless effect re-registers every commit; a same-stamp re-registration only
 // swaps the stored config in place so closures always see the latest props.
+// A server render inverts that (nothing commits, so nothing can be lost) and
+// registers while it renders — the same exception useMark takes, for the same
+// reason: without it a server-rendered plot has no scale components in it.
 function useScaleOption(scaleName: string, config: Record<string, any>): void {
   const id = useId();
-  const {registerScale, unregisterScale} = usePlotContext();
+  const {registerScale, unregisterScale, serverRender} = usePlotContext();
+  const stamp = () => stampOptions(`scale:${scaleName}`, null, config);
+  // A server render registers while it renders, for the reasons spelled out in
+  // useMark: no effect runs there, so the effect below would never take the
+  // registration and the scale option would be missing from the plot. The
+  // order the registration lands in is tree order, which is what the compute
+  // pass in <Replot> reads it in.
+  if (serverRender) registerScale?.(id, stamp(), scaleName, config);
   useLayoutEffect(() => {
-    registerScale?.(id, stampOptions(`scale:${scaleName}`, null, config), scaleName, config);
+    // Unconditional (hooks are), and never run on a server render; see useMark.
+    if (serverRender) return;
+    registerScale?.(id, stamp(), scaleName, config);
   });
   // Removal is unmount-driven, mirroring useMark.
   useLayoutEffect(() => (unregisterScale ? () => unregisterScale(id) : undefined), [unregisterScale, id]);

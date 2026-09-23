@@ -66,6 +66,7 @@ export function Ramp(props: RampProps) {
   const reactId = useId();
   const filterColor = props.filterColor;
   const filterId = filterColor ? `plot-filter-${reactId.replace(/[^A-Za-z0-9_-]/g, "")}` : null;
+  const rampId = `plot-ramp-${reactId.replace(/[^A-Za-z0-9_-]/g, "")}`;
 
   const context = createContext(props as any);
   const applyRange = round
@@ -76,6 +77,11 @@ export function Ramp(props: RampProps) {
 
   let x: any;
   let body: React.ReactNode = null;
+  // The ramp's paint server, when it needs one: a document-less render paints
+  // the interpolate branch with a gradient instead of a canvas data URL, and
+  // the gradient's definition is rendered next to the filter's, outside the
+  // body it fills.
+  let gradient: React.ReactNode = null;
 
   if (interpolate) {
     const interpolator =
@@ -89,16 +95,36 @@ export function Ramp(props: RampProps) {
         Math.min(domain.length + (pivot !== undefined ? 1 : 0), range === undefined ? Infinity : range.length)
       )
     );
-    const href = canvasDataURL(interpolator, context);
-    body = (
+    // The ramp body is a 256x1 canvas interpolated into a data URL, which is
+    // what the imperative legend produces and needs a document to build. A
+    // server render has none, so it paints the same interpolator as an SVG
+    // gradient instead: the legend is still complete and correct-looking in the
+    // markup, and the browser path is untouched (whether the two agree is
+    // rampGradient's subject). The two bodies are equivalent, not identical — a
+    // client render of a server-rendered ramp legend replaces the gradient with
+    // the image, which is the same hydration re-render every other part of a
+    // server-rendered plot takes.
+    const rampWidth = width - marginLeft - marginRight;
+    const rampHeight = height - marginTop - marginBottom;
+    gradient = context.document == null ? rampGradient(interpolator, rampId) : null;
+    body = gradient ? (
+      <rect
+        opacity={opacity ?? undefined}
+        x={marginLeft}
+        y={marginTop}
+        width={rampWidth}
+        height={rampHeight}
+        fill={`url(#${rampId})`}
+      />
+    ) : (
       <image
         opacity={opacity ?? undefined}
         x={marginLeft}
         y={marginTop}
-        width={width - marginLeft - marginRight}
-        height={height - marginTop - marginBottom}
+        width={rampWidth}
+        height={rampHeight}
         preserveAspectRatio="none"
-        href={href}
+        href={canvasDataURL(interpolator, context)}
       />
     );
   } else if (type === "threshold") {
@@ -171,6 +197,7 @@ export function Ramp(props: RampProps) {
       style={styleAttr}
     >
       {legendStyleSheet(rampStyle(className))}
+      {gradient}
       {filterId ? (
         <filter id={filterId}>
           <feFlood floodColor={filterColor} />
@@ -207,6 +234,27 @@ function canvasDataURL(interpolator: (t: number) => string, context: any): strin
     c2d.fillRect(i, 0, 1, 1);
   }
   return canvas.toDataURL();
+}
+
+// The ramp body without a DOM: the same interpolator sampled into a horizontal
+// <linearGradient>, which a server render can emit as markup. 256 stops would
+// be the canvas's own resolution and a needlessly large legend, so the ramp is
+// sampled at 64 — the interpolators the legends use are piecewise-linear
+// between a handful of stops, so sampling at 64 is within one and a half
+// parts of 255 in any channel of what the canvas would paint (measured over
+// sequential rgb, basis and turbo interpolators). The gradient is in
+// objectBoundingBox units, so it stretches to whatever rect references it,
+// exactly as preserveAspectRatio="none" stretches the image.
+function rampGradient(interpolator: (t: number) => string, id: string): React.ReactNode {
+  const n = 64;
+  const offset = (i: number): string => `${+((100 * i) / (n - 1)).toFixed(4)}%`;
+  return (
+    <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
+      {Array.from({length: n}, (_, i) => (
+        <stop key={i} offset={offset(i)} stopColor={interpolator(i / (n - 1))} />
+      ))}
+    </linearGradient>
+  );
 }
 
 // Replicates the tick markup that d3-axis (axisBottom) emits, minus the

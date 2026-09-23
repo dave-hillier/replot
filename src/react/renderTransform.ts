@@ -52,7 +52,21 @@ export function renderTransformJSX(
 // Serializes a JSX tree and reparses it in an <svg> context so the resulting
 // nodes carry the SVG namespace, mirroring how renderStatic.tsx serializes
 // the whole plot for the imperative entry point.
-function jsxToDom(jsx: ReactNode, document: Document): Node | null {
+//
+// This is the one place a render transform touches the DOM, and it is also the
+// only thing standing between a render transform and a server render: the
+// transform is arbitrary imperative code over real elements (a user may
+// measure, clone, or wrap them), so there is nothing to substitute for the
+// elements and no way to run it without a document. Failing here with the
+// reason beats the bare "Cannot read properties of undefined" a missing
+// document would otherwise produce, and beats silently dropping the transform's
+// output from the markup.
+function jsxToDom(jsx: ReactNode, document: Document | undefined): Node | null {
+  if (document == null) {
+    throw new Error(
+      "the render option needs a DOM: a server render has no document, so it cannot run a mark's render transform. Render this plot on the client, or drop the render option."
+    );
+  }
   const holder = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   holder.innerHTML = renderToStaticMarkup(h(Fragment, null, jsx));
   if (holder.childNodes.length === 1) {

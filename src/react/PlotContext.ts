@@ -37,6 +37,15 @@ export interface Dimensions {
 //     because <Legend> reads them off this same value; a second context is
 //     the shape to move to if legends ever need to subscribe to them.
 export interface PlotContextValue {
+  // True when this plot is being rendered where no effect will ever run — a
+  // server render (renderToString/renderToStaticMarkup). Every registration
+  // below is normally taken from a layout effect, which a server render does
+  // not run, so on a server the components taking them hand them over while
+  // they render instead, and <Replot> computes the plot in a render of its
+  // own, after theirs (see useMark and ServerPlot for why that ordering is
+  // sound rather than lucky). Set by <Replot> from the environment; every
+  // browser render, including a hydrating one, leaves it false.
+  readonly serverRender?: boolean;
   // Per-mark event handlers ride alongside the factory; their identities are
   // excluded from the stamp (like all functions), so a handler-identity
   // change refreshes the registration without a rebuild.

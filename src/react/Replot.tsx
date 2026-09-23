@@ -181,6 +181,55 @@ type Mode =
       pointerEnabled: boolean;
     };
 
+// One computePlot pass: the plot it produced, the map from that plot's mark
+// instances back to the registrations they came from, and the options it
+// actually received. Kept together because the three are produced together, by
+// runComputePass below, and are consumed together by its two callers — the
+// compute effect, for a browser commit, and the server render of a plot.
+interface ComputePass {
+  computed: any;
+  registrationByMark: Map<any, Registration>;
+  effectiveOptions: Record<string, any>;
+}
+
+// The legends a pass shows, and whether a <figure> wraps it — everything the
+// plot's element tree needs beyond the pass itself. Built once per pass by
+// plotExtras, and read by both entries: the browser render, which also depends
+// on the figure flag, and the server render.
+interface PlotExtras {
+  autoLegends: ReactElement[];
+  explicitLegends: ReactElement[];
+  wantsFigure: boolean;
+}
+
+// Whether a DOM exists in this process at all. Asked PER RENDER, never once at
+// module scope: the test suite installs a jsdom document per test, after every
+// module is already loaded, so a flag captured at import time would tell a
+// jsdom test it is on a server (and tell a real server it has a document).
+function hasDocument(): boolean {
+  return typeof document !== "undefined";
+}
+
+// The compute half of a server render. A parent's render body runs before its
+// children's, so <Replot> cannot compute a server-rendered plot in its own
+// render: the registrations it computes from are taken by descendants that have
+// not rendered yet (useMark registers while rendering there). This component is
+// rendered after those descendants, so by the time its body runs every mark,
+// scale and legend this render declares has registered, and it calls back into
+// <Replot> to compute the pass and build the plot elements from it.
+//
+// That ordering is sound for a reason of its own rather than inherited from the
+// client path: a server pass renders each component exactly once,
+// depth-first, in the order the tree declares them — there is no bailout that
+// could skip a descendant, no second render that could deliver a registration
+// late, and none of StrictMode's double rendering (that is a client-side,
+// commit-phase behaviour) — so the registry holds exactly the components this
+// tree declared, in the order tree order puts them, which is the contract
+// renderMarksWith relies on.
+function ServerPlot({render}: {render: () => ReactNode}) {
+  return <>{render()}</>;
+}
+
 export function Replot({
   children,
   title,
@@ -228,6 +277,12 @@ export function Replot({
   // computePlot's last failure. Setting it re-renders, and the render throws;
   // see the throw below.
   const [error, setError] = useState<unknown>(null);
+  // A render with no DOM behind it: no effect will run, no ref will be called,
+  // and no state will ever be readable. It is asked per render (see
+  // hasDocument) and published on the context, where the components that
+  // register read it and hand their registrations over during the render
+  // instead of from a layout effect (useMark, Scale, Legend).
+  const serverRender = !hasDocument();
 
   // The pointer selection store, created here rather than in <PointerRoot>
   // because two of the three things it needs are only available at this level.
@@ -254,6 +309,9 @@ export function Replot({
   // survivable because marks and scales re-register from their own effects,
   // instead of depending on a changed context re-rendering them into doing it.
   const [ctx] = useState<PlotContextValue>(() => ({
+    // Fixed for the life of this plot, like the rest of the value: the
+    // environment a render happens in does not change under a mounted plot.
+    serverRender,
     registerMark: (id, stamp, factory, handlers) => {
       recordOrder(pendingMarkOrderRef, id);
       const prev = marksRef.current.get(id);
@@ -375,38 +433,16 @@ export function Replot({
     adoptOrder(pendingScaleOrderRef, scalesRef);
   });
 
-  const lastInputsRef = useRef<string | null>(null);
-  const onValueRef = useRef(onValue);
-  onValueRef.current = onValue;
-  const figureRef = useRef<HTMLElement | null>(null);
-  const svgElementRef = useRef<SVGSVGElement | null>(null);
-
-  useLayoutEffect(() => {
-    computedRef.current = true;
-    // Recompute directly when the effective inputs changed, rather than bumping
-    // a version and waiting for the next commit's effect to notice: the
-    // registrations this pass must see were taken by children in THIS commit,
-    // and a registration change wakes <Plot> with a version bump of its own, so
-    // there is nothing left for a dirty flag to add.
-    //
-    // Registration ids change when children remount without any real change —
-    // e.g. when the tree gains a <figure> once auto-legends resolve — waking
-    // <Plot> while every stamp stays the same. Recomputing then would be wasted
-    // work and would re-emit computePlot warnings, so skip when the effective
-    // inputs are unchanged; that guard is also what stops a commit that only
-    // setMode or setResolved caused from computing again. (onValue is excluded
-    // entirely, like functions in mark stamps: the pointer store reads it
-    // through a ref at dispatch time, so neither its identity nor its presence
-    // changes anything computePlot produces.)
-    const inputsKey = [
-      ...[...marksRef.current.values()].map((r) => r.stamp),
-      ...[...scalesRef.current.values()].map((r) => r.stamp),
-      stableKey(options),
-      String(classNameProp),
-      stableKey({style})
-    ].join("\u0000");
-    if (inputsKey === lastInputsRef.current) return;
-    lastInputsRef.current = inputsKey;
+  // ONE COMPUTE PASS, in a function rather than in the effect below, because
+  // two renders need one and only one of them commits. The effect runs it for
+  // a browser commit, after this commit's children have registered; <ServerPlot>
+  // runs it during a server render, after the registration subtree has rendered
+  // — the only moment a server render has every registration, since there they
+  // arrive while the marks render (see useMark). It reads the registries as
+  // they stand when it is called and publishes nothing: the caller decides
+  // where the result goes, which is what keeps the state writes on the effect
+  // side, where a server render cannot reach them.
+  const runComputePass = (): ComputePass => {
     const flat: any[] = [];
     // Maps each built mark instance to its registration so <MarkSlot> can read
     // the registration's CURRENT handlers at render and event time (handler
@@ -439,7 +475,6 @@ export function Replot({
         if (one != null) markKeys.set(one, `m${id}#${k}`);
       });
     }
-    registrationByMarkRef.current = registrationByMark;
     // Merge scale-component registrations (<ScaleY>, <ScaleColor>, …) into
     // the plot-level options. Multiple components for the same scale merge in
     // registration order (later wins per key). Precedence on conflict: an
@@ -459,61 +494,42 @@ export function Replot({
           explicit === undefined ? config : isPlainOptionsObject(explicit) ? {...config, ...explicit} : explicit;
       }
     }
-    let computed: any;
-    try {
-      // Always run computePlot, even with zero marks: declared position scales
-      // (e.g. x={{type: "log", …}}) infer implicit axis marks, so a markless
-      // <Plot> can still render axes — matching the imperative plot().
-      computed = computePlot({...effectiveOptions, marks: flat, style});
-    } catch (e) {
-      // The failure is kept and rethrown from the render below, so an enclosing
-      // error boundary sees it. It is NOT downgraded to a console message and
-      // an empty plot-host: upstream's imperative plot() throws these straight
-      // out of plot() (src/plot.js:143 → src/scales.js:379, "unknown scale type:
-      // nope"), and nothing in upstream's src/ catches an error at all. Storing
-      // it rather than throwing here is what keeps the throw in the render
-      // phase, where an error boundary can catch it. The warning counter is
-      // deliberately left undrained, exactly as upstream leaves it when plot()
-      // throws partway through.
-      setError(e);
-      return;
-    }
-
-    // Nothing to render (no marks and no inferred axes); keep the empty host.
-    if (!computed.marks.length) {
-      setMode((prev) => (prev.kind === "empty" ? prev : {kind: "empty"}));
-      return;
-    }
-
+    // Always run computePlot, even with zero marks: declared position scales
+    // (e.g. x={{type: "log", …}}) infer implicit axis marks, so a markless
+    // <Plot> can still render axes — matching the imperative plot().
+    const computed = computePlot({...effectiveOptions, marks: flat, style});
     // Slot keys are React fiber identity, and a pointer slot's fiber carries the
     // registration record holding its selection. Keying by position in
     // computed.marks would hand that record to whatever pointer consumer
     // shifted into the slot whenever a mark was added or removed anywhere in
     // the plot, so the key names the registration the mark came from instead —
     // and the mark object cannot supply it, because useMark rebuilds its
-    // instances on every stamp change. This narrows the problem; it does not
-    // close it (see the useId note above), which is why the store re-resolves
-    // every record at the pointer once a commit has settled.
+    // instances on every stamp change. markKeysOf completes the map with the
+    // marks computePlot creates for itself (the tip a tip-requesting mark
+    // produces). This narrows the problem; it does not close it (see the useId
+    // note above), which is why the store re-resolves every record at the
+    // pointer once a commit has settled.
     computed.markKeys = markKeysOf(computed.marks, markKeys);
+    return {computed, registrationByMark, effectiveOptions};
+  };
 
-    // Published to the stable context value's accessors and, for the parts
-    // <Plot> itself renders from, to state. Both are written together, so they
-    // always name the same pass.
-    const nextResolved = {
+  // A pass in the form the render needs it: the mode naming the subtree to
+  // draw, and the resolved values the context accessors hand back to
+  // descendants. Both are per-pass objects — computePlot builds a fresh context
+  // every time — and both callers publish them the same way: each writes them
+  // into the ref the accessors read, and the browser caller also into the state
+  // its render reads (a server render has no state to carry them in, which is
+  // why it renders from this call's return value instead).
+  const resolveComputePass = (pass: ComputePass): {mode: Mode; resolved: ResolvedScales} => {
+    const {computed, effectiveOptions} = pass;
+    // What the context accessors answer from, and what <Plot> itself renders
+    // the figure and legends from. The two are always the same object, so a
+    // descendant and the plot that owns it can never name different passes.
+    const resolved: ResolvedScales = {
       scaleDescriptors: computed.scaleDescriptors,
       context: computed.context,
       plotOptions: effectiveOptions
     };
-    resolvedRef.current = nextResolved;
-    setResolved(nextResolved);
-
-    // NOTE the warning counter is deliberately NOT drained here. computePlot is
-    // only the first of the two phases that can warn: its marks warn while they
-    // RENDER, which has not happened yet at this point in the effect. Draining
-    // here would count the compute-phase warnings and leave the rest in the
-    // counter for the next plot to claim. <WarningIndicator> drains instead,
-    // after the whole render phase.
-    //
     // The exposed scales are built here, once per computed plot, and carried on
     // the mode: the root element GETS them through a ref callback, which React
     // calls on every commit (the callback is a fresh closure each render), so
@@ -527,6 +543,106 @@ export function Replot({
       // on an unknown name, exactly as the imperative plot()'s root does.
       (svg as any).scale = scale;
     };
+    const pointerEnabled = computed.marks.some(isPointerConsumer);
+    return {mode: {kind: "jsx", computed, onSvgRef, pointerEnabled}, resolved};
+  };
+
+  // The plot elements for a server render: one pass, computed and rendered
+  // inside <ServerPlot>'s render rather than after a commit. Called from there,
+  // which is what makes the registries complete by the time it runs (see
+  // ServerPlot), and called at most once per render.
+  const serverPlotElement = (): ReactNode => {
+    // A failure is thrown, not stored: the client stores it so the throw happens
+    // in a render an error boundary can catch, and there is no state here to
+    // survive in nor a boundary to reach — renderToString reports it to its
+    // caller, exactly as upstream's plot() throws these at its caller.
+    const pass = runComputePass();
+    // Before the tree renders, not after: the context accessors and the mark
+    // handler lookup read these refs, and on a server render this is the only
+    // moment they can be written — no effect follows to write them. It is safe
+    // because the refs belong to this render alone: a server render has no
+    // commits, no suspension point inside this call, and no second render that
+    // could read a value from a pass other than its own.
+    registrationByMarkRef.current = pass.registrationByMark;
+    // Nothing to render (no marks and no inferred axes): the same empty host the
+    // client keeps. It matches what the browser path produces for the same
+    // input, which is what the two paths must agree on.
+    if (!pass.computed.marks.length) return renderPlotTree({kind: "empty"}, plotExtras(null));
+    const {mode: nextMode, resolved: nextResolved} = resolveComputePass(pass);
+    resolvedRef.current = nextResolved;
+    return renderPlotTree(nextMode, plotExtras(nextResolved));
+  };
+
+  const lastInputsRef = useRef<string | null>(null);
+  const onValueRef = useRef(onValue);
+  onValueRef.current = onValue;
+  const figureRef = useRef<HTMLElement | null>(null);
+  const svgElementRef = useRef<SVGSVGElement | null>(null);
+
+  useLayoutEffect(() => {
+    computedRef.current = true;
+    // Recompute directly when the effective inputs changed, rather than bumping
+    // a version and waiting for the next commit's effect to notice: the
+    // registrations this pass must see were taken by children in THIS commit,
+    // and a registration change wakes <Plot> with a version bump of its own, so
+    // there is nothing left for a dirty flag to add.
+    //
+    // Registration ids change when children remount without any real change —
+    // e.g. when the tree gains a <figure> once auto-legends resolve — waking
+    // <Plot> while every stamp stays the same. Recomputing then would be wasted
+    // work and would re-emit computePlot warnings, so skip when the effective
+    // inputs are unchanged; that guard is also what stops a commit that only
+    // setMode or setResolved caused from computing again. (onValue is excluded
+    // entirely, like functions in mark stamps: the pointer store reads it
+    // through a ref at dispatch time, so neither its identity nor its presence
+    // changes anything computePlot produces.)
+    const inputsKey = [
+      ...[...marksRef.current.values()].map((r) => r.stamp),
+      ...[...scalesRef.current.values()].map((r) => r.stamp),
+      stableKey(options),
+      String(classNameProp),
+      stableKey({style})
+    ].join("\u0000");
+    if (inputsKey === lastInputsRef.current) return;
+    lastInputsRef.current = inputsKey;
+    let pass: ComputePass;
+    try {
+      pass = runComputePass();
+    } catch (e) {
+      // The failure is kept and rethrown from the render below, so an enclosing
+      // error boundary sees it. It is NOT downgraded to a console message and
+      // an empty plot-host: upstream's imperative plot() throws these straight
+      // out of plot() (src/plot.js:143 → src/scales.js:379, "unknown scale type:
+      // nope"), and nothing in upstream's src/ catches an error at all. Storing
+      // it rather than throwing here is what keeps the throw in the render
+      // phase, where an error boundary can catch it. The warning counter is
+      // deliberately left undrained, exactly as upstream leaves it when plot()
+      // throws partway through.
+      setError(e);
+      return;
+    }
+    const {computed, registrationByMark} = pass;
+    registrationByMarkRef.current = registrationByMark;
+
+    // Nothing to render (no marks and no inferred axes); keep the empty host.
+    if (!computed.marks.length) {
+      setMode((prev) => (prev.kind === "empty" ? prev : {kind: "empty"}));
+      return;
+    }
+
+    // Published to the stable context value's accessors and, for the parts
+    // <Plot> itself renders from, to state. Both are written together, so they
+    // always name the same pass.
+    const {mode: nextMode, resolved: nextResolved} = resolveComputePass(pass);
+    resolvedRef.current = nextResolved;
+    setResolved(nextResolved);
+
+    // NOTE the warning counter is deliberately NOT drained here. computePlot is
+    // only the first of the two phases that can warn: its marks warn while they
+    // RENDER, which has not happened yet at this point in the effect. Draining
+    // here would count the compute-phase warnings and leave the rest in the
+    // counter for the next plot to claim. <WarningIndicator> drains instead,
+    // after the whole render phase.
 
     // Carry the plot's root element onto the NEW context's figureHolder here,
     // rather than leaving it to the holder effect below. computePlot builds a
@@ -542,44 +658,111 @@ export function Replot({
       computed.context.figureHolder.current = figureRef.current ?? svgElementRef.current;
     }
 
-    const pointerEnabled = computed.marks.some(isPointerConsumer);
-    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled});
+    setMode(nextMode);
     // No dependency array: the inputs key above is the guard, and it is taken
     // over the registries as the reconciliation above just ordered them.
   });
 
-  // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
-  // through the compute effect's own ref callback (which exposes the scales on
-  // it), so this wrapper records it on the way past.
-  const setSvgElement = (svg: SVGSVGElement | null) => {
-    svgElementRef.current = svg;
-    if (mode.kind === "jsx") mode.onSvgRef(svg);
+  // THE PLOT AS ELEMENTS, built from a pass rather than from this component's
+  // state. A browser commit renders it from the state the compute effect has
+  // just written; a server render serializes it from the pass <ServerPlot>
+  // computed during that render (nothing there commits, so no state can carry
+  // it). One builder for both is what keeps the two paths from drifting: the
+  // tree a browser draws and the tree a server serializes are the same
+  // expression of the same values.
+  const renderPlotTree = (mode: Mode, extras: PlotExtras): ReactNode => {
+    const {autoLegends, explicitLegends, wantsFigure} = extras;
+    // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
+    // through this ref callback (which exposes the scales on it), so this
+    // wrapper records it on the way past.
+    const setSvgElement = (svg: SVGSVGElement | null) => {
+      svgElementRef.current = svg;
+      if (mode.kind === "jsx") mode.onSvgRef(svg);
+    };
+
+    // The plot-level style option, as a prop on the <svg>. React needs an object,
+    // so a string — upstream sets the whole style attribute from one,
+    // applyInlineStyles in style.js — is parsed into one. A prop, rather than a
+    // merge onto the node from a ref callback, is what lets React clear a key
+    // that a later render drops from the option.
+    const svgStyle = typeof style === "string" ? parseStyleString(style) : style;
+
+    // In figure mode, wrap the plot in a div.plot-host inside the figure to
+    // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
+    // > figcaption). In non-figure mode, return the SVG directly (matching the
+    // existing .svg-snapshot test expectations) or the imperatively-mounted
+    // host div.
+    const plotElement =
+      mode.kind === "jsx" ? (
+        <PlotSvg
+          computed={mode.computed}
+          svgRef={setSvgElement}
+          className={classNameProp}
+          style={svgStyle}
+          pointerEnabled={mode.pointerEnabled}
+          pointerStore={pointerStore}
+          onValueRef={onValueRef}
+          getHandlers={getMarkHandlers}
+          serverRender={serverRender}
+        />
+      ) : (
+        <div className="plot-host" />
+      );
+
+    return wantsFigure ? (
+      <FigureLayout
+        title={title}
+        subtitle={subtitle}
+        caption={caption}
+        autoLegends={autoLegends}
+        explicitLegends={explicitLegends}
+        plotElement={plotElement}
+        isJsx={mode.kind === "jsx"}
+        figureRef={figureRef}
+      />
+    ) : (
+      <>
+        {explicitLegends}
+        {plotElement}
+      </>
+    );
   };
 
-  // Auto-legends (color/opacity/symbol scales with legend requested) render
-  // via the React legend components and force figure mode, matching the
-  // imperative plot()'s createLegends behavior.
-  const autoLegends = resolved?.scaleDescriptors
-    ? buildAutoLegends(resolved.scaleDescriptors, resolved.context, resolved.plotOptions ?? options)
-    : [];
+  // The legends a pass shows and the figure decision around them. Both entries
+  // build these the same way — the client from its resolved state, the server
+  // from the pass it just computed — and the figure flag is also what the
+  // root-element effect below depends on, so it is read here rather than buried
+  // in renderPlotTree.
+  const plotExtras = (resolved: ResolvedScales | null): PlotExtras => {
+    // Auto-legends (color/opacity/symbol scales with legend requested) render
+    // via the React legend components and force figure mode, matching the
+    // imperative plot()'s createLegends behavior.
+    const autoLegends = resolved?.scaleDescriptors
+      ? buildAutoLegends(resolved.scaleDescriptors, resolved.context, resolved.plotOptions ?? options)
+      : [];
 
-  // Explicit <Legend> descendants register via PlotContext (like marks via
-  // useMark) and render visibly here as <LegendDisplay>, matching the
-  // imperative plot()'s createLegends/exposeLegends placement above the
-  // <svg>. The <Legend> instances themselves render null inside the hidden
-  // children div, so any composition (memo, wrapper components, fragments)
-  // still surfaces the legend. Any registered legend forces figure mode.
-  // Registry order tracks the children's render order via the layout-effect
-  // reconciliation above, so keyed reorders update the visible order.
-  const explicitLegends: ReactElement[] = [...legendsRef.current.entries()].map(([id, r]) => (
-    <LegendDisplay key={id} {...r.props} />
-  ));
+    // Explicit <Legend> descendants register via PlotContext (like marks via
+    // useMark) and render visibly here as <LegendDisplay>, matching the
+    // imperative plot()'s createLegends/exposeLegends placement above the
+    // <svg>. The <Legend> instances themselves render null inside the hidden
+    // children div, so any composition (memo, wrapper components, fragments)
+    // still surfaces the legend. Any registered legend forces figure mode.
+    // Registry order tracks the children's render order via the layout-effect
+    // reconciliation above, so keyed reorders update the visible order.
+    const explicitLegends: ReactElement[] = [...legendsRef.current.entries()].map(([id, r]) => (
+      <LegendDisplay key={id} {...r.props} />
+    ));
 
-  // "always"/true forces a figure; "never"/false suppresses it; "auto" (or
-  // undefined) infers it from whether there's anything to wrap.
-  const autoFigure = Boolean(title || subtitle || caption || autoLegends.length > 0 || explicitLegends.length > 0);
-  const wantsFigure =
-    figure === "always" || figure === true ? true : figure === "never" || figure === false ? false : autoFigure;
+    // "always"/true forces a figure; "never"/false suppresses it; "auto" (or
+    // undefined) infers it from whether there's anything to wrap.
+    const autoFigure = Boolean(title || subtitle || caption || autoLegends.length > 0 || explicitLegends.length > 0);
+    const wantsFigure =
+      figure === "always" || figure === true ? true : figure === "never" || figure === false ? false : autoFigure;
+    return {autoLegends, explicitLegends, wantsFigure};
+  };
+
+  // For a browser render, from the state the compute effect has written.
+  const extras = plotExtras(resolved);
 
   // Upstream reports the pointer selection through context.dispatchValue
   // (src/plot.ts:189-194, verbatim from plot.js): it assigns `.value` on the
@@ -596,7 +779,7 @@ export function Replot({
     const holder = mode.kind === "jsx" ? mode.computed.context?.figureHolder : null;
     if (holder == null) return;
     holder.current = figureRef.current ?? svgElementRef.current;
-  }, [mode, wantsFigure]);
+  }, [mode, extras.wantsFigure]);
 
   // THE POINTER'S SETTLING POINT, and the last thing to run in any commit of
   // this plot: React runs layout effects child first, so every pointer slot has
@@ -626,61 +809,40 @@ export function Replot({
   // throw survives the commit boundary and is repeated on any later render of
   // the same broken inputs; a boundary that resets remounts this component
   // with fresh state, which is how a plot recovers from a fixed prop.
+  // A server render has no state to store one in and no boundary to hand it to;
+  // its failure is thrown straight out of the compute below.
   if (error !== null) throw error;
-
-  // The plot-level style option, as a prop on the <svg>. React needs an object,
-  // so a string — upstream sets the whole style attribute from one,
-  // applyInlineStyles in style.js — is parsed into one. A prop, rather than a
-  // merge onto the node from a ref callback, is what lets React clear a key
-  // that a later render drops from the option.
-  const svgStyle = typeof style === "string" ? parseStyleString(style) : style;
-
-  // In figure mode, wrap the plot in a div.plot-host inside the figure to
-  // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
-  // > figcaption). In non-figure mode, return the SVG directly (matching the
-  // existing .svg-snapshot test expectations) or the imperatively-mounted
-  // host div.
-  const plotElement =
-    mode.kind === "jsx" ? (
-      <PlotSvg
-        computed={mode.computed}
-        svgRef={setSvgElement}
-        className={classNameProp}
-        style={svgStyle}
-        pointerEnabled={mode.pointerEnabled}
-        pointerStore={pointerStore}
-        onValueRef={onValueRef}
-        getHandlers={getMarkHandlers}
-      />
-    ) : (
-      <div className="plot-host" />
-    );
 
   // The hidden registration div keeps a stable position in the tree across
   // figure-mode changes: if it moved inside <FigureLayout> when a figure
   // appears, React would remount the children subtree, wiping descendant
   // state — a legend mounted by a stateful wrapper would flip figure mode,
   // remount (and so reset) that wrapper, and immediately unregister itself.
+  const registrations = <div style={{display: "none"}}>{wrapFunctionChildren(children)}</div>;
+
+  // A SERVER RENDER HAS TO RENDER THE REGISTRATIONS FIRST, and it is the one
+  // place the two entries' trees differ in order. A parent's render body runs
+  // before its children's, so this component cannot compute the plot in its own
+  // render — the marks it would compute from have not registered yet — and
+  // therefore cannot render the plot before the subtree that registers them.
+  // The plot is computed and rendered by <ServerPlot>, which sits after that
+  // subtree and computes during its own render, when the registry is complete
+  // (see its comment for why that ordering is sound rather than lucky). The
+  // serialized markup is consequently hidden-div-first, which is invisible
+  // (display: none) and is the only order that can produce a plot at all.
+  if (serverRender) {
+    return (
+      <PlotContext.Provider value={ctx}>
+        {registrations}
+        <ServerPlot render={serverPlotElement} />
+      </PlotContext.Provider>
+    );
+  }
+
   return (
     <PlotContext.Provider value={ctx}>
-      {wantsFigure ? (
-        <FigureLayout
-          title={title}
-          subtitle={subtitle}
-          caption={caption}
-          autoLegends={autoLegends}
-          explicitLegends={explicitLegends}
-          plotElement={plotElement}
-          isJsx={mode.kind === "jsx"}
-          figureRef={figureRef}
-        />
-      ) : (
-        <>
-          {explicitLegends}
-          {plotElement}
-        </>
-      )}
-      <div style={{display: "none"}}>{wrapFunctionChildren(children)}</div>
+      {renderPlotTree(mode, extras)}
+      {registrations}
     </PlotContext.Provider>
   );
 }
@@ -737,15 +899,27 @@ function containsFunctionChild(node: unknown): boolean {
 // list, is what makes the redundant passes (this component's own re-render, and
 // StrictMode's simulated remount, which re-runs every effect it created) cheap
 // no-ops; a deps list would only add a way to get this wrong.
-function WarningIndicator({computed}: {computed: any}) {
+//
+// A SERVER RENDER DRAINS HERE, IN THE RENDER, for the reason above read
+// backwards: there is no effect and no second pass there, so the drain has to
+// happen while rendering or not at all — and not at all would leave the
+// counter, which is module-global and shared with every plot this process
+// renders, holding this plot's warnings for the next plot to claim, reporting
+// warnings that plot never raised. It cannot drain too early: this component
+// renders last inside the <svg>, after every mark has rendered and warned, and
+// a server pass renders nothing twice.
+function WarningIndicator({computed, serverRender}: {computed: any; serverRender?: boolean}) {
   const [warnings, setWarnings] = useState(0);
   const drainedRef = useRef<any>(null);
   useLayoutEffect(() => {
+    // Never runs on a server render, where the drain above has already
+    // happened; see this component's comment.
+    if (serverRender) return;
     if (drainedRef.current === computed) return;
     drainedRef.current = computed;
     setWarnings(consumeWarnings());
   });
-  return warningIndicatorElement(computed, warnings);
+  return warningIndicatorElement(computed, serverRender ? consumeWarnings() : warnings);
 }
 
 // THE PLOT'S <svg> SHELL, DEFINED ONCE. Both entry points build an <svg>
@@ -818,7 +992,8 @@ function PlotSvg({
   pointerEnabled,
   pointerStore,
   onValueRef,
-  getHandlers
+  getHandlers,
+  serverRender
 }: any) {
   const internalSvgRef = useRef<SVGSVGElement | null>(null);
   const setSvgRef = (el: SVGSVGElement | null) => {
@@ -837,7 +1012,7 @@ function PlotSvg({
       <style>{plotStyleSheet(computed.className)}</style>
       {clipReg.defs}
       {renderMarks(computed, clipReg, getHandlers)}
-      <WarningIndicator computed={computed} />
+      <WarningIndicator computed={computed} serverRender={serverRender} />
     </>
   );
   return (
