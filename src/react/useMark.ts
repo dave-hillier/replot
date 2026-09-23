@@ -53,7 +53,7 @@ export interface UseMarkOptions {
 // transforms allocate lazy column() cells that computePlot fills per run.
 export function useMark({name, data, options, create}: UseMarkOptions): void {
   const id = useId();
-  const {registerMark, unregisterMark} = usePlotContext();
+  const {registerMark, unregisterMark, serverRender} = usePlotContext();
   const transform = useTransformContext();
   // The stamp can't cheaply hash array/object data contents, so track data
   // identity with a sequence number: any new reference bumps the stamp. The
@@ -79,6 +79,28 @@ export function useMark({name, data, options, create}: UseMarkOptions): void {
     (handlers as Record<string, unknown>)[key] = options[key];
     delete markOptions[key];
   }
+  // The registration this commit (or this render, on a server) makes. The
+  // stamp is the same either way, data-sequence bump included, so the two
+  // paths cannot describe the same mark differently.
+  const registration = () => {
+    if (dataRef.current.data !== data) dataRef.current = {data, seq: dataRef.current.seq + 1};
+    return `${transform.stamp}${stampOptions(name, data, options)}|d${dataRef.current.seq}`;
+  };
+  // THE EXCEPTION TO THE RULE BELOW, and it is a narrow one: a server render
+  // (renderToString) runs no effects at all, so a registration taken in this
+  // component's layout effect is never taken, and a plot that would have drawn
+  // this mark draws an empty host instead (#147). There is no commit to be
+  // discarded and no simulated unmount to survive there, so the reasons the
+  // effect path exists do not apply: the registration is taken while this
+  // component renders. The ordering contract is the one renderMarksWith
+  // relies on — tree order — and it holds for a different reason than it does
+  // in the browser: a first server pass renders each component exactly once,
+  // in depth-first order, so the registrations arrive in the order the marks
+  // are written (see ServerPlot, which is where the plot is computed from
+  // them, and only after this render has finished).
+  if (serverRender) {
+    registerMark(id, registration(), () => create(data, transform.wrap(markOptions)), handlers);
+  }
   // Registration is effect-based, NOT render-phase: StrictMode's simulated
   // unmount runs the cleanup below with no re-render to follow it, so a
   // render-phase registration is simply lost, and re-registering anyway would
@@ -89,9 +111,12 @@ export function useMark({name, data, options, create}: UseMarkOptions): void {
   // The effect runs before <Plot>'s own layout effects — children first — so a
   // plot always computes against the registrations of the commit it is in.
   useLayoutEffect(() => {
-    if (dataRef.current.data !== data) dataRef.current = {data, seq: dataRef.current.seq + 1};
-    const stamp = `${transform.stamp}${stampOptions(name, data, options)}|d${dataRef.current.seq}`;
-    registerMark(id, stamp, () => create(data, transform.wrap(markOptions)), handlers);
+    // Called unconditionally, because hooks are; a server render never runs
+    // it. Which path a render takes is decided per render, from the
+    // environment: a client render of a tree that was server-rendered
+    // registers here, in the effect, like any other client render.
+    if (serverRender) return;
+    registerMark(id, registration(), () => create(data, transform.wrap(markOptions)), handlers);
   });
   // Removal is unmount-driven — <Plot> can't infer it, because bailed-out
   // children don't re-register.

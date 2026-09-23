@@ -181,6 +181,55 @@ type Mode =
       pointerEnabled: boolean;
     };
 
+// One computePlot pass: the plot it produced, the map from that plot's mark
+// instances back to the registrations they came from, and the options it
+// actually received. Kept together because the three are produced together, by
+// runComputePass below, and are consumed together by its two callers — the
+// compute effect, for a browser commit, and the server render of a plot.
+interface ComputePass {
+  computed: any;
+  registrationByMark: Map<any, Registration>;
+  effectiveOptions: Record<string, any>;
+}
+
+// The legends a pass shows, and whether a <figure> wraps it — everything the
+// plot's element tree needs beyond the pass itself. Built once per pass by
+// plotExtras, and read by both entries: the browser render, which also depends
+// on the figure flag, and the server render.
+interface PlotExtras {
+  autoLegends: ReactElement[];
+  explicitLegends: ReactElement[];
+  wantsFigure: boolean;
+}
+
+// Whether a DOM exists in this process at all. Asked PER RENDER, never once at
+// module scope: the test suite installs a jsdom document per test, after every
+// module is already loaded, so a flag captured at import time would tell a
+// jsdom test it is on a server (and tell a real server it has a document).
+function hasDocument(): boolean {
+  return typeof document !== "undefined";
+}
+
+// The compute half of a server render. A parent's render body runs before its
+// children's, so <Replot> cannot compute a server-rendered plot in its own
+// render: the registrations it computes from are taken by descendants that have
+// not rendered yet (useMark registers while rendering there). This component is
+// rendered after those descendants, so by the time its body runs every mark,
+// scale and legend this render declares has registered, and it calls back into
+// <Replot> to compute the pass and build the plot elements from it.
+//
+// That ordering is sound for a reason of its own rather than inherited from the
+// client path: a server pass renders each component exactly once,
+// depth-first, in the order the tree declares them — there is no bailout that
+// could skip a descendant, no second render that could deliver a registration
+// late, and none of StrictMode's double rendering (that is a client-side,
+// commit-phase behaviour) — so the registry holds exactly the components this
+// tree declared, in the order tree order puts them, which is the contract
+// renderMarksWith relies on.
+function ServerPlot({render}: {render: () => ReactNode}) {
+  return <>{render()}</>;
+}
+
 export function Replot({
   children,
   title,
@@ -228,6 +277,12 @@ export function Replot({
   // computePlot's last failure. Setting it re-renders, and the render throws;
   // see the throw below.
   const [error, setError] = useState<unknown>(null);
+  // A render with no DOM behind it: no effect will run, no ref will be called,
+  // and no state will ever be readable. It is asked per render (see
+  // hasDocument) and published on the context, where the components that
+  // register read it and hand their registrations over during the render
+  // instead of from a layout effect (useMark, Scale, Legend).
+  const serverRender = !hasDocument();
 
   // The pointer selection store, created here rather than in <PointerRoot>
   // because two of the three things it needs are only available at this level.
@@ -254,6 +309,9 @@ export function Replot({
   // survivable because marks and scales re-register from their own effects,
   // instead of depending on a changed context re-rendering them into doing it.
   const [ctx] = useState<PlotContextValue>(() => ({
+    // Fixed for the life of this plot, like the rest of the value: the
+    // environment a render happens in does not change under a mounted plot.
+    serverRender,
     registerMark: (id, stamp, factory, handlers) => {
       recordOrder(pendingMarkOrderRef, id);
       const prev = marksRef.current.get(id);
@@ -375,38 +433,16 @@ export function Replot({
     adoptOrder(pendingScaleOrderRef, scalesRef);
   });
 
-  const lastInputsRef = useRef<string | null>(null);
-  const onValueRef = useRef(onValue);
-  onValueRef.current = onValue;
-  const figureRef = useRef<HTMLElement | null>(null);
-  const svgElementRef = useRef<SVGSVGElement | null>(null);
-
-  useLayoutEffect(() => {
-    computedRef.current = true;
-    // Recompute directly when the effective inputs changed, rather than bumping
-    // a version and waiting for the next commit's effect to notice: the
-    // registrations this pass must see were taken by children in THIS commit,
-    // and a registration change wakes <Plot> with a version bump of its own, so
-    // there is nothing left for a dirty flag to add.
-    //
-    // Registration ids change when children remount without any real change —
-    // e.g. when the tree gains a <figure> once auto-legends resolve — waking
-    // <Plot> while every stamp stays the same. Recomputing then would be wasted
-    // work and would re-emit computePlot warnings, so skip when the effective
-    // inputs are unchanged; that guard is also what stops a commit that only
-    // setMode or setResolved caused from computing again. (onValue is excluded
-    // entirely, like functions in mark stamps: the pointer store reads it
-    // through a ref at dispatch time, so neither its identity nor its presence
-    // changes anything computePlot produces.)
-    const inputsKey = [
-      ...[...marksRef.current.values()].map((r) => r.stamp),
-      ...[...scalesRef.current.values()].map((r) => r.stamp),
-      stableKey(options),
-      String(classNameProp),
-      stableKey({style})
-    ].join("\u0000");
-    if (inputsKey === lastInputsRef.current) return;
-    lastInputsRef.current = inputsKey;
+  // ONE COMPUTE PASS, in a function rather than in the effect below, because
+  // two renders need one and only one of them commits. The effect runs it for
+  // a browser commit, after this commit's children have registered; <ServerPlot>
+  // runs it during a server render, after the registration subtree has rendered
+  // — the only moment a server render has every registration, since there they
+  // arrive while the marks render (see useMark). It reads the registries as
+  // they stand when it is called and publishes nothing: the caller decides
+  // where the result goes, which is what keeps the state writes on the effect
+  // side, where a server render cannot reach them.
+  const runComputePass = (): ComputePass => {
     const flat: any[] = [];
     // Maps each built mark instance to its registration so <MarkSlot> can read
     // the registration's CURRENT handlers at render and event time (handler
@@ -439,7 +475,6 @@ export function Replot({
         if (one != null) markKeys.set(one, `m${id}#${k}`);
       });
     }
-    registrationByMarkRef.current = registrationByMark;
     // Merge scale-component registrations (<ScaleY>, <ScaleColor>, …) into
     // the plot-level options. Multiple components for the same scale merge in
     // registration order (later wins per key). Precedence on conflict: an
@@ -459,61 +494,42 @@ export function Replot({
           explicit === undefined ? config : isPlainOptionsObject(explicit) ? {...config, ...explicit} : explicit;
       }
     }
-    let computed: any;
-    try {
-      // Always run computePlot, even with zero marks: declared position scales
-      // (e.g. x={{type: "log", …}}) infer implicit axis marks, so a markless
-      // <Plot> can still render axes — matching the imperative plot().
-      computed = computePlot({...effectiveOptions, marks: flat, style});
-    } catch (e) {
-      // The failure is kept and rethrown from the render below, so an enclosing
-      // error boundary sees it. It is NOT downgraded to a console message and
-      // an empty plot-host: upstream's imperative plot() throws these straight
-      // out of plot() (src/plot.js:143 → src/scales.js:379, "unknown scale type:
-      // nope"), and nothing in upstream's src/ catches an error at all. Storing
-      // it rather than throwing here is what keeps the throw in the render
-      // phase, where an error boundary can catch it. The warning counter is
-      // deliberately left undrained, exactly as upstream leaves it when plot()
-      // throws partway through.
-      setError(e);
-      return;
-    }
-
-    // Nothing to render (no marks and no inferred axes); keep the empty host.
-    if (!computed.marks.length) {
-      setMode((prev) => (prev.kind === "empty" ? prev : {kind: "empty"}));
-      return;
-    }
-
+    // Always run computePlot, even with zero marks: declared position scales
+    // (e.g. x={{type: "log", …}}) infer implicit axis marks, so a markless
+    // <Plot> can still render axes — matching the imperative plot().
+    const computed = computePlot({...effectiveOptions, marks: flat, style});
     // Slot keys are React fiber identity, and a pointer slot's fiber carries the
     // registration record holding its selection. Keying by position in
     // computed.marks would hand that record to whatever pointer consumer
     // shifted into the slot whenever a mark was added or removed anywhere in
     // the plot, so the key names the registration the mark came from instead —
     // and the mark object cannot supply it, because useMark rebuilds its
-    // instances on every stamp change. This narrows the problem; it does not
-    // close it (see the useId note above), which is why the store re-resolves
-    // every record at the pointer once a commit has settled.
+    // instances on every stamp change. markKeysOf completes the map with the
+    // marks computePlot creates for itself (the tip a tip-requesting mark
+    // produces). This narrows the problem; it does not close it (see the useId
+    // note above), which is why the store re-resolves every record at the
+    // pointer once a commit has settled.
     computed.markKeys = markKeysOf(computed.marks, markKeys);
+    return {computed, registrationByMark, effectiveOptions};
+  };
 
-    // Published to the stable context value's accessors and, for the parts
-    // <Plot> itself renders from, to state. Both are written together, so they
-    // always name the same pass.
-    const nextResolved = {
+  // A pass in the form the render needs it: the mode naming the subtree to
+  // draw, and the resolved values the context accessors hand back to
+  // descendants. Both are per-pass objects — computePlot builds a fresh context
+  // every time — and both callers publish them the same way: each writes them
+  // into the ref the accessors read, and the browser caller also into the state
+  // its render reads (a server render has no state to carry them in, which is
+  // why it renders from this call's return value instead).
+  const resolveComputePass = (pass: ComputePass): {mode: Mode; resolved: ResolvedScales} => {
+    const {computed, effectiveOptions} = pass;
+    // What the context accessors answer from, and what <Plot> itself renders
+    // the figure and legends from. The two are always the same object, so a
+    // descendant and the plot that owns it can never name different passes.
+    const resolved: ResolvedScales = {
       scaleDescriptors: computed.scaleDescriptors,
       context: computed.context,
       plotOptions: effectiveOptions
     };
-    resolvedRef.current = nextResolved;
-    setResolved(nextResolved);
-
-    // NOTE the warning counter is deliberately NOT drained here. computePlot is
-    // only the first of the two phases that can warn: its marks warn while they
-    // RENDER, which has not happened yet at this point in the effect. Draining
-    // here would count the compute-phase warnings and leave the rest in the
-    // counter for the next plot to claim. <WarningIndicator> drains instead,
-    // after the whole render phase.
-    //
     // The exposed scales are built here, once per computed plot, and carried on
     // the mode: the root element GETS them through a ref callback, which React
     // calls on every commit (the callback is a fresh closure each render), so
@@ -527,6 +543,106 @@ export function Replot({
       // on an unknown name, exactly as the imperative plot()'s root does.
       (svg as any).scale = scale;
     };
+    const pointerEnabled = computed.marks.some(isPointerConsumer);
+    return {mode: {kind: "jsx", computed, onSvgRef, pointerEnabled}, resolved};
+  };
+
+  // The plot elements for a server render: one pass, computed and rendered
+  // inside <ServerPlot>'s render rather than after a commit. Called from there,
+  // which is what makes the registries complete by the time it runs (see
+  // ServerPlot), and called at most once per render.
+  const serverPlotElement = (): ReactNode => {
+    // A failure is thrown, not stored: the client stores it so the throw happens
+    // in a render an error boundary can catch, and there is no state here to
+    // survive in nor a boundary to reach — renderToString reports it to its
+    // caller, exactly as upstream's plot() throws these at its caller.
+    const pass = runComputePass();
+    // Before the tree renders, not after: the context accessors and the mark
+    // handler lookup read these refs, and on a server render this is the only
+    // moment they can be written — no effect follows to write them. It is safe
+    // because the refs belong to this render alone: a server render has no
+    // commits, no suspension point inside this call, and no second render that
+    // could read a value from a pass other than its own.
+    registrationByMarkRef.current = pass.registrationByMark;
+    // Nothing to render (no marks and no inferred axes): the same empty host the
+    // client keeps. It matches what the browser path produces for the same
+    // input, which is what the two paths must agree on.
+    if (!pass.computed.marks.length) return renderPlotTree({kind: "empty"}, plotExtras(null));
+    const {mode: nextMode, resolved: nextResolved} = resolveComputePass(pass);
+    resolvedRef.current = nextResolved;
+    return renderPlotTree(nextMode, plotExtras(nextResolved));
+  };
+
+  const lastInputsRef = useRef<string | null>(null);
+  const onValueRef = useRef(onValue);
+  onValueRef.current = onValue;
+  const figureRef = useRef<HTMLElement | null>(null);
+  const svgElementRef = useRef<SVGSVGElement | null>(null);
+
+  useLayoutEffect(() => {
+    computedRef.current = true;
+    // Recompute directly when the effective inputs changed, rather than bumping
+    // a version and waiting for the next commit's effect to notice: the
+    // registrations this pass must see were taken by children in THIS commit,
+    // and a registration change wakes <Plot> with a version bump of its own, so
+    // there is nothing left for a dirty flag to add.
+    //
+    // Registration ids change when children remount without any real change —
+    // e.g. when the tree gains a <figure> once auto-legends resolve — waking
+    // <Plot> while every stamp stays the same. Recomputing then would be wasted
+    // work and would re-emit computePlot warnings, so skip when the effective
+    // inputs are unchanged; that guard is also what stops a commit that only
+    // setMode or setResolved caused from computing again. (onValue is excluded
+    // entirely, like functions in mark stamps: the pointer store reads it
+    // through a ref at dispatch time, so neither its identity nor its presence
+    // changes anything computePlot produces.)
+    const inputsKey = [
+      ...[...marksRef.current.values()].map((r) => r.stamp),
+      ...[...scalesRef.current.values()].map((r) => r.stamp),
+      stableKey(options),
+      String(classNameProp),
+      stableKey({style})
+    ].join("\u0000");
+    if (inputsKey === lastInputsRef.current) return;
+    lastInputsRef.current = inputsKey;
+    let pass: ComputePass;
+    try {
+      pass = runComputePass();
+    } catch (e) {
+      // The failure is kept and rethrown from the render below, so an enclosing
+      // error boundary sees it. It is NOT downgraded to a console message and
+      // an empty plot-host: upstream's imperative plot() throws these straight
+      // out of plot() (src/plot.js:143 → src/scales.js:379, "unknown scale type:
+      // nope"), and nothing in upstream's src/ catches an error at all. Storing
+      // it rather than throwing here is what keeps the throw in the render
+      // phase, where an error boundary can catch it. The warning counter is
+      // deliberately left undrained, exactly as upstream leaves it when plot()
+      // throws partway through.
+      setError(e);
+      return;
+    }
+    const {computed, registrationByMark} = pass;
+    registrationByMarkRef.current = registrationByMark;
+
+    // Nothing to render (no marks and no inferred axes); keep the empty host.
+    if (!computed.marks.length) {
+      setMode((prev) => (prev.kind === "empty" ? prev : {kind: "empty"}));
+      return;
+    }
+
+    // Published to the stable context value's accessors and, for the parts
+    // <Plot> itself renders from, to state. Both are written together, so they
+    // always name the same pass.
+    const {mode: nextMode, resolved: nextResolved} = resolveComputePass(pass);
+    resolvedRef.current = nextResolved;
+    setResolved(nextResolved);
+
+    // NOTE the warning counter is deliberately NOT drained here. computePlot is
+    // only the first of the two phases that can warn: its marks warn while they
+    // RENDER, which has not happened yet at this point in the effect. Draining
+    // here would count the compute-phase warnings and leave the rest in the
+    // counter for the next plot to claim. <WarningIndicator> drains instead,
+    // after the whole render phase.
 
     // Carry the plot's root element onto the NEW context's figureHolder here,
     // rather than leaving it to the holder effect below. computePlot builds a
@@ -542,44 +658,111 @@ export function Replot({
       computed.context.figureHolder.current = figureRef.current ?? svgElementRef.current;
     }
 
-    const pointerEnabled = computed.marks.some(isPointerConsumer);
-    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled});
+    setMode(nextMode);
     // No dependency array: the inputs key above is the guard, and it is taken
     // over the registries as the reconciliation above just ordered them.
   });
 
-  // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
-  // through the compute effect's own ref callback (which exposes the scales on
-  // it), so this wrapper records it on the way past.
-  const setSvgElement = (svg: SVGSVGElement | null) => {
-    svgElementRef.current = svg;
-    if (mode.kind === "jsx") mode.onSvgRef(svg);
+  // THE PLOT AS ELEMENTS, built from a pass rather than from this component's
+  // state. A browser commit renders it from the state the compute effect has
+  // just written; a server render serializes it from the pass <ServerPlot>
+  // computed during that render (nothing there commits, so no state can carry
+  // it). One builder for both is what keeps the two paths from drifting: the
+  // tree a browser draws and the tree a server serializes are the same
+  // expression of the same values.
+  const renderPlotTree = (mode: Mode, extras: PlotExtras): ReactNode => {
+    const {autoLegends, explicitLegends, wantsFigure} = extras;
+    // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
+    // through this ref callback (which exposes the scales on it), so this
+    // wrapper records it on the way past.
+    const setSvgElement = (svg: SVGSVGElement | null) => {
+      svgElementRef.current = svg;
+      if (mode.kind === "jsx") mode.onSvgRef(svg);
+    };
+
+    // The plot-level style option, as a prop on the <svg>. React needs an object,
+    // so a string — upstream sets the whole style attribute from one,
+    // applyInlineStyles in style.js — is parsed into one. A prop, rather than a
+    // merge onto the node from a ref callback, is what lets React clear a key
+    // that a later render drops from the option.
+    const svgStyle = typeof style === "string" ? parseStyleString(style) : style;
+
+    // In figure mode, wrap the plot in a div.plot-host inside the figure to
+    // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
+    // > figcaption). In non-figure mode, return the SVG directly (matching the
+    // existing .svg-snapshot test expectations) or the imperatively-mounted
+    // host div.
+    const plotElement =
+      mode.kind === "jsx" ? (
+        <PlotSvg
+          computed={mode.computed}
+          svgRef={setSvgElement}
+          className={classNameProp}
+          style={svgStyle}
+          pointerEnabled={mode.pointerEnabled}
+          pointerStore={pointerStore}
+          onValueRef={onValueRef}
+          getHandlers={getMarkHandlers}
+          serverRender={serverRender}
+        />
+      ) : (
+        <div className="plot-host" />
+      );
+
+    return wantsFigure ? (
+      <FigureLayout
+        title={title}
+        subtitle={subtitle}
+        caption={caption}
+        autoLegends={autoLegends}
+        explicitLegends={explicitLegends}
+        plotElement={plotElement}
+        isJsx={mode.kind === "jsx"}
+        figureRef={figureRef}
+      />
+    ) : (
+      <>
+        {explicitLegends}
+        {plotElement}
+      </>
+    );
   };
 
-  // Auto-legends (color/opacity/symbol scales with legend requested) render
-  // via the React legend components and force figure mode, matching the
-  // imperative plot()'s createLegends behavior.
-  const autoLegends = resolved?.scaleDescriptors
-    ? buildAutoLegends(resolved.scaleDescriptors, resolved.context, resolved.plotOptions ?? options)
-    : [];
+  // The legends a pass shows and the figure decision around them. Both entries
+  // build these the same way — the client from its resolved state, the server
+  // from the pass it just computed — and the figure flag is also what the
+  // root-element effect below depends on, so it is read here rather than buried
+  // in renderPlotTree.
+  const plotExtras = (resolved: ResolvedScales | null): PlotExtras => {
+    // Auto-legends (color/opacity/symbol scales with legend requested) render
+    // via the React legend components and force figure mode, matching the
+    // imperative plot()'s createLegends behavior.
+    const autoLegends = resolved?.scaleDescriptors
+      ? buildAutoLegends(resolved.scaleDescriptors, resolved.context, resolved.plotOptions ?? options)
+      : [];
 
-  // Explicit <Legend> descendants register via PlotContext (like marks via
-  // useMark) and render visibly here as <LegendDisplay>, matching the
-  // imperative plot()'s createLegends/exposeLegends placement above the
-  // <svg>. The <Legend> instances themselves render null inside the hidden
-  // children div, so any composition (memo, wrapper components, fragments)
-  // still surfaces the legend. Any registered legend forces figure mode.
-  // Registry order tracks the children's render order via the layout-effect
-  // reconciliation above, so keyed reorders update the visible order.
-  const explicitLegends: ReactElement[] = [...legendsRef.current.entries()].map(([id, r]) => (
-    <LegendDisplay key={id} {...r.props} />
-  ));
+    // Explicit <Legend> descendants register via PlotContext (like marks via
+    // useMark) and render visibly here as <LegendDisplay>, matching the
+    // imperative plot()'s createLegends/exposeLegends placement above the
+    // <svg>. The <Legend> instances themselves render null inside the hidden
+    // children div, so any composition (memo, wrapper components, fragments)
+    // still surfaces the legend. Any registered legend forces figure mode.
+    // Registry order tracks the children's render order via the layout-effect
+    // reconciliation above, so keyed reorders update the visible order.
+    const explicitLegends: ReactElement[] = [...legendsRef.current.entries()].map(([id, r]) => (
+      <LegendDisplay key={id} {...r.props} />
+    ));
 
-  // "always"/true forces a figure; "never"/false suppresses it; "auto" (or
-  // undefined) infers it from whether there's anything to wrap.
-  const autoFigure = Boolean(title || subtitle || caption || autoLegends.length > 0 || explicitLegends.length > 0);
-  const wantsFigure =
-    figure === "always" || figure === true ? true : figure === "never" || figure === false ? false : autoFigure;
+    // "always"/true forces a figure; "never"/false suppresses it; "auto" (or
+    // undefined) infers it from whether there's anything to wrap.
+    const autoFigure = Boolean(title || subtitle || caption || autoLegends.length > 0 || explicitLegends.length > 0);
+    const wantsFigure =
+      figure === "always" || figure === true ? true : figure === "never" || figure === false ? false : autoFigure;
+    return {autoLegends, explicitLegends, wantsFigure};
+  };
+
+  // For a browser render, from the state the compute effect has written.
+  const extras = plotExtras(resolved);
 
   // Upstream reports the pointer selection through context.dispatchValue
   // (src/plot.ts:189-194, verbatim from plot.js): it assigns `.value` on the
@@ -596,7 +779,7 @@ export function Replot({
     const holder = mode.kind === "jsx" ? mode.computed.context?.figureHolder : null;
     if (holder == null) return;
     holder.current = figureRef.current ?? svgElementRef.current;
-  }, [mode, wantsFigure]);
+  }, [mode, extras.wantsFigure]);
 
   // THE POINTER'S SETTLING POINT, and the last thing to run in any commit of
   // this plot: React runs layout effects child first, so every pointer slot has
@@ -626,61 +809,40 @@ export function Replot({
   // throw survives the commit boundary and is repeated on any later render of
   // the same broken inputs; a boundary that resets remounts this component
   // with fresh state, which is how a plot recovers from a fixed prop.
+  // A server render has no state to store one in and no boundary to hand it to;
+  // its failure is thrown straight out of the compute below.
   if (error !== null) throw error;
-
-  // The plot-level style option, as a prop on the <svg>. React needs an object,
-  // so a string — upstream sets the whole style attribute from one,
-  // applyInlineStyles in style.js — is parsed into one. A prop, rather than a
-  // merge onto the node from a ref callback, is what lets React clear a key
-  // that a later render drops from the option.
-  const svgStyle = typeof style === "string" ? parseStyleString(style) : style;
-
-  // In figure mode, wrap the plot in a div.plot-host inside the figure to
-  // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
-  // > figcaption). In non-figure mode, return the SVG directly (matching the
-  // existing .svg-snapshot test expectations) or the imperatively-mounted
-  // host div.
-  const plotElement =
-    mode.kind === "jsx" ? (
-      <PlotSvg
-        computed={mode.computed}
-        svgRef={setSvgElement}
-        className={classNameProp}
-        style={svgStyle}
-        pointerEnabled={mode.pointerEnabled}
-        pointerStore={pointerStore}
-        onValueRef={onValueRef}
-        getHandlers={getMarkHandlers}
-      />
-    ) : (
-      <div className="plot-host" />
-    );
 
   // The hidden registration div keeps a stable position in the tree across
   // figure-mode changes: if it moved inside <FigureLayout> when a figure
   // appears, React would remount the children subtree, wiping descendant
   // state — a legend mounted by a stateful wrapper would flip figure mode,
   // remount (and so reset) that wrapper, and immediately unregister itself.
+  const registrations = <div style={{display: "none"}}>{wrapFunctionChildren(children)}</div>;
+
+  // A SERVER RENDER HAS TO RENDER THE REGISTRATIONS FIRST, and it is the one
+  // place the two entries' trees differ in order. A parent's render body runs
+  // before its children's, so this component cannot compute the plot in its own
+  // render — the marks it would compute from have not registered yet — and
+  // therefore cannot render the plot before the subtree that registers them.
+  // The plot is computed and rendered by <ServerPlot>, which sits after that
+  // subtree and computes during its own render, when the registry is complete
+  // (see its comment for why that ordering is sound rather than lucky). The
+  // serialized markup is consequently hidden-div-first, which is invisible
+  // (display: none) and is the only order that can produce a plot at all.
+  if (serverRender) {
+    return (
+      <PlotContext.Provider value={ctx}>
+        {registrations}
+        <ServerPlot render={serverPlotElement} />
+      </PlotContext.Provider>
+    );
+  }
+
   return (
     <PlotContext.Provider value={ctx}>
-      {wantsFigure ? (
-        <FigureLayout
-          title={title}
-          subtitle={subtitle}
-          caption={caption}
-          autoLegends={autoLegends}
-          explicitLegends={explicitLegends}
-          plotElement={plotElement}
-          isJsx={mode.kind === "jsx"}
-          figureRef={figureRef}
-        />
-      ) : (
-        <>
-          {explicitLegends}
-          {plotElement}
-        </>
-      )}
-      <div style={{display: "none"}}>{wrapFunctionChildren(children)}</div>
+      {renderPlotTree(mode, extras)}
+      {registrations}
     </PlotContext.Provider>
   );
 }
@@ -737,15 +899,88 @@ function containsFunctionChild(node: unknown): boolean {
 // list, is what makes the redundant passes (this component's own re-render, and
 // StrictMode's simulated remount, which re-runs every effect it created) cheap
 // no-ops; a deps list would only add a way to get this wrong.
-function WarningIndicator({computed}: {computed: any}) {
+//
+// A SERVER RENDER DRAINS HERE, IN THE RENDER, for the reason above read
+// backwards: there is no effect and no second pass there, so the drain has to
+// happen while rendering or not at all — and not at all would leave the
+// counter, which is module-global and shared with every plot this process
+// renders, holding this plot's warnings for the next plot to claim, reporting
+// warnings that plot never raised. It cannot drain too early: this component
+// renders last inside the <svg>, after every mark has rendered and warned, and
+// a server pass renders nothing twice.
+function WarningIndicator({computed, serverRender}: {computed: any; serverRender?: boolean}) {
   const [warnings, setWarnings] = useState(0);
   const drainedRef = useRef<any>(null);
   useLayoutEffect(() => {
+    // Never runs on a server render, where the drain above has already
+    // happened; see this component's comment.
+    if (serverRender) return;
     if (drainedRef.current === computed) return;
     drainedRef.current = computed;
     setWarnings(consumeWarnings());
   });
-  return warningIndicatorElement(computed, warnings);
+  return warningIndicatorElement(computed, serverRender ? consumeWarnings() : warnings);
+}
+
+// THE PLOT'S <svg> SHELL, DEFINED ONCE. Both entry points build an <svg>
+// around the marks they render — this file's <PlotSvg>, which renders it as
+// React children, and renderStatic.tsx's buildStaticPlotSvg, which builds the
+// element for the imperative plot() — and the two had drifted: the attributes,
+// the inline stylesheet and the xmlns declarations were written twice, so a
+// change to one (the xmlns pair, added to the JSX path only) never reached the
+// other. The shell is what the two renderers have in common; what differs is
+// how the marks inside it are rendered, which is what each path still owns.
+//
+// The stylesheet, which is the plot's only forced CSS: it makes the svg scale
+// with its container and stops text being collapsed, all through :where() so
+// the selectors carry no specificity a user's own rules have to fight. The
+// class name is the plot's (meant to be unique per plot); upstream writes the
+// same two rules in style.js, with a comment that changing them means changing
+// defaultClassName there too.
+export function plotStyleSheet(className: string): string {
+  return `:where(.${className}) {
+  --plot-background: white;
+  display: block;
+  height: auto;
+  height: intrinsic;
+  max-width: 100%;
+}
+:where(.${className} text),
+:where(.${className} tspan) {
+  white-space: pre;
+}`;
+}
+
+// The shell's attributes, in the order they are written to the element — the
+// order React writes them in for the JSX path, and the order the markup
+// serializes in on both. `style` is deliberately NOT here: the JSX path passes
+// it as a prop (so React can clear a key a later render drops, and so it lands
+// last, as upstream applies the style option after the svg's attributes are
+// set, plot.js:278), while the imperative path applies it to the element it has
+// just built.
+//
+// The xmlns declarations are not needed to render: React creates svg elements
+// in the SVG namespace and the HTML parser puts an <svg> it meets into it. They
+// are here so the SERIALIZED plot — a server-rendered page, an <img>, a saved
+// .svg file — carries its namespace, which is what every one of upstream's
+// committed test outputs does.
+export function plotSvgAttributes(computed: any, classNameProp?: string): Record<string, any> {
+  const {className, ariaLabel, ariaDescription, dimensions} = computed;
+  const {width, height} = dimensions;
+  return {
+    className: [className, classNameProp].filter(Boolean).join(" ") || undefined,
+    fill: "currentColor",
+    fontFamily: "system-ui, sans-serif",
+    fontSize: 10,
+    textAnchor: "middle",
+    width,
+    height,
+    viewBox: `0 0 ${width} ${height}`,
+    "aria-label": ariaLabel ?? undefined,
+    "aria-description": ariaDescription ?? undefined,
+    xmlns: "http://www.w3.org/2000/svg",
+    xmlnsXlink: "http://www.w3.org/1999/xlink"
+  };
 }
 
 // Renders the whole plot as a JSX <svg> tree.
@@ -757,26 +992,14 @@ function PlotSvg({
   pointerEnabled,
   pointerStore,
   onValueRef,
-  getHandlers
+  getHandlers,
+  serverRender
 }: any) {
-  const {className, ariaLabel, ariaDescription, dimensions} = computed;
-  const {width, height} = dimensions;
   const internalSvgRef = useRef<SVGSVGElement | null>(null);
   const setSvgRef = (el: SVGSVGElement | null) => {
     internalSvgRef.current = el;
     if (typeof svgRef === "function") svgRef(el);
   };
-  const styleText = `:where(.${className}) {
-  --plot-background: white;
-  display: block;
-  height: auto;
-  height: intrinsic;
-  max-width: 100%;
-}
-:where(.${className} text),
-:where(.${className} tspan) {
-  white-space: pre;
-}`;
   // Allocate clip-path defs up front (pre-pass) so they're known before the
   // marks that reference them are rendered, then render them in the <svg>. The
   // plot's context is handed over so a mark that emits its own <clipPath> defs
@@ -786,31 +1009,18 @@ function PlotSvg({
   registerClips(computed, clipReg);
   const inner = (
     <>
-      <style>{styleText}</style>
+      <style>{plotStyleSheet(computed.className)}</style>
       {clipReg.defs}
       {renderMarks(computed, clipReg, getHandlers)}
-      <WarningIndicator computed={computed} />
+      <WarningIndicator computed={computed} serverRender={serverRender} />
     </>
   );
   return (
     <svg
       ref={setSvgRef}
-      className={[className, classNameProp].filter(Boolean).join(" ") || undefined}
-      fill="currentColor"
-      fontFamily="system-ui, sans-serif"
-      fontSize={10}
-      textAnchor="middle"
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      aria-label={ariaLabel ?? undefined}
-      aria-description={ariaDescription ?? undefined}
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      // Last, and so last in the serialized element: React writes attributes in
-      // prop order, and upstream's plot() applies the style option after the
-      // svg's attributes are set (plot.js:278), which puts the style attribute
-      // at the end there too.
+      {...plotSvgAttributes(computed, classNameProp)}
+      // After the shell attributes, and so last in the serialized element: the
+      // rationale is in plotSvgAttributes.
       style={style}
     >
       {pointerEnabled ? (
@@ -824,22 +1034,34 @@ function PlotSvg({
   );
 }
 
-// Computes the per-facet transform string by invoking the imperative
-// facetTranslator against a minimal element shim (it sets a "transform"
-// attribute for <g> hosts). Returns undefined when there is no offset.
-function facetTransform(facetTranslate: any, f: any): string | undefined {
+// The attributes one facet's cell translation asks for, keyed by attribute
+// name, out of facetTranslator.
+export type FacetCell = Record<string, string>;
+
+// Asks the imperative facetTranslator for this facet's cell offset, by
+// invoking it against minimal element shims. Which attributes it writes
+// depends on the node it is handed (facet.js:65): a nested <svg> — what a mark
+// whose render option returns a whole plot produces, so the facet's node IS an
+// svg — takes x/y, and any other node takes a transform. The node does not
+// exist yet at the point the walker needs the offset, so both forms are
+// collected here, through a shim standing in for each kind of host, and the
+// applier takes the pair its own node needs. Returns undefined when the plot
+// has no facetTranslator to ask.
+export function facetCell(facetTranslate: any, f: any): FacetCell | undefined {
   if (typeof facetTranslate !== "function") return undefined;
-  let transform: string | undefined;
-  facetTranslate.call(
-    {
-      tagName: "g",
-      setAttribute: (k: string, v: string) => {
-        if (k === "transform") transform = v;
-      }
-    },
-    f
-  );
-  return transform;
+  const cell: FacetCell = {};
+  for (const tagName of ["svg", "g"]) {
+    facetTranslate.call(
+      {
+        tagName,
+        setAttribute: (k: string, v: string) => {
+          cell[k] = String(v);
+        }
+      },
+      f
+    );
+  }
+  return cell;
 }
 
 // Completes the registered marks' keys with the marks computePlot creates for
@@ -879,11 +1101,12 @@ export type RenderOne = (
   // by render order rather than by the order React fires effects in.
   order: number,
   // Set only for one facet of a PROMOTED group (see renderMarksWith): the cell
-  // transform this facet's node must carry in place of the mark transform,
-  // which the walker has hoisted onto the shared parent along with the mark's
-  // ARIA attributes. Undefined everywhere else, including every facet of an
-  // unpromoted mark, whose node the walker wraps in its own <g transform>.
-  facetTransform?: string
+  // offset this facet's node must carry in place of the mark transform, which
+  // the walker has hoisted onto the shared parent along with the mark's ARIA
+  // attributes. Undefined for an unfaceted mark, or when the plot has no
+  // facetTranslator to ask for a cell offset, in which case the walker wraps
+  // each facet in its own <g transform> instead.
+  facetCell?: FacetCell
 ) => ReactNode;
 
 // Walks the computed marks, resolving each mark's per-facet index and (for
@@ -928,17 +1151,16 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
       // aria-description, aria-hidden and the mark transform off the per-facet
       // nodes onto a single shared <g> per mark, then writes each facet's cell
       // transform onto the children in the vacated transform's place
-      // (plot.js:313-325). Replot does that for pointer consumers only — the
-      // same promotion for axes and every other faceted mark is a far larger
-      // baseline change that this work does not own. The two-level target is
-      // upstream's own tipDotFacets.svg baseline: an outer
-      // <g aria-label="tip" transform="translate(0.5,0.5)"> holding one plain
-      // <g fill=… stroke=… pointer-events=… transform="translate(295,148)">
-      // per facet.
+      // (plot.js:313-325, "Promote ARIA attributes and mark transform to avoid
+      // repetition on each facet"). Every faceted mark goes through it, so the
+      // shape for a mark with no aria attributes at all is still ONE <g
+      // transform="translate(cell)"> per facet carrying the mark's own
+      // attributes, not the two nested <g>s (one at the cell, one holding the
+      // mark transform) that an unpromoted facet would need.
       // The facetTranslate guard is what makes `cell` a string for every facet
       // below, and the promotion is all-or-nothing per mark: a facet left with
       // its own ARIA attributes would defeat the whole point.
-      const promote = isPointerConsumer(mark) && typeof facetTranslate === "function";
+      const promote = typeof facetTranslate === "function";
       for (const f of facets) {
         if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty)) continue;
         let index: any = null;
@@ -950,7 +1172,7 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
           if (!faceted && index === indexes[0]) index = subarray(index);
           (index.fx = f.x), (index.fy = f.y), (index.fi = f.i);
         }
-        const cell = facetTransform(facetTranslate, f);
+        const cell = facetCell(facetTranslate, f);
         const inner = renderOne(
           mark,
           index,
@@ -972,7 +1194,7 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
           promote ? (
             inner
           ) : (
-            <g key={f.i} transform={cell}>
+            <g key={f.i} transform={cell?.transform}>
               {inner}
             </g>
           )
@@ -997,15 +1219,16 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
 // group (plot.js:318-321), read off the mark as it renders AT REST.
 //
 // Upstream reads them back off a real DOM node it has just appended. Here the
-// interactive path's facets are <PointerMarkSlot> COMPONENT elements, whose
-// output the walker cannot inspect at all, so the mark is rendered once more
-// with an empty index purely to read its root. That is sound because none of
-// the four depends on the index — the transform is the crispness offset plus
-// dx/dy plus any band offset — and cheap because an empty index is exactly
-// what a pointer consumer renders until something is hovered. The clip wrap is
-// reproduced because it is the OUTERMOST node upstream reads: a frame-clipped
-// mark's wrapper carries the ARIA attributes and no transform, so the mark
-// transform correctly stays inside.
+// interactive path's facets are <MarkSlot>/<PointerMarkSlot> COMPONENT
+// elements, whose output the walker cannot inspect at all, so the mark is
+// rendered once more with an empty index purely to read its root. That is
+// sound because none of the four depends on the index — the transform is the
+// crispness offset plus dx/dy plus any band offset (computeTransform, which
+// reads the mark and the scales, never the datum) and the ARIA attributes come
+// from the mark's options — and cheap because an empty index renders no data.
+// The clip wrap is reproduced because it is the OUTERMOST node upstream reads:
+// a frame-clipped mark's wrapper carries the ARIA attributes and no transform,
+// so the mark transform correctly stays inside.
 function promotedProps(
   mark: any,
   values: any,
@@ -1035,19 +1258,31 @@ const promotedNames = ["aria-label", "aria-description", "aria-hidden", "transfo
 
 // One facet of a promoted group: the attributes the walker hoisted onto the
 // shared parent are removed here (upstream removeAttribute, plot.js:321) and
-// the facet's cell transform is written in the vacated transform's place
+// the facet's cell offset is written in the vacated transform's place
 // (upstream's facetTranslate pass, plot.js:325).
-export function promoteFacetChild(node: ReactNode, cell: string): ReactNode {
+export function promoteFacetChild(node: ReactNode, cell: FacetCell): ReactNode {
   if (!isValidElement(node)) return node;
-  return cloneElement(
-    node as ReactElement<any>,
-    {
-      "aria-label": undefined,
-      "aria-description": undefined,
-      "aria-hidden": undefined,
-      transform: cell
-    } as any
-  );
+  // Which form the offset takes is a property of the facet's own node, exactly
+  // as it is for upstream's facetTranslate (facet.js:65, `this.tagName ===
+  // "svg"`): a nested <svg> — a mark whose render option returns a whole plot,
+  // so the facet's node IS that svg — is positioned with x/y, and everything
+  // else with a transform. The transform is cleared for the nested svg because
+  // the promotion has taken the mark transform off it: leaving both would
+  // apply the offset twice.
+  const nested = (node as ReactElement).type === "svg";
+  const props: Record<string, any> = {
+    "aria-label": undefined,
+    "aria-description": undefined,
+    "aria-hidden": undefined
+  };
+  if (nested) {
+    props.x = cell.x;
+    props.y = cell.y;
+    props.transform = undefined;
+  } else {
+    props.transform = cell.transform;
+  }
+  return cloneElement(node as ReactElement<any>, props as any);
 }
 
 function renderMarks(
@@ -1057,7 +1292,7 @@ function renderMarks(
 ): ReactNode[] {
   return renderMarksWith(
     computed,
-    (mark, index, values, dims, scales, context, key, order, facetTransform) => {
+    (mark, index, values, dims, scales, context, key, order, facetCell) => {
       // The split is on the component TYPE, not on a prop or a branch inside
       // one component: <MarkSlot> holds no useContext(PointerContext) and no
       // pointer state at all, so an ordinary mark is structurally incapable of
@@ -1076,7 +1311,7 @@ function renderMarks(
           clipReg={clipReg}
           getHandlers={getHandlers}
           markData={getHandlers?.(mark) ? computed.stateByMark.get(mark)?.data : undefined}
-          facetTransform={facetTransform}
+          facetCell={facetCell}
         />
       );
     },
@@ -1089,7 +1324,7 @@ function renderMarks(
 // interaction can reach it: a plot of ten thousand dots is not rebuilt because
 // a tip moved. Pointer consumers go through <PointerMarkSlot> instead, chosen
 // by component type in renderMarks.
-function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandlers, markData}: any) {
+function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandlers, markData, facetCell}: any) {
   if (typeof mark.renderJSX !== "function") return null;
   const arrayIndex = plainIndex(index);
   // renderJSX usually returns its own <g> wrapper; we don't add another, to
@@ -1113,7 +1348,14 @@ function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandl
   // decision stays in sync with the registration.
   const handlers = getHandlers?.(mark);
   if (handlers) jsx = attachMarkHandlers(jsx, markData, handlers, () => getHandlers(mark));
-  return <>{clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx}</>;
+  let out: ReactElement = clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx;
+  // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
+  // drop the attributes now carried by the shared parent and take the facet's
+  // cell transform instead of the mark transform. Applied to the OUTERMOST
+  // node, which is the clip wrapper when there is one — the same node upstream
+  // reads its attributes off after render.
+  if (facetCell !== undefined) out = promoteFacetChild(out, facetCell) as ReactElement;
+  return <>{out}</>;
 }
 
 // Renders one pointer-consumer mark (a tip, a crosshair sub-mark, or any
@@ -1132,7 +1374,7 @@ function PointerMarkSlot({
   getHandlers,
   markData,
   order,
-  facetTransform
+  facetCell
 }: any) {
   const store = pointerStoreOf(useContext(PointerContext));
 
@@ -1184,16 +1426,9 @@ function PointerMarkSlot({
 
   if (typeof mark.renderJSX !== "function") return null;
 
-  // The substituted index: upstream's `const I = i == null ? [] : [i]`, with
-  // the facet markers carried across so a faceted mark still knows its cell —
-  // a tip reads index.fx/index.fy to report the facet channels. The marker is
-  // `fi`, exactly as upstream tests it (`const faceted = index.fi != null`):
-  // a plot faceted only by fy has no fx at all.
-  let renderIndex: any = index;
-  if (index != null) {
-    renderIndex = sel.i != null ? [sel.i] : [];
-    if (index.fi != null) (renderIndex.fx = index.fx), (renderIndex.fy = index.fy), (renderIndex.fi = index.fi);
-  }
+  // The substituted index: the datum the pointer has awarded this slot, or
+  // nothing at all until it has awarded one.
+  const renderIndex = pointerIndex(index, sel.i);
 
   // No plainIndex() here: a pointer consumer's index is one this slot built,
   // so it is already a plain Array (or the null a channel-less mark was given).
@@ -1223,7 +1458,7 @@ function PointerMarkSlot({
   // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
   // drop the attributes now carried by the shared parent and take the facet's
   // cell transform instead of the mark transform.
-  if (facetTransform !== undefined) out = promoteFacetChild(out, facetTransform) as ReactElement;
+  if (facetCell !== undefined) out = promoteFacetChild(out, facetCell) as ReactElement;
   // The store needs the rendered root to answer "was this pointerdown inside an
   // already-pinned mark?". rootRef is bound once per record, so attaching it
   // costs no detach/attach churn on a re-render.
@@ -1239,11 +1474,28 @@ function pointerStoreOf(store: PointerStore | null): PointerStore {
   return store;
 }
 
+// The index a pointer consumer renders: the selected datum alone, or — until
+// the pointer has awarded one — none at all (upstream's `const I = i == null ?
+// [] : [i]`, pointer.js). The facet markers travel with it either way, so a
+// faceted mark still knows its cell: a tip reads index.fx/index.fy to report
+// the facet channels. `fi` is the marker, exactly as upstream tests it (`const
+// faceted = index.fi != null`) — a plot faceted only by fy has no fx at all. A
+// channel-less mark's index is null and stays null: it has nothing to
+// hit-test, and `[sel.i]` would invent a datum for it. Shared with the static
+// renderer, which renders every pointer consumer at rest.
+export function pointerIndex(index: any, selected?: number | null): any {
+  if (index == null) return null;
+  const out: any = selected == null ? [] : [selected];
+  if (index.fi != null) (out.fx = index.fx), (out.fy = index.fy), (out.fi = index.fi);
+  return out;
+}
+
 // Coerces an index to a plain Array, preserving the facet markers. Marks call
 // (index as number[]).map(...), but `index` is often a TypedArray (e.g.
 // Uint32Array), whose .map() coerces the returned React elements back to
-// numbers and corrupts the output.
-function plainIndex(index: any): any {
+// numbers and corrupts the output. Shared with the static renderer, which
+// renders the same indexes through the same marks.
+export function plainIndex(index: any): any {
   if (index == null || !ArrayBuffer.isView(index)) return index;
   const {fx, fy, fi} = index as any;
   return Object.assign(Array.from(index as any), {fx, fy, fi});

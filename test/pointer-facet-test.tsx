@@ -40,9 +40,12 @@ function facetedPlot(onValue?: (value: unknown) => void) {
 
 /** The facet cell transforms, read off the plain (non-pointer) dot mark. */
 function facetTransforms(harness: PointerHarness): (string | null)[] {
-  return Array.from(harness.svg.querySelectorAll('g[aria-label="dot"]') as ArrayLike<any>).map((group: any) =>
-    group.parentNode.getAttribute("transform")
-  );
+  // A faceted mark is promoted: ONE <g> carries the mark's aria-label and its
+  // own transform, and each facet's child carries its cell transform
+  // (plot.js:313-325 — see test/facet-aria-test.tsx). The cell transforms are
+  // therefore the children of the shared group.
+  const [group] = Array.from(harness.svg.querySelectorAll('g[aria-label="dot"]') as ArrayLike<any>);
+  return Array.from((group?.children ?? []) as ArrayLike<any>).map((child: any) => child.getAttribute("transform"));
 }
 
 describe("pointer faceting", () => {
