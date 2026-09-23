@@ -195,10 +195,15 @@ it("areaY(data, {line: true, marker}) decorates the line with markers", () => {
     ]
   });
   const [, line] = svg.querySelectorAll('[aria-label="area-line"] path');
-  assert.match(line.getAttribute("marker-start"), /^url\(#plot-m-dot-/);
-  assert.match(line.getAttribute("marker-mid"), /^url\(#plot-m-dot-/);
-  assert.match(line.getAttribute("marker-end"), /^url\(#plot-m-dot-/);
-  assert.ok(svg.querySelector("marker"), "the marker def is rendered");
+  const marker = svg.querySelector("marker");
+  assert.ok(marker, "the marker def is rendered");
+  // The three refs must point at the def that was actually rendered, rather
+  // than matching an id shape: the id scheme is the marker registry's business,
+  // and a ref that names a def this plot never emitted draws nothing.
+  const ref = `url(#${marker.getAttribute("id")})`;
+  assert.strictEqual(line.getAttribute("marker-start"), ref);
+  assert.strictEqual(line.getAttribute("marker-mid"), ref);
+  assert.strictEqual(line.getAttribute("marker-end"), ref);
 });
 
 it("areaX(data, {line: true}) draws the topline as a separate stroke-only path", () => {
