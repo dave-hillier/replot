@@ -180,6 +180,9 @@ export function Replot({
   // always name the same pass.
   const resolvedRef = useRef<ResolvedScales | null>(null);
   const [mode, setMode] = useState<Mode>({kind: "empty"});
+  // computePlot's last failure. Setting it re-renders, and the render throws;
+  // see the throw below.
+  const [error, setError] = useState<unknown>(null);
 
   // The pointer selection store, created here rather than in <PointerRoot>
   // because two of the three things it needs are only available at this level.
@@ -418,8 +421,16 @@ export function Replot({
       // <Plot> can still render axes — matching the imperative plot().
       computed = computePlot({...effectiveOptions, marks: flat, style});
     } catch (e) {
-      console.error("Plot: computePlot failed.", e);
-      setMode((prev) => (prev.kind === "empty" ? prev : {kind: "empty"}));
+      // The failure is kept and rethrown from the render below, so an enclosing
+      // error boundary sees it. It is NOT downgraded to a console message and
+      // an empty plot-host: upstream's imperative plot() throws these straight
+      // out of plot() (src/plot.js:143 → src/scales.js:379, "unknown scale type:
+      // nope"), and nothing in upstream's src/ catches an error at all. Storing
+      // it rather than throwing here is what keeps the throw in the render
+      // phase, where an error boundary can catch it. The warning counter is
+      // deliberately left undrained, exactly as upstream leaves it when plot()
+      // throws partway through.
+      setError(e);
       return;
     }
 
@@ -558,6 +569,15 @@ export function Replot({
     pointerStore.setValueSink(mode.kind === "jsx" ? mode.computed.context?.dispatchValue ?? null : null);
     pointerStore.settle();
   });
+
+  // A computePlot failure is rethrown HERE, in the render phase, which is where
+  // an enclosing error boundary can see it. Throwing it in the effect instead
+  // would not: React catches an effect's throw and unmounts the whole root
+  // rather than handing it to the nearest boundary. The error is state, so the
+  // throw survives the commit boundary and is repeated on any later render of
+  // the same broken inputs; a boundary that resets remounts this component
+  // with fresh state, which is how a plot recovers from a fixed prop.
+  if (error !== null) throw error;
 
   // In figure mode, wrap the plot in a div.plot-host inside the figure to
   // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
