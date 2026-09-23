@@ -16,6 +16,7 @@ import {
 } from "../../src/react/index.js";
 import * as d3 from "d3";
 import * as Arrow from "apache-arrow";
+import {PointerViewof} from "./viewof.js";
 
 /**
  * An arrow table dataset supports direct (getChild) accessors.
@@ -184,12 +185,9 @@ export async function arrowTestCustomOrder() {
  */
 export async function arrowTestPointer() {
   const penguins = Arrow.tableFromJSON(await d3.csv<any>("data/penguins.csv", d3.autoType));
-  const plot = (
-    <Replot>
+  return (
+    <PointerViewof>
       <Dot data={penguins} x="culmen_length_mm" y="culmen_depth_mm" tip={true} />
-    </Replot>
+    </PointerViewof>
   );
-  // TODO: This test involves DOM manipulation (textarea, oninput) that doesn't directly translate to React components.
-  // The React component tree is returned as-is without the textarea interaction.
-  return plot;
 }

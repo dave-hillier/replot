@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useRef, type ReactNode} from "react";
+import React, {useLayoutEffect, useRef, type ReactNode, type RefObject} from "react";
 
 // Document-layout half of <Plot>: wraps the rendered plot in a <figure> with
 // optional <h2> title, <h3> subtitle, legends, and a <figcaption>, mirroring
@@ -16,6 +16,11 @@ export interface FigureLayoutProps {
   // When the plot rendered as a JSX <svg>, wrap it in div.plot-host to match
   // the imperative structure; the imperatively-mounted host is already a div.
   isJsx: boolean;
+  // <Plot> reports the pointer selection on the plot's root element (upstream's
+  // context.dispatchValue), which is this <figure> whenever there is one, so it
+  // needs a handle on it. Its own layout effect reads this ref, which React has
+  // attached by then: a child's host refs attach before a parent's effects run.
+  figureRef?: RefObject<HTMLElement | null>;
 }
 
 export function FigureLayout({
@@ -25,10 +30,11 @@ export function FigureLayout({
   autoLegends,
   explicitLegends,
   plotElement,
-  isJsx
+  isJsx,
+  figureRef
 }: FigureLayoutProps) {
   return (
-    <figure style={{maxWidth: "initial"}}>
+    <figure ref={figureRef} style={{maxWidth: "initial"}}>
       {title != null && <SlotHeader as="h2" content={title} />}
       {subtitle != null && <SlotHeader as="h3" content={subtitle} />}
       {autoLegends}

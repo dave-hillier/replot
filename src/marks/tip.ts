@@ -120,7 +120,12 @@ export interface TipOptions extends MarkOptions, TextStyles {
 const defaults = {
   ariaLabel: "tip",
   fill: "var(--plot-background)",
-  stroke: "currentColor"
+  stroke: "currentColor",
+  // upstream tip.js:15-20. Pooling is a tip default, not an opt-in: when a tip
+  // is the FIRST pointer mark rendered in a plot it drags every other pointer
+  // mark of that plot into one pool, so a boxX (four marks, four tips) or two
+  // tipped dot marks show exactly one tip — the nearest — rather than one each.
+  pool: true
 };
 
 // These channels are not displayed in the default tip; see formatChannels.
@@ -128,6 +133,9 @@ const ignoreChannels = new Set(["geometry", "href", "src", "ariaLabel", "scales"
 
 /** The tip mark. */
 export class Tip extends (Mark as {new (...args: any[]): Mark}) {
+  // Set by plot.ts's inferTips on a tip it derives from a mark's `tip` option,
+  // naming that mark. Only the React path reads it, to key the tip's slot.
+  tipFor: any;
   anchor: any;
   preferredAnchor: any;
   frameAnchor: any;

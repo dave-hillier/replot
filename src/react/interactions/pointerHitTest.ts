@@ -61,22 +61,18 @@ export const svgPoint = (svg: SVGSVGElement, event: any): [number, number] => po
  * Runs upstream's search for one registration at the SVG-space point
  * (*x0*, *y0*), correcting the POINTER by the registration's facet and
  * band-scale offsets — the channel values are facet-local, so the event moves,
- * not the data. Returns an infinite radius when nothing is within maxRadius, so
- * that a miss can never win a group comparison.
+ * not the data.
  *
- * That Infinity is a DELIBERATE divergence from upstream, which reports a miss
- * as *maxRadius* squared and pools it alongside the hits (pointer.js:134-140):
- * a datum sitting at exactly maxRadius scores maxRadius squared too, and
- * upstream's `c.ri < best.ri` gives the tie to whichever entry the pool saw
- * first — so an earlier-registered MISS beats it and every pooled mark renders
- * nothing. Replot shows the datum instead. Pinned by "prefers a datum at
- * exactly maxRadius over an earlier registration that missed" in
- * test/pointer-store-test.ts, which is where a future upstream re-sync will
- * trip over it.
+ * A miss is reported exactly as upstream reports it: `ii` null with `ri` equal
+ * to *maxRadius* squared, the value pointerSearch's accumulator still holds
+ * when nothing came inside the radius. That number is not a sentinel; upstream
+ * enters it into the pool alongside the hits (pointer.js:134-140) and lets it
+ * compete, so a miss can win its group and blank every mark in it. Reporting a
+ * miss as Infinity instead — as an earlier revision did — silently drops it out
+ * of the arbitration and shows a datum wherever upstream shows nothing.
  */
 export function nearest(reg: HitTestTarget, x0: number, y0: number): {ii: number | null; ri: number} {
-  if (!reg.index.length) return {ii: null, ri: Infinity};
-  const {ii, ri} = pointerSearch(
+  return pointerSearch(
     reg.index,
     reg.px,
     reg.py,
@@ -87,5 +83,4 @@ export function nearest(reg: HitTestTarget, x0: number, y0: number): {ii: number
     reg.maxRadius,
     reg.dimensions
   );
-  return {ii, ri: ii == null ? Infinity : ri};
 }

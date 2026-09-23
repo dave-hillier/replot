@@ -5,16 +5,25 @@ import {domToJsx, isDomNode} from "./domToJsx.js";
 // Bridges the imperative `render` option (a render transform: DOM in, DOM
 // out) into the JSX render paths. The Mark constructor composes
 // options.render into an own `render` property — marks define no imperative
-// render of their own anymore — so an own function marks a user transform.
-// Pointer-driven renders are excluded (the React pointer path re-renders the
-// selection itself), as is a mark with a custom renderJSX, which takes
-// precedence on the JSX paths.
+// render of their own anymore — so an own function marks a user transform. A
+// mark with a custom renderJSX is excluded, since that takes precedence on the
+// JSX paths.
 export function hasRenderTransform(mark: any): boolean {
-  return (
-    typeof mark?.render === "function" &&
-    mark.render.pointer !== true &&
-    !Object.prototype.hasOwnProperty.call(mark, "renderJSX")
-  );
+  return typeof userRenderOf(mark) === "function" && !Object.prototype.hasOwnProperty.call(mark, "renderJSX");
+}
+
+// The transform to actually run. For a pointer-wrapped mark, `mark.render` is
+// pointer.js's composed closure — the one that attaches its own listeners and
+// owns its own focused index — which the React path never executes, because it
+// reimplements the interaction over the pure helpers. Composing the user's own
+// render inside it (composeRender, pointer.js:213) would otherwise bury it, so
+// pointer.js records it separately as `render.userRender` and that is what runs
+// here, with the pointer's selection already substituted into `index` by
+// <PointerMarkSlot>.
+export function userRenderOf(mark: any): unknown {
+  const render = mark?.render;
+  if (typeof render !== "function") return null;
+  return render.pointer === true ? render.userRender : render;
 }
 
 // Executes the composed render transform with a `next` that produces the
@@ -34,7 +43,8 @@ export function renderTransformJSX(
     const jsx = mark.renderJSX(i, s, v, d, c);
     return jsx == null ? null : isDomNode(jsx) ? jsx : jsxToDom(jsx, c.document);
   };
-  const out = mark.render.call(mark, index, scales, values, dimensions, context, next);
+  const render = userRenderOf(mark) as (...args: any[]) => unknown;
+  const out = render.call(mark, index, scales, values, dimensions, context, next);
   if (out == null) return null;
   return isDomNode(out) ? domToJsx(out) : (out as ReactNode);
 }

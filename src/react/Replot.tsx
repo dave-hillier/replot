@@ -4,10 +4,10 @@ import {
   Fragment,
   isValidElement,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
   type ReactElement
 } from "react";
@@ -17,6 +17,8 @@ import {consumeWarnings} from "../warnings.js";
 import {PlotContext} from "./PlotContext.js";
 import {markEventNames, useMark, type MarkEventHandlers, type MarkFactory} from "./useMark.js";
 import {PointerRoot, PointerContext} from "./interactions/PointerContext.js";
+import {computeAnchors, pointerKOf} from "./interactions/pointerHitTest.js";
+import {createPointerStore, type PointerStore} from "./interactions/pointerStore.js";
 import {buildAutoLegends, LegendDisplay} from "./legends/Legend.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode} from "./domToJsx.js";
@@ -118,7 +120,6 @@ type Mode =
       kind: "jsx";
       computed: any;
       onSvgRef: (svg: SVGSVGElement | null) => void;
-      onInput: ((e: Event) => void) | null;
       pointerEnabled: boolean;
       warnings: number;
     };
@@ -145,6 +146,16 @@ export function Replot({
   const [, setLegendsVersion] = useState(0);
   const [resolved, setResolved] = useState<ResolvedScales | null>(null);
   const [mode, setMode] = useState<Mode>({kind: "empty"});
+
+  // The pointer selection store, created here rather than in <PointerRoot>
+  // because two of the three things it needs are only available at this level.
+  // It has to outlive the <svg> — a plot whose last pointer consumer is removed
+  // unmounts <PointerRoot> with the slot that was showing a datum, and the
+  // clearing value still has to be reported — and its settle() has to run after
+  // the plot's ROOT ELEMENT has been attached, which is this component's own
+  // layout effect and nothing lower. <PointerRoot> keeps the rest: the store is
+  // handed to it, and it wires the <svg>'s listeners into it and disposes it.
+  const [pointerStore] = useState(createPointerStore);
 
   // Updates the published scale descriptors only when the set of scale keys
   // changes; identity-only changes mutate in place to avoid re-rendering
@@ -273,6 +284,8 @@ export function Replot({
   const lastInputsRef = useRef<string | null>(null);
   const onValueRef = useRef(onValue);
   onValueRef.current = onValue;
+  const figureRef = useRef<HTMLElement | null>(null);
+  const svgElementRef = useRef<SVGSVGElement | null>(null);
 
   useLayoutEffect(() => {
     computedRef.current = true;
@@ -280,15 +293,16 @@ export function Replot({
     // e.g. when the tree gains a <figure> once auto-legends resolve — bumping
     // version while every stamp stays the same. Recomputing then would be
     // wasted work and would re-emit computePlot warnings, so skip when the
-    // effective inputs are unchanged. (onValue identity is excluded, like
-    // functions in mark stamps; the onInput closure reads it from a ref.)
+    // effective inputs are unchanged. (onValue is excluded entirely, like
+    // functions in mark stamps: the pointer store reads it through a ref at
+    // dispatch time, so neither its identity nor its presence changes anything
+    // computePlot produces.)
     const inputsKey = [
       ...[...marksRef.current.values()].map((r) => r.stamp),
       ...[...scalesRef.current.values()].map((r) => r.stamp),
       optionsKey,
       String(classNameProp),
-      stableKey({style}),
-      String(!!onValue)
+      stableKey({style})
     ].join("\u0000");
     if (inputsKey === lastInputsRef.current) return;
     lastInputsRef.current = inputsKey;
@@ -298,12 +312,31 @@ export function Replot({
     // identity changes refresh the registration without a recompute, so the
     // instances — and this map — stay valid).
     const registrationByMark = new Map<any, Registration>();
-    for (const registration of marksRef.current.values()) {
+    const markKeys = new Map<any, string>();
+    for (const [id, registration] of marksRef.current) {
       const m = registration.factory();
-      for (const one of Array.isArray(m) ? m : [m]) {
+      const built = Array.isArray(m) ? m : [m];
+      for (const one of built) {
         flat.push(one);
         if (registration.handlers) registrationByMark.set(one, registration);
       }
+      // useMark's id comes from useId, which survives every rebuild of the mark
+      // objects a registration produces, so the key does not move when a mark's
+      // data or options change. The suffix is the leaf's position within this
+      // one registration's own output — a crosshair yields a rule and a text —
+      // which is fixed by the factory, not by what the rest of the plot
+      // contains. What useId does NOT give is component identity: React assigns
+      // it at MOUNT from a global counter and keeps it in the fiber's hook
+      // state, so it names a POSITION that a reused fiber inherits. Removing
+      // the first of two unkeyed sibling marks hands the survivor the first
+      // one's id, and with it this key. No key scheme can defend against that,
+      // because React genuinely considers the reused fiber to be the same
+      // component instance; what defends the pointer selection is that the
+      // store re-resolves it against the mark the record now holds (see settle
+      // in pointerStore.ts), which is a search the pointer is nowhere near.
+      (built as any[]).flat(Infinity).forEach((one: any, k: number) => {
+        if (one != null) markKeys.set(one, `m${id}#${k}`);
+      });
     }
     registrationByMarkRef.current = registrationByMark;
     // Merge scale-component registrations (<ScaleY>, <ScaleColor>, …) into
@@ -343,6 +376,17 @@ export function Replot({
       return;
     }
 
+    // Slot keys are React fiber identity, and a pointer slot's fiber carries the
+    // registration record holding its selection. Keying by position in
+    // computed.marks would hand that record to whatever pointer consumer
+    // shifted into the slot whenever a mark was added or removed anywhere in
+    // the plot, so the key names the registration the mark came from instead —
+    // and the mark object cannot supply it, because useMark rebuilds its
+    // instances on every stamp change. This narrows the problem; it does not
+    // close it (see the useId note above), which is why the store re-resolves
+    // every record at the pointer once a commit has settled.
+    computed.markKeys = markKeysOf(computed.marks, markKeys);
+
     publishResolved({
       scaleDescriptors: computed.scaleDescriptors,
       context: computed.context,
@@ -366,19 +410,33 @@ export function Replot({
       else if (style != null) Object.assign(svg.style, style as any);
     };
 
-    const onInput = onValue
-      ? (e: Event) => {
-          const t = e.target as any;
-          const cb = onValueRef.current;
-          if (cb && t && "value" in t) cb(t.value);
-        }
-      : null;
+    // Carry the plot's root element onto the NEW context's figureHolder here,
+    // rather than leaving it to the holder effect below. computePlot builds a
+    // fresh context per recompute, and so a fresh holder whose `current` is
+    // null, which a dispatch cannot reach `.value` through. The pointer's own
+    // reports are settled from a layout effect below, after the holder effect
+    // has filled it; this earlier assignment covers a plain pointer move that
+    // arrives in the window between this compute pass and that commit. The root
+    // element does not change across a recompute, so it is not a guess; the
+    // effect below still owns the case where the root itself changes, which is
+    // figure mode appearing or going away.
+    if (computed.context?.figureHolder != null) {
+      computed.context.figureHolder.current = figureRef.current ?? svgElementRef.current;
+    }
 
     const pointerEnabled = computed.marks.some(isPointerConsumer);
-    setMode({kind: "jsx", computed, onSvgRef, onInput, pointerEnabled, warnings});
+    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled, warnings});
     // version counts mark registration changes (stamp changes, additions,
     // removals), so prop updates on marks after mount re-run computePlot.
-  }, [optionsKey, onValue, classNameProp, style, version]);
+  }, [optionsKey, classNameProp, style, version]);
+
+  // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
+  // through the compute effect's own ref callback (which applies the className
+  // and the plot-level style), so this wrapper records it on the way past.
+  const setSvgElement = (svg: SVGSVGElement | null) => {
+    svgElementRef.current = svg;
+    if (mode.kind === "jsx") mode.onSvgRef(svg);
+  };
 
   const ctx = {
     registerMark,
@@ -419,6 +477,44 @@ export function Replot({
   const wantsFigure =
     figure === "always" || figure === true ? true : figure === "never" || figure === false ? false : autoFigure;
 
+  // Upstream reports the pointer selection through context.dispatchValue
+  // (src/plot.ts:189-194, verbatim from plot.js): it assigns `.value` on the
+  // plot's root element and dispatches a bubbling `input` event there. That
+  // root is the <figure> when the plot has one and the <svg> otherwise —
+  // upstream's plot() sets figureHolder.current in exactly those two places
+  // (plot.js:157/333/340) — and until this effect existed nothing on the React
+  // path ever filled the holder, so dispatchValue returned at its first line
+  // and viewof was dead. A layout effect is the right seam: React attaches a
+  // child's host refs before running a parent's layout effects, so both refs
+  // are populated here, and the assignment lands before any pointer event can
+  // be delivered.
+  useLayoutEffect(() => {
+    const holder = mode.kind === "jsx" ? mode.computed.context?.figureHolder : null;
+    if (holder == null) return;
+    holder.current = figureRef.current ?? svgElementRef.current;
+  }, [mode, wantsFigure]);
+
+  // THE POINTER'S SETTLING POINT, and the last thing to run in any commit of
+  // this plot: React runs layout effects child first, so every pointer slot has
+  // registered by now, and the effect above has just pointed the context's
+  // figure holder at the root element this commit produced.
+  //
+  // Both orderings are why it is here rather than beside the slots or inside
+  // <PointerRoot>. Re-resolving as each slot registers would arbitrate against
+  // the half-populated registry a commit passes through — React runs every
+  // layout-effect cleanup before any of the creates — and report values for
+  // winners that lose again in the same commit. Reporting from any earlier
+  // effect would dispatch through a figure holder that this commit has just
+  // replaced, which is why a plot that gained or lost its <figure> in the same
+  // commit used to drop its clearing value in silence.
+  //
+  // No dependency array: a registration can change in any commit of this
+  // component, and settle() is a no-op in the ones where nothing did.
+  useLayoutEffect(() => {
+    pointerStore.setValueSink(mode.kind === "jsx" ? mode.computed.context?.dispatchValue ?? null : null);
+    pointerStore.settle();
+  });
+
   // In figure mode, wrap the plot in a div.plot-host inside the figure to
   // match the imperative API's structure (figure > h2/h3 > div.plot-host > svg
   // > figcaption). In non-figure mode, return the SVG directly (matching the
@@ -428,10 +524,11 @@ export function Replot({
     mode.kind === "jsx" ? (
       <PlotSvg
         computed={mode.computed}
-        svgRef={mode.onSvgRef}
+        svgRef={setSvgElement}
         className={classNameProp}
-        onInput={mode.onInput}
         pointerEnabled={mode.pointerEnabled}
+        pointerStore={pointerStore}
+        onValueRef={onValueRef}
         warnings={mode.warnings}
         getHandlers={getMarkHandlers}
       />
@@ -455,6 +552,7 @@ export function Replot({
           explicitLegends={explicitLegends}
           plotElement={plotElement}
           isJsx={mode.kind === "jsx"}
+          figureRef={figureRef}
         />
       ) : (
         <>
@@ -500,7 +598,16 @@ function containsFunctionChild(node: unknown): boolean {
 }
 
 // Renders the whole plot as a JSX <svg> tree.
-function PlotSvg({computed, svgRef, className: classNameProp, onInput, pointerEnabled, warnings, getHandlers}: any) {
+function PlotSvg({
+  computed,
+  svgRef,
+  className: classNameProp,
+  pointerEnabled,
+  pointerStore,
+  onValueRef,
+  warnings,
+  getHandlers
+}: any) {
   const {className, ariaLabel, ariaDescription, dimensions} = computed;
   const {width, height} = dimensions;
   const internalSvgRef = useRef<SVGSVGElement | null>(null);
@@ -557,9 +664,14 @@ function PlotSvg({computed, svgRef, className: classNameProp, onInput, pointerEn
       aria-description={ariaDescription ?? undefined}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      onInput={onInput ?? undefined}
     >
-      {pointerEnabled ? <PointerRoot svgRef={internalSvgRef}>{inner}</PointerRoot> : inner}
+      {pointerEnabled ? (
+        <PointerRoot store={pointerStore} svgRef={internalSvgRef} onValueRef={onValueRef}>
+          {inner}
+        </PointerRoot>
+      ) : (
+        inner
+      )}
     </svg>
   );
 }
@@ -582,6 +694,24 @@ function facetTransform(facetTranslate: any, f: any): string | undefined {
   return transform;
 }
 
+// Completes the registered marks' keys with the marks computePlot creates for
+// itself. Two kinds reach here: tips inferred from a `tip` option, which carry
+// the mark they were inferred from (plot.ts's inferTips) and are keyed under
+// it — these are pointer consumers, so they are exactly the ones a positional
+// key would shuffle on every mark added or removed elsewhere in the plot; and
+// implicit axis and grid marks, which are not pointer consumers and fall back
+// to their position, in a namespace that cannot collide with a registration
+// key.
+function markKeysOf(marks: readonly any[], registered: Map<any, string>): Map<any, string> {
+  const keys = new Map(registered);
+  marks.forEach((mark, i) => {
+    if (keys.has(mark)) return;
+    const source = mark.tipFor === undefined ? undefined : keys.get(mark.tipFor);
+    keys.set(mark, source === undefined ? `x${i}` : `${source}#tip`);
+  });
+  return keys;
+}
+
 // A callback that renders one mark instance (a mark at a given facet/index)
 // to a ReactNode. Shared between the interactive React path (<MarkSlot>) and
 // the static renderer used by the imperative plot() entry point.
@@ -592,14 +722,27 @@ export type RenderOne = (
   dims: any,
   scales: any,
   context: any,
-  key: string
+  key: string,
+  // Render order of this (mark, facet) slot: markIndex * facetCount +
+  // facetOrdinal, which cannot collide however many facets the plot has.
+  // It is the pointer store's sort key, standing in for upstream's
+  // renderIndex, so that the two order-sensitive pointer behaviours (whose
+  // pooling infects the plot, and which slot claims a pointerdown) are decided
+  // by render order rather than by the order React fires effects in.
+  order: number,
+  // Set only for one facet of a PROMOTED group (see renderMarksWith): the cell
+  // transform this facet's node must carry in place of the mark transform,
+  // which the walker has hoisted onto the shared parent along with the mark's
+  // ARIA attributes. Undefined everywhere else, including every facet of an
+  // unpromoted mark, whose node the walker wraps in its own <g transform>.
+  facetTransform?: string
 ) => ReactNode;
 
 // Walks the computed marks, resolving each mark's per-facet index and (for
 // faceted marks) wrapping each facet in a <g transform> at its cell. The
 // per-mark rendering is delegated to `renderOne` so the interactive and
 // static paths share identical structure.
-export function renderMarksWith(computed: any, renderOne: RenderOne): ReactNode[] {
+export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: ClipRegistry): ReactNode[] {
   const {
     marks,
     stateByMark,
@@ -613,6 +756,13 @@ export function renderMarksWith(computed: any, renderOne: RenderOne): ReactNode[
     facetTranslate
   } = computed;
   const out: ReactNode[] = [];
+  // The slot order packs (markIndex, facetOrdinal) into one sortable number.
+  // The stride is the plot's own facet count rather than a fixed 1000, because
+  // f.i indexes `facets`: with a fixed stride a 32-by-32 grid already overflows
+  // it and two different slots collide, which silently drops the pool
+  // contagion and the pointerdown claimant back to effect-firing order.
+  const stride = Math.max(1, facets?.length ?? 1);
+  const keyOf = (mark: any, i: number): string => computed.markKeys?.get(mark) ?? `x${i}`;
   marks.forEach((mark: any, i: number) => {
     const {channels, values, facets: indexes} = stateByMark.get(mark);
     if (facets === undefined || mark.facet === "super") {
@@ -622,10 +772,25 @@ export function renderMarksWith(computed: any, renderOne: RenderOne): ReactNode[
         index = mark.filter(index, channels, values);
         if (index.length === 0) return;
       }
-      const node = renderOne(mark, index, values, superdimensions, scales, context, `${i}`);
+      const node = renderOne(mark, index, values, superdimensions, scales, context, keyOf(mark, i), i * stride);
       if (node != null) out.push(node);
     } else {
       const facetMarks: ReactNode[] = [];
+      // Upstream announces a faceted mark ONCE: it hoists aria-label,
+      // aria-description, aria-hidden and the mark transform off the per-facet
+      // nodes onto a single shared <g> per mark, then writes each facet's cell
+      // transform onto the children in the vacated transform's place
+      // (plot.js:313-325). Replot does that for pointer consumers only — the
+      // same promotion for axes and every other faceted mark is a far larger
+      // baseline change that this work does not own. The two-level target is
+      // upstream's own tipDotFacets.svg baseline: an outer
+      // <g aria-label="tip" transform="translate(0.5,0.5)"> holding one plain
+      // <g fill=… stroke=… pointer-events=… transform="translate(295,148)">
+      // per facet.
+      // The facetTranslate guard is what makes `cell` a string for every facet
+      // below, and the promotion is all-or-nothing per mark: a facet left with
+      // its own ARIA attributes would defeat the whole point.
+      const promote = isPointerConsumer(mark) && typeof facetTranslate === "function";
       for (const f of facets) {
         if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty)) continue;
         let index: any = null;
@@ -637,23 +802,104 @@ export function renderMarksWith(computed: any, renderOne: RenderOne): ReactNode[
           if (!faceted && index === indexes[0]) index = subarray(index);
           (index.fx = f.x), (index.fy = f.y), (index.fi = f.i);
         }
-        const inner = renderOne(mark, index, values, subdimensions, scales, context, `${i}-${f.i}`);
+        const cell = facetTransform(facetTranslate, f);
+        const inner = renderOne(
+          mark,
+          index,
+          values,
+          subdimensions,
+          scales,
+          context,
+          `${keyOf(mark, i)}-${f.i}`,
+          i * stride + f.i,
+          promote ? cell : undefined
+        );
         if (inner == null) continue;
         // Translate each facet's marks to its cell, mirroring the imperative
         // pipeline's per-facet <g transform> (facetTranslator). Without this
         // wrapper every facet would render at the same origin (overlapping).
+        // A promoted mark needs no wrapper: renderOne has written the cell
+        // transform onto the mark's own node instead.
         facetMarks.push(
-          <g key={f.i} transform={facetTransform(facetTranslate, f)}>
-            {inner}
-          </g>
+          promote ? (
+            inner
+          ) : (
+            <g key={f.i} transform={cell}>
+              {inner}
+            </g>
+          )
         );
       }
       if (facetMarks.length > 0) {
-        out.push(<g key={i}>{facetMarks}</g>);
+        out.push(
+          <g
+            key={keyOf(mark, i)}
+            {...(promote ? promotedProps(mark, values, subdimensions, scales, context, clipReg) : null)}
+          >
+            {facetMarks}
+          </g>
+        );
       }
     }
   });
   return out;
+}
+
+// The four attributes upstream hoists from the per-facet nodes onto the shared
+// group (plot.js:318-321), read off the mark as it renders AT REST.
+//
+// Upstream reads them back off a real DOM node it has just appended. Here the
+// interactive path's facets are <PointerMarkSlot> COMPONENT elements, whose
+// output the walker cannot inspect at all, so the mark is rendered once more
+// with an empty index purely to read its root. That is sound because none of
+// the four depends on the index — the transform is the crispness offset plus
+// dx/dy plus any band offset — and cheap because an empty index is exactly
+// what a pointer consumer renders until something is hovered. The clip wrap is
+// reproduced because it is the OUTERMOST node upstream reads: a frame-clipped
+// mark's wrapper carries the ARIA attributes and no transform, so the mark
+// transform correctly stays inside.
+function promotedProps(
+  mark: any,
+  values: any,
+  dims: any,
+  scales: any,
+  context: any,
+  clipReg?: ClipRegistry
+): Record<string, any> {
+  if (typeof mark.renderJSX !== "function") return {};
+  let jsx: ReactNode;
+  if (hasRenderTransform(mark)) {
+    jsx = renderTransformJSX(mark, [], scales, values, dims, context) as ReactNode;
+  } else {
+    jsx = mark.renderJSX([], scales, values, dims, context) as ReactNode;
+    if (isDomNode(jsx)) jsx = domToJsx(jsx);
+  }
+  if (!isValidElement(jsx)) return {};
+  const node = clipReg ? clipReg.wrap(jsx as ReactElement, mark, dims, context) : jsx;
+  if (!isValidElement(node)) return {};
+  const props = (node as ReactElement).props as Record<string, any>;
+  const promoted: Record<string, any> = {};
+  for (const name of promotedNames) if (props[name] != null) promoted[name] = props[name];
+  return promoted;
+}
+
+const promotedNames = ["aria-label", "aria-description", "aria-hidden", "transform"] as const;
+
+// One facet of a promoted group: the attributes the walker hoisted onto the
+// shared parent are removed here (upstream removeAttribute, plot.js:321) and
+// the facet's cell transform is written in the vacated transform's place
+// (upstream's facetTranslate pass, plot.js:325).
+export function promoteFacetChild(node: ReactNode, cell: string): ReactNode {
+  if (!isValidElement(node)) return node;
+  return cloneElement(
+    node as ReactElement<any>,
+    {
+      "aria-label": undefined,
+      "aria-description": undefined,
+      "aria-hidden": undefined,
+      transform: cell
+    } as any
+  );
 }
 
 function renderMarks(
@@ -661,69 +907,43 @@ function renderMarks(
   clipReg: ClipRegistry,
   getHandlers?: (mark: any) => MarkEventHandlers | undefined
 ): ReactNode[] {
-  return renderMarksWith(computed, (mark, index, values, dims, scales, context, key) => (
-    <MarkSlot
-      key={key}
-      mark={mark}
-      index={index}
-      scales={scales}
-      values={values}
-      dims={dims}
-      context={context}
-      clipReg={clipReg}
-      getHandlers={getHandlers}
-      markData={getHandlers?.(mark) ? computed.stateByMark.get(mark)?.data : undefined}
-    />
-  ));
+  return renderMarksWith(
+    computed,
+    (mark, index, values, dims, scales, context, key, order, facetTransform) => {
+      // The split is on the component TYPE, not on a prop or a branch inside
+      // one component: <MarkSlot> holds no useContext(PointerContext) and no
+      // pointer state at all, so an ordinary mark is structurally incapable of
+      // re-rendering because the pointer moved.
+      const Slot = isPointerConsumer(mark) ? PointerMarkSlot : MarkSlot;
+      return (
+        <Slot
+          key={key}
+          order={order}
+          mark={mark}
+          index={index}
+          scales={scales}
+          values={values}
+          dims={dims}
+          context={context}
+          clipReg={clipReg}
+          getHandlers={getHandlers}
+          markData={getHandlers?.(mark) ? computed.stateByMark.get(mark)?.data : undefined}
+          facetTransform={facetTransform}
+        />
+      );
+    },
+    clipReg
+  );
 }
 
-// Renders one mark via its renderJSX into pure React SVG. Pointer-consumer
-// marks (Tip, crosshair sub-marks) render with an empty index by default;
-// PointerRoot will override this on hover to render only the selected datum.
+// Renders one ordinary (non-pointer) mark via its renderJSX into pure React
+// SVG. It holds no hooks and reads no context, so nothing about the pointer
+// interaction can reach it: a plot of ten thousand dots is not rebuilt because
+// a tip moved. Pointer consumers go through <PointerMarkSlot> instead, chosen
+// by component type in renderMarks.
 function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandlers, markData}: any) {
-  const pointerCtx = useContext(PointerContext);
-  const pointerConsumer = isPointerConsumer(mark);
-
-  // For pointer-consumer marks, replace the data index with the currently-
-  // selected index (or empty when nothing is hovered). The selection key
-  // identifies this mark's registration in PointerRoot.
-  const fi = (index as any)?.fi ?? null;
-  const regId = pointerConsumer ? pointerRegistrationId(mark, fi) : null;
-
-  useEffect(() => {
-    if (!pointerCtx || !pointerConsumer || regId == null || index == null || index.length === 0) return;
-    return pointerCtx.register({id: regId, index, values, fi, kx: 1, ky: 1, maxRadius: 40});
-  }, [pointerCtx, pointerConsumer, regId, index, values, fi]);
-
-  const sel = pointerConsumer && pointerCtx && regId ? pointerCtx.selectionFor(regId) : null;
-  let renderIndex = index;
-  if (pointerConsumer && index != null) {
-    const empty: any = [];
-    if ((index as any).fx !== undefined)
-      (empty.fx = (index as any).fx), (empty.fy = (index as any).fy), (empty.fi = (index as any).fi);
-    if (sel?.i != null) {
-      const filled: any = [sel.i];
-      filled.fx = (index as any).fx;
-      filled.fy = (index as any).fy;
-      filled.fi = (index as any).fi;
-      renderIndex = filled;
-    } else {
-      renderIndex = empty;
-    }
-  }
-
   if (typeof mark.renderJSX !== "function") return null;
-  // Coerce index to a plain Array. Marks call (index as number[]).map(...)
-  // but `index` is often a TypedArray (e.g. Uint32Array); its .map() coerces
-  // returned React elements back to numbers, corrupting output.
-  const arrayIndex =
-    renderIndex == null || !ArrayBuffer.isView(renderIndex)
-      ? renderIndex
-      : Object.assign(Array.from(renderIndex as any), {
-          fx: (renderIndex as any).fx,
-          fy: (renderIndex as any).fy,
-          fi: (renderIndex as any).fi
-        });
+  const arrayIndex = plainIndex(index);
   // renderJSX usually returns its own <g> wrapper; we don't add another, to
   // keep the DOM structure identical to the imperative output. Clip wrapping
   // (frame/geo) is applied via the clip registry. A user render option (a
@@ -739,10 +959,6 @@ function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandl
     if (isDomNode(jsx)) jsx = domToJsx(jsx) as ReactElement;
   }
   if (jsx == null) return null;
-  // While the pointer is not sticky, pointer-driven marks must not intercept
-  // the pointer events that drive them (upstream defaults pointer-events to
-  // "none" when context.pointerSticky === false).
-  if (pointerConsumer && sel?.sticky !== true) jsx = defaultPointerEventsNone(jsx) as ReactElement;
   // Per-mark event handlers attach as React event props (no DOM-structure
   // change): per element when the mark renders one element per datum,
   // mark-level otherwise. Presence changes rebuild the plot (stamped), so
@@ -750,6 +966,139 @@ function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandl
   const handlers = getHandlers?.(mark);
   if (handlers) jsx = attachMarkHandlers(jsx, arrayIndex, markData, handlers, () => getHandlers(mark));
   return <>{clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx}</>;
+}
+
+// Renders one pointer-consumer mark (a tip, a crosshair sub-mark, or any
+// pointer()-wrapped mark) for one facet — exactly upstream's renderIndex slot.
+// The slot owns a registration record in the plot's pointer store and renders
+// only the datum that record has been awarded, which is an empty index until
+// something is hovered.
+function PointerMarkSlot({
+  mark,
+  index,
+  scales,
+  values,
+  dims,
+  context,
+  clipReg,
+  getHandlers,
+  markData,
+  order,
+  facetTransform
+}: any) {
+  const store = pointerStoreOf(useContext(PointerContext));
+
+  // Created once and kept for the life of the slot. The record OBJECT is the
+  // registration's identity — there is no string key anywhere — so two tips,
+  // or a crosshair's two identically-labelled rules, cannot collide. What it
+  // does NOT carry across a recompute is any claim about the data: the store
+  // re-resolves every registered record at the last pointer position once the
+  // commit is over (see settle in interactions/pointerStore.ts), so a record
+  // handed to a different mark by a reused fiber simply resolves against that
+  // mark, at a position it is nowhere near, and shows nothing.
+  const [reg] = useState(() => store.createRegistration());
+
+  const sel = useSyncExternalStore(reg.subscribe, reg.getSnapshot, reg.getServerSnapshot);
+
+  // `index` is reallocated by mark.filter on most plot re-renders, so this
+  // effect DOES re-run whenever the plot recomputes — which is how the anchors,
+  // the data and the facet correction stay in step with the scales. It is
+  // deliberately not run on a pointer move: nothing it computes depends on the
+  // pointer. It writes the record only from an effect, so the store (which
+  // reads it from event handlers) can never see a half-filled record.
+  //
+  // WHATEVER THE INDEX IS, IT REGISTERS. An earlier revision also returned
+  // early on an EMPTY index, on the reasoning that a slot which can draw no
+  // datum has nothing to register — and that is exactly how a record goes
+  // missing: it never comes back to the store, so nothing re-resolves it and
+  // the plot goes on reporting a datum it has stopped drawing. An empty index
+  // is simply a search that always misses, so it registers like any other, and
+  // the store decides. (In practice one never arrives: renderMarksWith drops a
+  // mark whose filtered index is empty, exactly as upstream's plot.js does at
+  // 290/307, so the slot unmounts instead — which the store's departed-record
+  // path reports. The guard here is for the channel-less mark, whose index is
+  // null and which has nothing to hit-test at all.)
+  useLayoutEffect(() => {
+    if (index == null) return;
+    Object.assign(reg, {
+      order,
+      mark,
+      fi: index.fi ?? null,
+      index: Array.from(index as ArrayLike<number>),
+      dimensions: dims,
+      context,
+      data: context.getMarkState(mark).data,
+      ...pointerKOf(mark),
+      ...computeAnchors(mark, scales, values, dims, index)
+    });
+    return store.add(reg);
+  }, [store, reg, order, mark, index, values, scales, dims, context]);
+
+  if (typeof mark.renderJSX !== "function") return null;
+
+  // The substituted index: upstream's `const I = i == null ? [] : [i]`, with
+  // the facet markers carried across so a faceted mark still knows its cell —
+  // a tip reads index.fx/index.fy to report the facet channels. The marker is
+  // `fi`, exactly as upstream tests it (`const faceted = index.fi != null`):
+  // a plot faceted only by fy has no fx at all.
+  let renderIndex: any = index;
+  if (index != null) {
+    renderIndex = sel.i != null ? [sel.i] : [];
+    if (index.fi != null) (renderIndex.fx = index.fx), (renderIndex.fy = index.fy), (renderIndex.fi = index.fi);
+  }
+
+  // No plainIndex() here: a pointer consumer's index is one this slot built,
+  // so it is already a plain Array (or the null a channel-less mark was given).
+  //
+  // A user `render` option composed under pointer() runs HERE, over the
+  // substituted index, so it sees exactly the datum the pointer has selected —
+  // which is what upstream's composed closure does when it calls next(). Its
+  // own render is recovered from the pointer tag (see userRenderOf).
+  let jsx: ReactElement;
+  if (hasRenderTransform(mark)) {
+    jsx = renderTransformJSX(mark, renderIndex, scales, values, dims, context) as ReactElement;
+  } else {
+    jsx = mark.renderJSX(renderIndex, scales, values, dims, context) as ReactElement;
+    if (isDomNode(jsx)) jsx = domToJsx(jsx) as ReactElement;
+  }
+  if (jsx == null) return null;
+  // While the pointer is not sticky, a pointer-driven mark must not intercept
+  // the very events that drive it (upstream defaults pointer-events to "none"
+  // when context.pointerSticky === false). AFTER the transform branch on
+  // purpose: upstream applies the default to everything rendered under a
+  // pointer render, so a transform that wraps next()'s output must carry it on
+  // that wrapper, which is the root this slot renders.
+  if (!sel.sticky) jsx = defaultPointerEventsNone(jsx) as ReactElement;
+  const handlers = getHandlers?.(mark);
+  if (handlers) jsx = attachMarkHandlers(jsx, renderIndex, markData, handlers, () => getHandlers(mark));
+  let out = (clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx) as ReactElement;
+  // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
+  // drop the attributes now carried by the shared parent and take the facet's
+  // cell transform instead of the mark transform.
+  if (facetTransform !== undefined) out = promoteFacetChild(out, facetTransform) as ReactElement;
+  // The store needs the rendered root to answer "was this pointerdown inside an
+  // already-pinned mark?". rootRef is bound once per record, so attaching it
+  // costs no detach/attach churn on a re-render.
+  return cloneElement(out, {ref: reg.rootRef} as any);
+}
+
+// PlotSvg mounts a <PointerRoot> whenever the plot contains any pointer
+// consumer, and renderMarks picks <PointerMarkSlot> by that very same
+// predicate, so the context is always populated. Assert rather than degrade
+// into a mark that renders correctly and can never be selected.
+function pointerStoreOf(store: PointerStore | null): PointerStore {
+  if (store == null) throw new Error("PointerMarkSlot: a pointer-consumer mark rendered outside a <PointerRoot>");
+  return store;
+}
+
+// Coerces an index to a plain Array, preserving the facet markers. Marks call
+// (index as number[]).map(...), but `index` is often a TypedArray (e.g.
+// Uint32Array), whose .map() coerces the returned React elements back to
+// numbers and corrupts the output.
+function plainIndex(index: any): any {
+  if (index == null || !ArrayBuffer.isView(index)) return index;
+  const {fx, fy, fi} = index as any;
+  return Object.assign(Array.from(index as any), {fx, fy, fi});
 }
 
 // Attaches the registered handlers to a mark's rendered JSX. Marks that
@@ -797,19 +1146,6 @@ function handlerProps(
     };
   }
   return props;
-}
-
-// Marks driven by the pointer interaction. Their render is wrapped by
-// pointer.js's composeRender (which manages an internal "selected index"
-// via D3 event subscriptions on the imperative path). On the React path,
-// PointerRoot tracks the selection in React state; pointer-consumer marks
-// render with an empty index by default and are overridden to render the
-// selected datum when PointerRoot reports a hit.
-// Stable id for a pointer registration. Combines aria-label and facet so
-// each (mark, facet) pair gets its own slot; the ariaLabel is sufficient
-// to disambiguate Tip from crosshair sub-marks within a single Plot.
-function pointerRegistrationId(mark: any, fi: number | null): string {
-  return `${mark.ariaLabel ?? mark.constructor?.name ?? "?"}#${fi ?? "-"}`;
 }
 
 // Mirrors applyIndirectStyles' pointer-events default (upstream style.js):

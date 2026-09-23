@@ -59,6 +59,9 @@ interface FakeRegistration {
   fi?: number | null;
   tx?: number;
   ty?: number;
+  /** Anisotropy, as pointerX (ky 0.01) and pointerY (kx 0.01) set it. */
+  kx?: number;
+  ky?: number;
   points: [number, number][];
   data?: unknown;
   dispatched?: unknown[];
@@ -66,7 +69,7 @@ interface FakeRegistration {
 
 /** Builds and registers one record whose data are its own point objects. */
 function register(store: PointerStore, options: FakeRegistration): {reg: Registration; unregister: () => void} {
-  const {order, mark = {}, fi = null, tx = 0, ty = 0, points, data, dispatched = []} = options;
+  const {order, mark = {}, fi = null, tx = 0, ty = 0, kx = 1, ky = 1, points, data, dispatched = []} = options;
   const reg = store.createRegistration();
   Object.assign(reg, {
     order,
@@ -74,8 +77,9 @@ function register(store: PointerStore, options: FakeRegistration): {reg: Registr
     fi,
     tx,
     ty,
+    kx,
+    ky,
     index: points.map((_, i) => i),
-    values: {},
     data: data ?? points.map((_, i) => ({datum: i})),
     dimensions: DIMS,
     context: {dispatchValue: (v: unknown) => dispatched.push(v)},
@@ -83,6 +87,22 @@ function register(store: PointerStore, options: FakeRegistration): {reg: Registr
     py: (i: number) => points[i][1]
   });
   return {reg, unregister: store.add(reg)};
+}
+
+/**
+ * Re-points a record at new data, exactly as a plot recompute does: the index,
+ * the anchors and the data are all rebuilt together, because they all come out
+ * of the same computePlot pass. Nothing here may set one without the others —
+ * a fixture whose points stay put while its data are reordered is a plot that
+ * cannot exist.
+ */
+function recompute(reg: Registration, points: [number, number][], data?: unknown[]): void {
+  Object.assign(reg, {
+    index: points.map((_, i) => i),
+    data: data ?? points.map((_, i) => ({datum: i})),
+    px: (i: number) => points[i][0],
+    py: (i: number) => points[i][1]
+  });
 }
 
 /** Counts how many times a record has notified its subscribers. */
@@ -206,6 +226,319 @@ describe("pointer store", () => {
     assert.strictEqual(reg.sel.i, 1);
   });
 
+  it("releases the plot's sticky modality when the record holding the pin departs for good", () => {
+    const store = createPointerStore();
+    // Two records, so the store survives the first one's departure; the pin is
+    // claimed by the lowest-order record, exactly as upstream's handledEvents
+    // WeakSet gives the pointerdown to the first-registered handler.
+    const {reg: a, unregister: removeA} = register(store, {order: 0, points: [[10, 10]]});
+    const {reg: b} = register(store, {order: 1000, points: [[100, 100]]});
+
+    hover(store, 10, 10);
+    store.down(mouseDown());
+    assert.strictEqual(store.sticky, true);
+    assert.strictEqual(a.sel.sticky, true);
+
+    // The pinning slot unmounts and never comes back — its data went empty,
+    // its tip was toggled off, its mark was dropped. Nothing in that path
+    // inspects the pin, so a stored flag would stay raised with no owner and
+    // no gesture could lower it again: move() and leave() return on sticky,
+    // and down() returns because the new first record is not pointing.
+    removeA();
+
+    assert.strictEqual(store.sticky, false);
+    hover(store, 100, 100);
+    assert.strictEqual(b.sel.i, 0); // the plot still answers the pointer
+    store.leave({pointerType: "mouse"});
+    assert.strictEqual(b.sel.i, null);
+  });
+
+  it("re-resolves a re-registered record at the pointer, whatever the new rows are made of", () => {
+    const store = createPointerStore();
+    // The store asks WHERE THE POINTER IS and nothing else, so the rows may be
+    // rebuilt from nothing in common with the old ones — which is what a parent
+    // re-render (`rows.map(d => ({...d}))`) and every grouping transform do —
+    // and the selection still lands on what is drawn under the pointer. A rule
+    // over the datum's identity dropped the selection here, and dropped it on
+    // the very render a controlled plot's own onValue had just caused.
+    const points: [number, number][] = [
+      [10, 10],
+      [110, 10]
+    ];
+    const {reg, unregister} = register(store, {order: 0, points, data: [{datum: "a"}, {datum: "b"}]});
+
+    hover(store, 10, 10);
+    store.down(mouseDown());
+    assert.deepStrictEqual({...reg.sel}, {i: 0, sticky: true});
+
+    unregister();
+    recompute(reg, points, [{datum: "a"}, {datum: "b"}]); // equal-looking, wholly new objects
+    store.add(reg);
+    store.settle();
+
+    assert.deepStrictEqual({...reg.sel}, {i: 0, sticky: true}); // and the pin survives with it
+    assert.strictEqual(store.sticky, true);
+  });
+
+  it("follows the datum under the pointer when the rows are reordered", () => {
+    const store = createPointerStore();
+    // Membership of the index proves nothing: `index` holds DATA indices, so a
+    // reorder (or a deletion before the selected datum) leaves the old index a
+    // member while it names something else, and the tip silently changes datum
+    // under a pointer that has not moved. Re-resolving asks the only question
+    // that survives a recompute — what is drawn HERE — so the index moves and
+    // the datum does not.
+    const a = {datum: "a"};
+    const b = {datum: "b"};
+    const c = {datum: "c"};
+    const points: [number, number][] = [
+      [10, 10],
+      [60, 10],
+      [110, 10]
+    ];
+    const values: unknown[] = [];
+    store.setOnValue((v) => values.push(v));
+    const {reg, unregister} = register(store, {order: 0, points, data: [a, b, c]});
+
+    hover(store, 110, 10);
+    assert.strictEqual(reg.sel.i, 2);
+    assert.deepStrictEqual(values, [c]);
+
+    // The data reverse, and so do the positions they are drawn at: c is still
+    // the datum at (110, 10), and is now index 0.
+    unregister();
+    recompute(reg, [...points].reverse() as [number, number][], [c, b, a]);
+    store.add(reg);
+    store.settle();
+
+    assert.strictEqual(reg.sel.i, 0);
+    assert.strictEqual(reg.data[reg.sel.i!], c);
+    assert.deepStrictEqual(values, [c], "the reported datum did not change, so nothing was reported");
+  });
+
+  it("drops a retained selection, and its pin, when a sibling mark's data slides under the record", () => {
+    const store = createPointerStore();
+    // The fiber-reuse case: React assigns useId at MOUNT, so removing the first
+    // of two unkeyed sibling marks hands the survivor the first one's fiber and
+    // therefore its registration record, its selection and its pin. Nothing
+    // about the record can tell that it changed hands — and nothing has to.
+    // The survivor draws its own datum in its own place, the pointer is not
+    // there, so the search misses and the pin goes with the selection it was
+    // holding. (A sibling that happened to draw a datum at the very same point
+    // would keep the pin, and would be showing what the pointer is over.)
+    const theirs = [{datum: "theirs"}];
+    const {reg, unregister} = register(store, {order: 0, points: [[10, 10]], data: [{datum: "mine"}]});
+
+    hover(store, 10, 10);
+    store.down(mouseDown());
+    assert.deepStrictEqual({...reg.sel}, {i: 0, sticky: true});
+
+    unregister();
+    recompute(reg, [[150, 150]], theirs);
+    store.add(reg);
+    store.settle();
+
+    assert.strictEqual(reg.sel, NONE);
+    assert.strictEqual(store.sticky, false);
+    hover(store, 150, 150);
+    assert.strictEqual(reg.sel.i, 0); // and it selects afresh
+  });
+
+  it("reports the clearing value when the data under the pointer go away", () => {
+    const store = createPointerStore();
+    // Ceasing to show a datum is not only a rendering change: the record stops
+    // SHOWING it, so the plot has to stop REPORTING it. Leaving the value
+    // behind left `figure.value` holding the vanished datum, left the last
+    // onValue call un-followed by a null, and left the store's own lastValue
+    // guard holding that datum — so a later genuine re-selection of it
+    // dispatched nothing at all.
+    const dispatched: unknown[] = [];
+    const values: unknown[] = [];
+    store.setOnValue((v) => values.push(v));
+    const rows = [{datum: "a"}];
+    const {reg, unregister} = register(store, {order: 0, points: [[10, 10]], data: rows, dispatched});
+
+    hover(store, 10, 10);
+    assert.deepStrictEqual(dispatched, [rows[0]]);
+    assert.deepStrictEqual(values, [rows[0]]);
+
+    // The parent sets the data to []. The slot still renders, and still
+    // registers: an empty index is a search that always misses, and skipping
+    // the registration is what used to leave the plot reporting a row it had
+    // stopped drawing.
+    unregister();
+    recompute(reg, [], []);
+    store.add(reg);
+    store.settle();
+
+    assert.strictEqual(reg.sel, NONE);
+    assert.deepStrictEqual(dispatched, [rows[0], null]);
+    assert.deepStrictEqual(values, [rows[0], null]);
+
+    // …and the guard is not poisoned: the data come back and the same datum
+    // reports again, with no pointer movement of any kind.
+    unregister();
+    recompute(reg, [[10, 10]], rows);
+    store.add(reg);
+    store.settle();
+    assert.strictEqual(reg.sel.i, 0);
+    assert.deepStrictEqual(values, [rows[0], null, rows[0]]);
+  });
+
+  it("reports the clearing value when the record holding the selection unmounts", () => {
+    const store = createPointerStore();
+    // The other half of the same failure. A slot that unmounts never
+    // re-registers, so there is no re-resolution to clear it and — before this
+    // — nothing dispatched at all: the tip vanished with its mark while
+    // svg.value, onValue and the duplicate-value guard all went on holding its
+    // datum. `regs` is empty afterwards, so the store cannot ask a record what
+    // to report; the rule is the plot-level one, that a plot showing nothing
+    // reports nothing.
+    const dispatched: unknown[] = [];
+    const values: unknown[] = [];
+    store.setOnValue((v) => values.push(v));
+    const rows = [{datum: "a"}];
+    const {unregister} = register(store, {order: 0, points: [[10, 10]], data: rows, dispatched});
+
+    hover(store, 10, 10);
+    assert.deepStrictEqual(values, [rows[0]]);
+
+    unregister(); // the mark was removed from the plot, tip and all
+    store.settle();
+
+    assert.deepStrictEqual(dispatched, [rows[0], null]);
+    assert.deepStrictEqual(values, [rows[0], null]);
+  });
+
+  it("does not report a clearing value for a record that is only re-registering", () => {
+    const store = createPointerStore();
+    // Every recompute unregisters and re-registers the same record, so the
+    // clearing report above must be reserved for records that do not come
+    // back. Reporting on the way out would put a null between every pair of
+    // values a hovered plot ever reports, and a controlled plot would see its
+    // own state blanked on every render it performed.
+    const values: unknown[] = [];
+    store.setOnValue((v) => values.push(v));
+    const rows = [{datum: "a"}];
+    const {reg, unregister} = register(store, {order: 0, points: [[10, 10]], data: rows});
+
+    hover(store, 10, 10);
+    unregister();
+    store.add(reg);
+    store.settle();
+
+    assert.strictEqual(reg.sel.i, 0);
+    assert.deepStrictEqual(values, [rows[0]]);
+  });
+
+  it("does not re-resolve at a position the pointer has left", () => {
+    const store = createPointerStore();
+    // The one place the remembered position is forgotten. Everywhere else it
+    // outlives the selection, because the pointer is still there; on
+    // pointerleave it is not, and re-resolving at the point it left through
+    // would hand a datum to a user who is pointing somewhere else entirely.
+    const values: unknown[] = [];
+    store.setOnValue((v) => values.push(v));
+    const points: [number, number][] = [[10, 10]];
+    const {reg, unregister} = register(store, {order: 0, points, data: [{datum: "a"}]});
+
+    hover(store, 10, 10);
+    store.leave({pointerType: "mouse"});
+    assert.strictEqual(reg.sel, NONE);
+
+    unregister();
+    recompute(reg, points, [{datum: "a"}]);
+    store.add(reg);
+    store.settle();
+
+    assert.strictEqual(reg.sel, NONE);
+    assert.deepStrictEqual(values, [{datum: "a"}, null]);
+  });
+
+  it("does not re-resolve before the pointer has ever entered the plot", () => {
+    const store = createPointerStore();
+    // A plot that recomputes under a pointer that has never touched it — the
+    // ordinary case of a live-updating chart nobody is looking at — must not
+    // conjure a selection out of the origin, or out of anywhere else.
+    const values: unknown[] = [];
+    store.setOnValue((v) => values.push(v));
+    const {reg, unregister} = register(store, {order: 0, points: [[0, 0]], data: [{datum: "a"}]});
+    store.settle();
+
+    unregister();
+    store.add(reg);
+    store.settle();
+
+    assert.strictEqual(reg.sel, NONE);
+    assert.deepStrictEqual(values, []);
+  });
+
+  it("lets a pointerdown unpin when a consumer has mounted ahead of the pin holder", () => {
+    const store = createPointerStore();
+    // Upstream gives the pointerdown to the first-registered handler and lets
+    // its own `i` decide, but it also guarantees — without ever having to say
+    // so — that the first handler IS the pin holder whenever there is a pin:
+    // its listener set is fixed for the life of a render, and a pin can only be
+    // taken while that first handler was pointing. A React registry gains
+    // members under a live pin (a <Crosshair> toggled on, a tip added to an
+    // earlier mark), so first-registered read literally hands the decision to a
+    // record that has never pointed — down() would return, isSticky() would
+    // stay true because the pin holder is still registered, and move() and
+    // leave() both return early on sticky. The plot would be pinned for good.
+    const {reg: pinned} = register(store, {order: 1000, points: [[10, 10]]});
+
+    hover(store, 10, 10);
+    store.down(mouseDown());
+    assert.strictEqual(pinned.sel.sticky, true);
+
+    // A consumer mounts AHEAD of the pin holder, with no selection of its own.
+    const {reg: ahead} = register(store, {order: 0, points: [[190, 190]]});
+    assert.strictEqual(ahead.sel.i, null);
+    assert.strictEqual(store.sticky, true);
+
+    store.down(mouseDown());
+    assert.strictEqual(store.sticky, false);
+    assert.strictEqual(pinned.sel, NONE);
+
+    // …and the plot answers the pointer again.
+    hover(store, 10, 10);
+    assert.strictEqual(pinned.sel.i, 0);
+  });
+
+  it("re-resolves a pinned record too, and releases the pin when nothing is under it", () => {
+    const store = createPointerStore();
+    // A pin is a pin on a PLACE: the user pinned what was under the pointer,
+    // and the pointer has not moved, so the pinned record is re-resolved like
+    // every other and hands its pin back to itself. What it must never do is
+    // keep a pin over nothing — a sticky selection with no index makes
+    // isSticky() true with nothing to show, and move(), leave() and down() all
+    // return early on sticky, so the plot would be pinned for good on a datum
+    // nobody can see or dismiss.
+    const points: [number, number][] = [[10, 10]];
+    const {reg, unregister} = register(store, {order: 0, points, data: [{datum: "a"}]});
+
+    hover(store, 10, 10);
+    store.down(mouseDown());
+    assert.strictEqual(store.sticky, true);
+
+    // An unrelated recompute: the pin stays exactly where it was.
+    unregister();
+    recompute(reg, points, [{datum: "a"}]);
+    store.add(reg);
+    store.settle();
+    assert.deepStrictEqual({...reg.sel}, {i: 0, sticky: true});
+
+    // And now the datum under it goes.
+    unregister();
+    recompute(reg, [], []);
+    store.add(reg);
+    store.settle();
+    assert.strictEqual(reg.sel, NONE);
+    assert.strictEqual(store.sticky, false);
+    hover(store, 10, 10); // the plot answers the pointer again
+    assert.strictEqual(reg.sel.i, null);
+  });
+
   it("pools the facets of one mark, so only the nearest facet keeps a datum", () => {
     const store = createPointerStore();
     const dispatched: unknown[] = [];
@@ -275,11 +608,46 @@ describe("pointer store", () => {
     assert.strictEqual(f0.sel, NONE); // the mark still stops rendering...
     assert.deepStrictEqual(dispatched, [{f: 0}]); // ...but the value is stale
 
+    // Re-entering the facet re-renders it, but reports NOTHING: the clearing
+    // dispatch above was suppressed, so the plot's value never stopped being
+    // this datum, and upstream's dispatchValue returns on `figure.value ===
+    // value` (plot.js:180-184). The two quirks compound exactly as upstream's
+    // do — that is the point of this case.
     hover(store, 10, 10);
-    assert.deepStrictEqual(dispatched, [{f: 0}, {f: 0}]);
+    assert.deepStrictEqual(dispatched, [{f: 0}]);
     hover(store, 190, 190); // out of range of every facet, this time via select()
     assert.strictEqual(f0.sel, NONE);
-    assert.deepStrictEqual(dispatched, [{f: 0}, {f: 0}]);
+    assert.deepStrictEqual(dispatched, [{f: 0}]);
+  });
+
+  it("does not retain a searched-facet set for a mark the plot has rebuilt", () => {
+    const store = createPointerStore();
+    const dispatched: unknown[] = [];
+    // useMark rebuilds its mark instances on every stamp change, so a pointer
+    // plot bound to changing data walks through a fresh mark object per
+    // recompute. Each generation below is one such recompute: the slots
+    // unregister and re-register around a brand-new mark, exactly as React's
+    // layout-effect cleanup and create pair does.
+    for (let generation = 0; generation < 5; ++generation) {
+      const mark = {ariaLabel: "dot"};
+      const f0 = register(store, {order: 1000, mark, fi: 0, points: [[10, 10]], data: [{f: 0}], dispatched});
+      const f1 = register(store, {order: 1001, mark, fi: 1, tx: 100, points: [[10, 10]], data: [{f: 1}], dispatched});
+
+      hover(store, 10, 10);
+      assert.strictEqual(f0.reg.sel.i, 0);
+      store.leave({pointerType: "mouse"});
+      assert.strictEqual(f0.reg.sel, NONE);
+
+      // One live mark, however many recomputes have gone by.
+      assert.strictEqual(store.retainedSearchedMarks(), 1);
+      f0.unregister();
+      f1.unregister();
+    }
+
+    // …and the retention that IS wanted is untouched: within each generation
+    // both facets were searched before the pointerleave, so every clearing
+    // dispatch was suppressed and the value never blinked through null.
+    assert.deepStrictEqual(dispatched, [{f: 0}, {f: 0}, {f: 0}, {f: 0}, {f: 0}]);
   });
 
   it("still dispatches a clearing value for a mark with a single searched facet", () => {
@@ -355,23 +723,54 @@ describe("pointer store", () => {
     assert.strictEqual(second.sel, NONE);
   });
 
-  it("prefers a datum at exactly maxRadius over an earlier registration that missed", () => {
+  it("lets an earlier registration's miss beat a datum sitting at exactly maxRadius", () => {
     const store = createPointerStore();
-    // A DELIBERATE divergence from upstream, pinned here so that a future
-    // re-sync trips over it rather than silently re-litigating it. Upstream
-    // pools misses alongside hits — pointerSearch scores a miss at maxRadius
-    // squared and update() stores it (pointer.js:134) — and a datum sitting at
+    // The boundary case of upstream's arbitration, and it is upstream's answer,
+    // not a nicer one. pointerSearch scores a miss at maxRadius squared and
+    // update() stores it in the pool like any hit (pointer.js:134); a datum at
     // exactly maxRadius scores maxRadius squared too, so `c.ri < best.ri`
-    // (pointer.js:139) hands the tie to the earlier entry: the miss wins and
-    // every pooled mark renders nothing. Replot reports a miss as Infinity and
-    // skips it, so the boundary datum is shown. See nearest() in
-    // src/react/interactions/pointerHitTest.ts.
+    // (pointer.js:139) leaves the win with the earlier entry — the miss — and
+    // the final loop renders `c === best ? c.ii : null` with best.ii null, so
+    // every pooled mark shows nothing.
     const {reg: missed} = register(store, {order: 0, mark: {pool: true}, points: [[300, 300]]});
     const {reg: boundary} = register(store, {order: 1000, mark: {pool: true}, points: [[50, 10]]});
 
     hover(store, 10, 10); // exactly maxRadius (40px) from the boundary datum
     assert.strictEqual(missed.sel, NONE);
+    assert.strictEqual(boundary.sel, NONE);
+
+    // One pixel closer and the datum beats the miss outright.
+    hover(store, 11, 10);
     assert.strictEqual(boundary.sel.i, 0);
+  });
+
+  it("blanks every member of a group whose winner is a miss", () => {
+    const store = createPointerStore();
+    // The rule the boundary case above is an instance of, and where it bites:
+    // an ANISOTROPIC mark. pointerX squashes the orthogonal distance to decide
+    // WHETHER a datum is within maxRadius, then recomputes ri unsquashed for
+    // the cross-facet comparison (pointer.js:154-157), so a hit's ri can be far
+    // greater than maxRadius squared — and a plain miss, scored at exactly
+    // maxRadius squared, then beats it. Upstream lets that miss win the pool
+    // and renders `c === best ? c.ii : null` with best.ii null, so the whole
+    // group goes blank. Skipping misses instead shows the far datum wherever
+    // upstream shows nothing: a differential oracle over a faceted lineY with a
+    // tip put that at 125 of 357 probe points.
+    const mark = {ariaLabel: "tip"};
+    const facet = {mark, kx: 1, ky: 0.01, points: [[10, 10]] as [number, number][]};
+    const {reg: near} = register(store, {order: 0, fi: 0, ...facet});
+    const {reg: far} = register(store, {order: 1, fi: 1, tx: 500, ...facet});
+
+    // 140px below facet 0's datum: squashed to 1.4px it is a hit, but its
+    // unsquashed ri is 19600 — worse than facet 1's miss at 1600.
+    hover(store, 10, 150);
+    assert.strictEqual(near.sel, NONE);
+    assert.strictEqual(far.sel, NONE);
+
+    // The control: 30px below, ri 900, and facet 0 beats the miss.
+    hover(store, 10, 40);
+    assert.strictEqual(near.sel.i, 0);
+    assert.strictEqual(far.sel, NONE);
   });
 
   it("keeps the identical snapshot and does not notify when the selection is unchanged", () => {
@@ -590,7 +989,10 @@ describe("pointer store", () => {
     store.leave({pointerType: "mouse"});
     assert.strictEqual(a.sel, NONE);
     assert.strictEqual(b.sel, NONE);
-    assert.deepStrictEqual(dispatched, [null, null]);
+    // Both records clear, but the plot reports ONE null: the value lives on the
+    // plot element, and upstream's dispatchValue compares against it by
+    // reference (plot.js:180-184), so the second record's null is a no-op.
+    assert.deepStrictEqual(dispatched, [null]);
     assert.strictEqual(notifiedA(), 2); // selected, then cleared
   });
 
@@ -843,7 +1245,7 @@ describe("pointer hit test adapters", () => {
     assert.strictEqual(py(0), 9);
   });
 
-  it("corrects the pointer by the registration's own offsets and reports a miss as Infinity", () => {
+  it("corrects the pointer by the registration's own offsets and scores a miss at maxRadius squared", () => {
     const points: [number, number][] = [
       [10, 10],
       [80, 10]
@@ -862,8 +1264,11 @@ describe("pointer hit test adapters", () => {
 
     assert.deepStrictEqual(nearest(reg, 30, 10), {ii: 0, ri: 0}); // 30 - tx lands on the datum
     assert.deepStrictEqual(nearest(reg, 10, 10), {ii: 0, ri: 400});
-    // Infinity, not maxRadius², so a miss can never win a group comparison.
-    assert.deepStrictEqual(nearest(reg, 200, 200), {ii: null, ri: Infinity});
-    assert.deepStrictEqual(nearest({...reg, index: []}, 30, 10), {ii: null, ri: Infinity});
+    // maxRadius², upstream's own accumulator value when nothing came inside the
+    // radius — NOT Infinity. The store enters it into the arbitration, exactly
+    // as upstream's update() enters it into the pool (pointer.js:134), so a
+    // miss can win a group and blank it.
+    assert.deepStrictEqual(nearest(reg, 200, 200), {ii: null, ri: 1600});
+    assert.deepStrictEqual(nearest({...reg, index: []}, 30, 10), {ii: null, ri: 1600});
   });
 });

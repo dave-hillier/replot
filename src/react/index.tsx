@@ -164,15 +164,11 @@ export {Legend} from "./legends/Legend.js";
 export type {LegendProps} from "./legends/Legend.js";
 
 // Interaction components
-export {Tip, formatTip} from "./interactions/Tip.js";
+export {Tip} from "./interactions/Tip.js";
 export type {TipProps} from "./interactions/Tip.js";
 
 export {Crosshair, CrosshairX, CrosshairY} from "./interactions/Crosshair.js";
 export type {CrosshairProps} from "./interactions/Crosshair.js";
-
-// Interaction hooks
-export {usePointer, findNearest} from "./interactions/usePointer.js";
-export type {PointerState, UsePointerOptions} from "./interactions/usePointer.js";
 
 // Transform components (wrappers composing via TransformContext)
 export {TransformContext, useTransformContext} from "./TransformContext.js";

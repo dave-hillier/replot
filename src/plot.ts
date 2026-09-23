@@ -521,6 +521,12 @@ function inferTips(marks) {
       const t = tip(mark.data, tipOptions);
       t.facet = mark.facet; // inherit facet settings
       t.facetAnchor = mark.facetAnchor; // inherit facet settings
+      // An inferred tip is created here, inside computePlot, so it has no
+      // registration of its own in the React tree. Recording the mark it was
+      // inferred from is what lets <Plot> give its slot a key that survives
+      // marks being added and removed around it; see markKeysOf in
+      // src/react/Replot.tsx. Inert on the imperative path.
+      t.tipFor = mark;
       tips.push(t);
     }
   }

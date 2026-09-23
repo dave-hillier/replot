@@ -371,6 +371,24 @@ export function tipLines(svg: any, k = 0): string[] {
     .map((node: any) => stripZeroWidth(node.textContent ?? ""));
 }
 
+/**
+ * The text lines of EVERY showing tip in the plot, one entry per rendered
+ * `<text>`, in document order.
+ *
+ * Unlike {@link tipLines} this does not index by tip GROUP. A faceted pointer
+ * consumer's facets are one `g[aria-label="tip"]` each today and become
+ * children of a single promoted group once the ARIA promotion lands, so a test
+ * asking "which datum is showing" must not have to know which shape it is
+ * looking at.
+ */
+export function tipTexts(svg: any): string[][] {
+  return Array.from(svg.querySelectorAll('g[aria-label="tip"] text') as ArrayLike<any>).map((text: any) =>
+    Array.from(text.childNodes as ArrayLike<any>)
+      .filter(isTspan)
+      .map((node: any) => stripZeroWidth(node.textContent ?? ""))
+  );
+}
+
 /** The user-space point d3.pointer would report for a client point. */
 export function svgPointOf(svg: any, event: Event): [number, number] {
   return d3pointer(event, svg) as [number, number];

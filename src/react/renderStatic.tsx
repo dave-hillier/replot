@@ -1,5 +1,5 @@
-import {createElement as h, Fragment, type ReactElement, type ReactNode} from "react";
-import {renderMarksWith, isPointerConsumer, defaultPointerEventsNone} from "./Replot.js";
+import {cloneElement, createElement as h, Fragment, isValidElement, type ReactElement, type ReactNode} from "react";
+import {renderMarksWith, isPointerConsumer, defaultPointerEventsNone, promoteFacetChild} from "./Replot.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode} from "./domToJsx.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
@@ -24,8 +24,11 @@ export function buildStaticPlotSvg(computed: any, warnings: number, classNamePro
 }`;
   const clipReg = createClipRegistry();
   registerClips(computed, clipReg);
-  const marks = renderMarksWith(computed, (mark, index, values, dims, scales, context, key) =>
-    staticRenderOne(mark, index, values, dims, scales, context, key, clipReg)
+  const marks = renderMarksWith(
+    computed,
+    (mark, index, values, dims, scales, context, key, _order, facetTransform) =>
+      staticRenderOne(mark, index, values, dims, scales, context, key, clipReg, facetTransform),
+    clipReg
   );
   const warningIndicator =
     warnings > 0
@@ -69,13 +72,17 @@ function staticRenderOne(
   scales: any,
   context: any,
   key: string,
-  clipReg: ClipRegistry
+  clipReg: ClipRegistry,
+  facetTransform?: string
 ): ReactNode {
   if (typeof mark.renderJSX !== "function") return null;
   let renderIndex = index;
   if (isPointerConsumer(mark) && index != null) {
     const empty: any = [];
-    if ((index as any).fx !== undefined)
+    // `fi`, exactly as upstream tests it (`const faceted = index.fi != null`,
+    // pointer.js:111) and as <PointerMarkSlot> does. A plot faceted by fy alone
+    // has no fx at all, so testing fx drops the facet markers there.
+    if ((index as any).fi != null)
       (empty.fx = (index as any).fx), (empty.fy = (index as any).fy), (empty.fi = (index as any).fi);
     renderIndex = empty;
   }
@@ -105,5 +112,13 @@ function staticRenderOne(
   // Static renders are never sticky, so pointer-driven marks always default
   // to pointer-events="none" (upstream's context.pointerSticky === false).
   if (isPointerConsumer(mark)) jsx = defaultPointerEventsNone(jsx);
-  return h(Fragment, {key}, clipReg ? clipReg.wrap(jsx as ReactElement, mark, dims, context) : jsx);
+  const node = clipReg ? clipReg.wrap(jsx as ReactElement, mark, dims, context) : jsx;
+  // One facet of a promoted ARIA group (renderMarksWith's faceted branch). The
+  // key goes on the mark's own node rather than on a <Fragment> wrapper,
+  // because the walker adds no per-facet <g> here for it to key.
+  if (facetTransform !== undefined) {
+    const child = promoteFacetChild(node, facetTransform);
+    return isValidElement(child) ? cloneElement(child as ReactElement, {key}) : child;
+  }
+  return h(Fragment, {key}, node);
 }
