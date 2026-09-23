@@ -14,7 +14,7 @@ import {
 import {computePlot} from "../plot.js";
 import type {MarkOptions} from "../mark.js";
 import {consumeWarnings} from "../warnings.js";
-import {PlotContext} from "./PlotContext.js";
+import {PlotContext, type PlotContextValue} from "./PlotContext.js";
 import {markEventNames, useMark, type MarkEventHandlers, type MarkFactory} from "./useMark.js";
 import {PointerRoot, PointerContext} from "./interactions/PointerContext.js";
 import {computeAnchors, pointerKOf} from "./interactions/pointerHitTest.js";
@@ -28,10 +28,22 @@ import {FigureLayout} from "./FigureLayout.js";
 // <Plot> renders a JSX <svg> populated entirely by each mark's renderJSX();
 // there is no imperative (d3-selection) render fallback.
 //
-// Children's <Mark> components register their factories into marksRef during
-// render; a useLayoutEffect then runs computePlot and stores the result in
-// state. The component re-renders with <PlotSvg> as a normal React child so
-// the JSX tree participates in the parent root's act() scope under JSDOM.
+// Children's <Mark> components register their factories into marksRef from
+// their own layout effects; a useLayoutEffect here then runs computePlot and
+// stores the result in state. The component re-renders with <PlotSvg> as a
+// normal React child so the JSX tree participates in the parent root's act()
+// scope under JSDOM.
+//
+// Effects rather than render because a render can be discarded: StrictMode
+// renders (and mounts) everything twice, and a concurrent render can be thrown
+// away before it commits, so a registration written during render can be
+// recorded for a tree that never appears — and, since the cleanup that follows
+// a simulated unmount has no re-render to restore it, lost entirely (#148).
+// The cost of doing it in effects is that a registry's Map insertion order
+// freezes at MOUNT order, while the plot must draw in CHILDREN order, so each
+// effect also records this commit's order and the layout effect below
+// reconciles the two (#145). Three registries share that machinery: marks,
+// scales, legends.
 export interface ReplotProps {
   children?: ReactNode;
   width?: number;
@@ -138,13 +150,35 @@ export function Replot({
   const marksRef = useRef<Map<string, Registration>>(new Map());
   const scalesRef = useRef<Map<string, ScaleRegistration>>(new Map());
   const registrationByMarkRef = useRef<Map<any, Registration>>(new Map());
-  const dirtyRef = useRef(false);
+  // Set once the first compute has run. After that, a registration change wakes
+  // <Plot> with a version bump; before it, the mount commit computes anyway, so
+  // a bump there would compute (and emit warnings) twice.
   const computedRef = useRef(false);
   const legendsRef = useRef<Map<string, LegendRegistration>>(new Map());
+  // Registration order for this commit, one list per registry, reconciled in
+  // the layout effect below. See recordOrder and adoptOrder for why the order
+  // has to be recorded per commit rather than read off the Map.
   const pendingLegendOrderRef = useRef<string[]>([]);
-  const [version, setVersion] = useState(0);
+  const pendingMarkOrderRef = useRef<string[]>([]);
+  const pendingScaleOrderRef = useRef<string[]>([]);
+  // Registrations whose component unmounted this commit. They are held until
+  // the reconciliation below, rather than deleted on the spot, so that a
+  // StrictMode simulated unmount — which destroys and recreates every effect
+  // (create, destroy, create) — is told apart from a real unmount. See
+  // sweepRetired.
+  const retiredLegendRef = useRef<Set<string>>(new Set());
+  const retiredMarkRef = useRef<Set<string>>(new Set());
+  const retiredScaleRef = useRef<Set<string>>(new Set());
+  // Re-render fodder, deliberately unread: a registration that changes a stamp
+  // bumps one of these so <Plot> renders again at all. The inputs key in the
+  // compute effect, not the counter, decides whether that render recomputes.
+  const [, setVersion] = useState(0);
   const [, setLegendsVersion] = useState(0);
   const [resolved, setResolved] = useState<ResolvedScales | null>(null);
+  // The same resolved values, readable from a closure that cannot see state.
+  // Written in the compute effect immediately before setResolved, so the two
+  // always name the same pass.
+  const resolvedRef = useRef<ResolvedScales | null>(null);
   const [mode, setMode] = useState<Mode>({kind: "empty"});
 
   // The pointer selection store, created here rather than in <PointerRoot>
@@ -157,58 +191,106 @@ export function Replot({
   // handed to it, and it wires the <svg>'s listeners into it and disposes it.
   const [pointerStore] = useState(createPointerStore);
 
-  // Updates the published scale descriptors only when the set of scale keys
-  // changes; identity-only changes mutate in place to avoid re-rendering
-  // every <Legend scale="…"> on each plot update.
-  const publishResolved = (next: ResolvedScales) => {
-    if (resolved && sameScaleKeys(resolved.scaleDescriptors, next.scaleDescriptors)) {
-      resolved.scaleDescriptors = next.scaleDescriptors;
-      resolved.context = next.context;
-      resolved.plotOptions = next.plotOptions;
-    } else {
-      setResolved(next);
+  // The options this render was given, for the plotOptions accessor below, which
+  // has no other way to see them. Assigned during render, like onValueRef: it is
+  // a read-only mirror of a prop, not a side effect.
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
+
+  // The context value, built ONCE and never rebuilt. Everything in it closes
+  // over refs and state setters and nothing else, so the first render's copies
+  // stay correct for the life of the plot — which is what lets the value keep
+  // its identity across renders. That identity is load-bearing twice over: a
+  // consumer re-renders when the plot resolves something new for it rather than
+  // on every render of the plot (#148), and StrictMode's simulated unmount is
+  // survivable because marks and scales re-register from their own effects,
+  // instead of depending on a changed context re-rendering them into doing it.
+  const [ctx] = useState<PlotContextValue>(() => ({
+    registerMark: (id, stamp, factory, handlers) => {
+      recordOrder(pendingMarkOrderRef, id);
+      const prev = marksRef.current.get(id);
+      // A changed stamp is the plot's cue to rebuild: the registration is
+      // replaced and <Plot> is woken. Same-stamp re-registration happens on
+      // every commit, so it only refreshes the factory and handlers in place
+      // (a handler identity change must not rebuild the plot). The wake is
+      // skipped before the first compute, which this same commit performs
+      // anyway; bumping would compute — and emit warnings — twice on mount.
+      if (!prev || prev.stamp !== stamp) {
+        marksRef.current.set(id, {stamp, factory, handlers});
+        if (computedRef.current) setVersion((v) => v + 1);
+      } else {
+        prev.factory = factory;
+        prev.handlers = handlers;
+      }
+    },
+    // Removal is unmount-driven (useMark's cleanup), NOT inferred from who
+    // re-registered this commit: when <Plot> re-renders from its own state,
+    // unchanged children bail out of rendering and never call registerMark, so
+    // any presence-based sweep would wrongly drop live marks. Retirement is
+    // deferred to the reconciliation below, which can tell a real unmount from
+    // the destroy half of StrictMode's simulated one; see sweepRetired. Waking
+    // <Plot> is what makes that reconciliation happen at all when nothing else
+    // re-rendered this component.
+    unregisterMark: (id) => {
+      if (retireRegistration(retiredMarkRef, marksRef, id)) setVersion((v) => v + 1);
+    },
+    // Scale components register like marks: from their own layout effect,
+    // stamped by prop values so a prop change wakes the plot, with same-stamp
+    // re-registration refreshing the stored config in place (function
+    // identities are excluded from the stamp).
+    registerScale: (id, stamp, scaleName, config) => {
+      recordOrder(pendingScaleOrderRef, id);
+      const prev = scalesRef.current.get(id);
+      if (!prev || prev.stamp !== stamp) {
+        scalesRef.current.set(id, {stamp, scaleName, config});
+        if (computedRef.current) setVersion((v) => v + 1);
+      } else {
+        prev.config = config;
+      }
+    },
+    // Unmount-driven removal, mirroring unregisterMark.
+    unregisterScale: (id) => {
+      if (retireRegistration(retiredScaleRef, scalesRef, id)) setVersion((v) => v + 1);
+    },
+    // Legends register from their own layout effect, like marks and scales do
+    // now. Legend registrations do NOT feed computePlot, so they bump their own
+    // version rather than the plot's. A changed stamp stores a fresh
+    // registration; same-stamp re-registration only refreshes the stored props
+    // (function identities are excluded from the stamp). Each call also records
+    // this commit's registration order, which the layout effect below
+    // reconciles against the registry: Map insertion order alone would freeze
+    // legends at mount order, because React moves keyed instances without
+    // remounting them. Last-wins dedupe keeps the order correct under
+    // StrictMode double-invocation and heals stale entries from partial commits
+    // that <Plot>'s effect never observed.
+    registerLegend: (id, stamp, props) => {
+      recordOrder(pendingLegendOrderRef, id);
+      const prev = legendsRef.current.get(id);
+      if (!prev || prev.stamp !== stamp) {
+        legendsRef.current.set(id, {stamp, props});
+        setLegendsVersion((v) => v + 1);
+      } else {
+        prev.props = props;
+      }
+    },
+    // Unmount-driven removal, mirroring unregisterMark.
+    unregisterLegend: (id) => {
+      if (retireRegistration(retiredLegendRef, legendsRef, id)) setLegendsVersion((v) => v + 1);
+    },
+    // Accessors rather than fields: the values are replaced by the compute
+    // effect and read on demand, so the value object around them can stay
+    // identical. Read during render — they are a snapshot of the last pass, not
+    // a subscription.
+    get scaleDescriptors() {
+      return resolvedRef.current?.scaleDescriptors;
+    },
+    get context() {
+      return resolvedRef.current?.context;
+    },
+    get plotOptions() {
+      return resolvedRef.current?.plotOptions ?? optionsRef.current;
     }
-  };
-
-  const registerMark = (id: string, stamp: string, factory: MarkFactory, handlers?: MarkEventHandlers) => {
-    const prev = marksRef.current.get(id);
-    if (!prev || prev.stamp !== stamp) {
-      marksRef.current.set(id, {stamp, factory, handlers});
-      dirtyRef.current = true;
-    } else {
-      prev.factory = factory;
-      prev.handlers = handlers;
-    }
-  };
-
-  // Removal is unmount-driven (useMark's cleanup), NOT inferred from who
-  // re-registered this render: when <Plot> re-renders from its own state,
-  // unchanged children bail out of rendering and never call registerMark, so
-  // any presence-based sweep would wrongly drop live marks. Stable identity
-  // (it closes over refs and setVersion only) so useMark's unmount cleanup
-  // doesn't re-fire on every render.
-  const unregisterMark = useRef((id: string) => {
-    if (marksRef.current.delete(id)) setVersion((v) => v + 1);
-  }).current;
-
-  // Scale components register like marks: during render, stamped by prop
-  // values so a prop change dirties the plot, with same-stamp re-registration
-  // refreshing the stored config in place (function identities are excluded
-  // from the stamp).
-  const registerScale = (id: string, stamp: string, scaleName: string, config: Record<string, any>) => {
-    const prev = scalesRef.current.get(id);
-    if (!prev || prev.stamp !== stamp) {
-      scalesRef.current.set(id, {stamp, scaleName, config});
-      dirtyRef.current = true;
-    } else {
-      prev.config = config;
-    }
-  };
-
-  // Unmount-driven removal with stable identity, mirroring unregisterMark.
-  const unregisterScale = useRef((id: string) => {
-    if (scalesRef.current.delete(id)) setVersion((v) => v + 1);
-  }).current;
+  }));
 
   // Reads the CURRENT handlers for a built mark instance. Stable identity so
   // passing it down doesn't churn props; event closures call it at dispatch
@@ -217,70 +299,34 @@ export function Replot({
     (mark: any): MarkEventHandlers | undefined => registrationByMarkRef.current.get(mark)?.handlers
   ).current;
 
-  // Legends register from a layout effect (unlike marks, which register
-  // during render): StrictMode's simulated unmount/remount re-registers after
-  // its cleanup unregistered, and effect-phase registration may set state
-  // directly — so a legend mounted later by a wrapper component (without
-  // <Plot> itself re-rendering) still becomes visible. Legend registrations
-  // don't feed computePlot, so they bump their own version. A changed stamp
-  // stores a fresh registration; same-stamp re-registration only refreshes
-  // the stored props (function identities are excluded from the stamp). Each
-  // call also records this commit's registration order, which the layout
-  // effect below reconciles against the registry: Map insertion order alone
-  // would freeze legends at mount order, because React moves keyed instances
-  // without remounting them. Last-wins dedupe keeps the order correct under
-  // StrictMode double-invocation and heals stale entries from partial
-  // commits that <Plot>'s effect never observed.
-  const registerLegend = (id: string, stamp: string, props: Record<string, any>) => {
-    const pending = pendingLegendOrderRef.current;
-    const at = pending.indexOf(id);
-    if (at !== -1) pending.splice(at, 1);
-    pending.push(id);
-    const prev = legendsRef.current.get(id);
-    if (!prev || prev.stamp !== stamp) {
-      legendsRef.current.set(id, {stamp, props});
-      setLegendsVersion((v) => v + 1);
-    } else {
-      prev.props = props;
-    }
-  };
-
-  // Unmount-driven removal with stable identity, mirroring unregisterMark.
-  const unregisterLegend = useRef((id: string) => {
-    if (legendsRef.current.delete(id)) setLegendsVersion((v) => v + 1);
-  }).current;
-
+  // THE REGISTRATION RECONCILIATION, and the first of this component's two
+  // layout effects. No dependency array: a registry can change in any commit of
+  // this component, and the adoption is a no-op in the ones where nothing did.
   useLayoutEffect(() => {
-    // Child effects run before this one, so the recorded legend registration
-    // order is complete for this commit. When every registered legend
-    // re-registered (a full re-render of the children), adopt that order —
-    // this is what makes reordering keyed <Legend> children reorder the
-    // output. Partial commits (a lone legend re-rendered or mounted by its
-    // wrapper) can't reveal sibling order, so they keep the existing order,
-    // appending new registrations.
-    const pendingOrder = pendingLegendOrderRef.current;
-    if (pendingOrder.length > 0) {
-      pendingLegendOrderRef.current = [];
-      const registry = legendsRef.current;
-      if (pendingOrder.length === registry.size && pendingOrder.every((id) => registry.has(id))) {
-        const ordered = [...registry.keys()];
-        if (pendingOrder.some((id, i) => id !== ordered[i])) {
-          legendsRef.current = new Map(pendingOrder.map((id) => [id, registry.get(id)!]));
-          setLegendsVersion((v) => v + 1);
-        }
-      }
-    }
-    if (dirtyRef.current) {
-      dirtyRef.current = false;
-      // The compute effect below re-runs when version changes, picking up the
-      // new registrations. Skip the bump before the first compute: it runs in
-      // this same commit anyway, and bumping would compute (and emit
-      // warnings) twice on mount.
-      if (computedRef.current) setVersion((v) => v + 1);
-    }
+    // Child effects run before this one, so both the recorded registration
+    // order and the retirements are complete for this commit. Sweep first:
+    // deleting can remove the entry an adoption would have ordered, and the
+    // sweep is also what reports the change. A legend registry change is not
+    // otherwise visible to this component, hence its own version; marks and
+    // scales need none — the inputs key below is taken over the registries as
+    // they are once this effect has run, so a deletion or a reorder differs
+    // from the last key and the compute runs in this same commit.
+    if (sweepRetired(retiredLegendRef, pendingLegendOrderRef, legendsRef)) setLegendsVersion((v) => v + 1);
+    sweepRetired(retiredMarkRef, pendingMarkOrderRef, marksRef);
+    sweepRetired(retiredScaleRef, pendingScaleOrderRef, scalesRef);
+    // When every registered entry re-registered (a full re-render of the
+    // children), adopt that order: this is what makes reordering keyed
+    // <Legend> children reorder the output, and what makes the mark list
+    // follow the children rather than the order they happened to mount in
+    // (#145 — a rule written before the dots but mounted a commit later used to
+    // draw on top of them). Partial commits (a lone mark re-rendered or
+    // mounted by its wrapper) can't reveal sibling order, so they keep the
+    // existing order, appending new registrations.
+    if (adoptOrder(pendingLegendOrderRef, legendsRef)) setLegendsVersion((v) => v + 1);
+    adoptOrder(pendingMarkOrderRef, marksRef);
+    adoptOrder(pendingScaleOrderRef, scalesRef);
   });
 
-  const optionsKey = stableKey(options);
   const lastInputsRef = useRef<string | null>(null);
   const onValueRef = useRef(onValue);
   onValueRef.current = onValue;
@@ -289,18 +335,25 @@ export function Replot({
 
   useLayoutEffect(() => {
     computedRef.current = true;
+    // Recompute directly when the effective inputs changed, rather than bumping
+    // a version and waiting for the next commit's effect to notice: the
+    // registrations this pass must see were taken by children in THIS commit,
+    // and a registration change wakes <Plot> with a version bump of its own, so
+    // there is nothing left for a dirty flag to add.
+    //
     // Registration ids change when children remount without any real change —
-    // e.g. when the tree gains a <figure> once auto-legends resolve — bumping
-    // version while every stamp stays the same. Recomputing then would be
-    // wasted work and would re-emit computePlot warnings, so skip when the
-    // effective inputs are unchanged. (onValue is excluded entirely, like
-    // functions in mark stamps: the pointer store reads it through a ref at
-    // dispatch time, so neither its identity nor its presence changes anything
-    // computePlot produces.)
+    // e.g. when the tree gains a <figure> once auto-legends resolve — waking
+    // <Plot> while every stamp stays the same. Recomputing then would be wasted
+    // work and would re-emit computePlot warnings, so skip when the effective
+    // inputs are unchanged; that guard is also what stops a commit that only
+    // setMode or setResolved caused from computing again. (onValue is excluded
+    // entirely, like functions in mark stamps: the pointer store reads it
+    // through a ref at dispatch time, so neither its identity nor its presence
+    // changes anything computePlot produces.)
     const inputsKey = [
       ...[...marksRef.current.values()].map((r) => r.stamp),
       ...[...scalesRef.current.values()].map((r) => r.stamp),
-      optionsKey,
+      stableKey(options),
       String(classNameProp),
       stableKey({style})
     ].join("\u0000");
@@ -387,11 +440,16 @@ export function Replot({
     // every record at the pointer once a commit has settled.
     computed.markKeys = markKeysOf(computed.marks, markKeys);
 
-    publishResolved({
+    // Published to the stable context value's accessors and, for the parts
+    // <Plot> itself renders from, to state. Both are written together, so they
+    // always name the same pass.
+    const nextResolved = {
       scaleDescriptors: computed.scaleDescriptors,
       context: computed.context,
       plotOptions: effectiveOptions
-    });
+    };
+    resolvedRef.current = nextResolved;
+    setResolved(nextResolved);
 
     // Drain the global warning counter just as the imperative plot() does, so
     // the warn() dedupe state (lastMessage) doesn't leak across plots and we
@@ -426,9 +484,9 @@ export function Replot({
 
     const pointerEnabled = computed.marks.some(isPointerConsumer);
     setMode({kind: "jsx", computed, onSvgRef, pointerEnabled, warnings});
-    // version counts mark registration changes (stamp changes, additions,
-    // removals), so prop updates on marks after mount re-run computePlot.
-  }, [optionsKey, classNameProp, style, version]);
+    // No dependency array: the inputs key above is the guard, and it is taken
+    // over the registries as the reconciliation above just ordered them.
+  });
 
   // The plot's root ELEMENTS, for the viewof contract below. The <svg> arrives
   // through the compute effect's own ref callback (which applies the className
@@ -436,20 +494,6 @@ export function Replot({
   const setSvgElement = (svg: SVGSVGElement | null) => {
     svgElementRef.current = svg;
     if (mode.kind === "jsx") mode.onSvgRef(svg);
-  };
-
-  const ctx = {
-    registerMark,
-    unregisterMark,
-    registerScale,
-    unregisterScale,
-    registerLegend,
-    unregisterLegend,
-    scaleDescriptors: resolved?.scaleDescriptors,
-    context: resolved?.context,
-    // Prefer the computed effective options (props + scale registrations) so
-    // legend defaults see scale options declared via components.
-    plotOptions: resolved?.plotOptions ?? options
   };
 
   // Auto-legends (color/opacity/symbol scales with legend requested) render
@@ -1171,13 +1215,79 @@ export function isPointerConsumer(mark: any): boolean {
   return false;
 }
 
-function sameScaleKeys(a: Record<string, any> | undefined, b: Record<string, any> | undefined): boolean {
-  if (a === b) return true;
-  if (!a || !b) return false;
-  const ka = Object.keys(a);
-  const kb = Object.keys(b);
-  if (ka.length !== kb.length) return false;
-  for (const k of ka) if (!(k in b)) return false;
+// Records that `id` registered in this commit, last-wins. React runs layout
+// effects child first and siblings in tree order, so the recorded list is the
+// registration order the children's own render produced; last-wins (rather
+// than a plain push) keeps one entry per id when StrictMode double-invokes an
+// effect and when a component's effect runs more than once in a commit.
+function recordOrder(pendingRef: {current: string[]}, id: string): void {
+  const pending = pendingRef.current;
+  const at = pending.indexOf(id);
+  if (at !== -1) pending.splice(at, 1);
+  pending.push(id);
+}
+
+// Retires a registration whose component unmounted. It stays in the registry —
+// and so keeps its place in the order — until the reconciliation below, which
+// is the only stage that can tell the two ways a registration can be destroyed
+// apart. StrictMode's simulated unmount destroys and recreates every effect it
+// finds (create, destroy, create), so a mark that mounted in this commit is
+// unregistered and re-registered within it; a real unmount is unregistered and
+// left alone. Dropping the entry on the spot loses the first case's position:
+// the entry leaves the middle of the registry and the re-registration appends
+// it at the END, which is the children-order inversion #145 is about, arriving
+// by the back door. Returns whether there was anything to retire.
+function retireRegistration<T>(
+  retiredRef: {current: Set<string>},
+  registryRef: {current: Map<string, T>},
+  id: string
+): boolean {
+  if (!registryRef.current.has(id)) return false;
+  retiredRef.current.add(id);
+  return true;
+}
+
+// Deletes the registrations that were retired in this commit and did not come
+// back. A retirement counts as "came back" when the same commit also recorded a
+// registration for the id — which child effects do before this effect runs, so
+// the pending list is the register/destroy ledger for the commit. Returns
+// whether the registry lost anything.
+function sweepRetired<T>(
+  retiredRef: {current: Set<string>},
+  pendingRef: {current: string[]},
+  registryRef: {current: Map<string, T>}
+): boolean {
+  const retired = retiredRef.current;
+  if (retired.size === 0) return false;
+  retiredRef.current = new Set();
+  const pending = pendingRef.current;
+  let changed = false;
+  for (const id of retired) {
+    if (pending.includes(id)) continue;
+    if (registryRef.current.delete(id)) changed = true;
+  }
+  return changed;
+}
+
+// Adopts the order a commit recorded into a registry. A registry's Map key
+// order freezes at MOUNT order — React moves keyed instances without
+// remounting them, and every effect here is depless, so an instance's
+// registration is only re-set when the instance itself re-renders — while the
+// plot must draw in CHILDREN order (#145). The recorded order reveals that
+// order only when the commit re-registered the WHOLE registry (i.e. every
+// child re-rendered); a partial commit — one mark re-rendered, or a mark newly
+// mounted by its wrapper — cannot see its siblings, so it keeps the existing
+// order and the new registrations append. Returns whether the registry
+// changed.
+function adoptOrder<T>(pendingRef: {current: string[]}, registryRef: {current: Map<string, T>}): boolean {
+  const pending = pendingRef.current;
+  if (pending.length === 0) return false;
+  pendingRef.current = [];
+  const registry = registryRef.current;
+  if (pending.length !== registry.size || !pending.every((id) => registry.has(id))) return false;
+  const ordered = [...registry.keys()];
+  if (!pending.some((id, i) => id !== ordered[i])) return false;
+  registryRef.current = new Map(pending.map((id) => [id, registry.get(id)!]));
   return true;
 }
 

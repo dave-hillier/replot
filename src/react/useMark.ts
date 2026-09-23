@@ -54,9 +54,12 @@ export function useMark({name, data, options, create}: UseMarkOptions): void {
   const {registerMark, unregisterMark} = usePlotContext();
   const transform = useTransformContext();
   // The stamp can't cheaply hash array/object data contents, so track data
-  // identity with a sequence number: any new reference bumps the stamp.
+  // identity with a sequence number: any new reference bumps the stamp. The
+  // bump happens in the registration effect rather than in render, because a
+  // render can be discarded — StrictMode renders every component twice, and a
+  // concurrent render can be thrown away before it commits — and a bump from a
+  // render nobody kept would rebuild the plot for data it never received.
   const dataRef = useRef({data, seq: 0});
-  if (dataRef.current.data !== data) dataRef.current = {data, seq: dataRef.current.seq + 1};
   // Event handler props are stripped before the options reach the imperative
   // mark factory (and any transform wrappers); they travel through the
   // registration instead. The stamp is taken over the FULL options, so handler
@@ -70,11 +73,22 @@ export function useMark({name, data, options, create}: UseMarkOptions): void {
     (handlers as Record<string, unknown>)[key] = options[key];
     delete markOptions[key];
   }
-  const stamp = `${transform.stamp}${stampOptions(name, data, options)}|d${dataRef.current.seq}`;
-  registerMark(id, stamp, () => create(data, transform.wrap(markOptions)), handlers);
-  // Registration happens during render (above) so <Plot> sees the mark before
-  // its compute effect; removal is unmount-driven — <Plot> can't infer it,
-  // because bailed-out children don't re-register.
+  // Registration is effect-based, NOT render-phase: StrictMode's simulated
+  // unmount runs the cleanup below with no re-render to follow it, so a
+  // render-phase registration is simply lost, and re-registering anyway would
+  // depend on something else re-rendering the mark. It is also depless, so the
+  // registration is refreshed on every commit: a same-stamp re-registration
+  // only swaps in the latest factory and handlers in place (a handler identity
+  // change must not rebuild the plot), while a stamp change dirties the plot.
+  // The effect runs before <Plot>'s own layout effects — children first — so a
+  // plot always computes against the registrations of the commit it is in.
+  useLayoutEffect(() => {
+    if (dataRef.current.data !== data) dataRef.current = {data, seq: dataRef.current.seq + 1};
+    const stamp = `${transform.stamp}${stampOptions(name, data, options)}|d${dataRef.current.seq}`;
+    registerMark(id, stamp, () => create(data, transform.wrap(markOptions)), handlers);
+  });
+  // Removal is unmount-driven — <Plot> can't infer it, because bailed-out
+  // children don't re-register.
   useLayoutEffect(() => () => unregisterMark(id), [unregisterMark, id]);
 }
 
