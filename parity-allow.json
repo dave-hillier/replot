@@ -157,7 +157,7 @@
   "pointerViewofTitle": {"differs": "div +3, figure[class] \u22121"},
   "projectionBleedEdges2": {"differs": "g +8, rect[aria-label] +2, rect[transform] 3 values"},
   "projectionDomainRatioNC": {"differs": "path[d] 2 values"},
-  "projectionFitBertin1953": {"differs": "g +6, rect[aria-label] +2, rect[transform] 3 values, svg[style] 2 values"},
+  "projectionFitBertin1953": {"differs": "g +6, rect[aria-label] +2, rect[transform] 3 values"},
   "projectionHeightDegenerate": {"differs": "svg[style] 2 values"},
   "projectionHeightEqualEarth": {"differs": "g +10, rect[aria-label] +2, rect[transform] 3 values"},
   "projectionHeightGeometry": {"differs": "g +6, rect[aria-label] +2, rect[transform] 3 values"},

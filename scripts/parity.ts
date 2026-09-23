@@ -360,12 +360,28 @@ function parseAllow(text: string, file: string): Map<string, AllowEntry> {
 }
 
 // One line per plot, sorted, so a diff of the file reads as a list of the
-// plots that changed and how. JSON.stringify can't do that on its own.
+// plots that changed and how. JSON.stringify can't do that on its own, and it
+// writes a record as {"differs":"…"} with a bare minus sign rather than the
+// escaped, spaced form the file holds, so an update would rewrite every line
+// and the diff would stop showing which plot actually moved.
 function formatAllow(entries: Map<string, AllowEntry>): string {
   const lines = [...entries.keys()]
     .sort()
-    .map((name) => `  ${JSON.stringify(name)}: ${JSON.stringify(entries.get(name))}`);
+    .map((name) => `  ${escaped(name)}: ${formatRecord(entries.get(name)!)}`);
   return `{\n${lines.join(",\n")}\n}\n`;
+}
+
+function formatRecord(entry: AllowEntry): string {
+  const fields = Object.entries(entry).map(([key, value]) => `${escaped(key)}: ${escaped(value as string)}`);
+  return `{${fields.join(", ")}}`;
+}
+
+// The summary prints U+2212 for a minus, which the file escapes.
+function escaped(value: string): string {
+  return JSON.stringify(value).replace(
+    /[\u007f-￿]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`
+  );
 }
 
 // What the allow file says about a comparison, and what is wrong with it.
