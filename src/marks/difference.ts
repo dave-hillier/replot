@@ -133,6 +133,7 @@ function differenceK(
     z = maybeColorChannel(stroke)[0],
     clip, // optional additional clip for area
     tip,
+    render, // composed onto the two areas only, as upstream does
     ...options
   }: any = {}
 ): CompoundMark {
@@ -143,39 +144,24 @@ function differenceK(
     else x1 = memo(0);
   }
   ({tip} = withTip({tip}, k === "y" ? "x" : "y"));
+  const shared = {x1, x2, y1, y2, z, clip, ...options};
   return marks(
     !isNoneish(positiveFill)
-      ? Object.assign(
-          area(data, {
-            x1,
-            x2,
-            y1,
-            y2,
-            z,
-            fill: positiveFill,
-            fillOpacity: positiveFillOpacity,
-            renderJSX: clipDifferenceJSX(k, true),
-            clip,
-            ...options
-          }),
-          {ariaLabel: "positive difference"}
+      ? clippedArea(
+          data,
+          {...shared, fill: positiveFill, fillOpacity: positiveFillOpacity},
+          clipDifferenceJSX(k, true),
+          "positive difference",
+          render
         )
       : null,
     !isNoneish(negativeFill)
-      ? Object.assign(
-          area(data, {
-            x1,
-            x2,
-            y1,
-            y2,
-            z,
-            fill: negativeFill,
-            fillOpacity: negativeFillOpacity,
-            renderJSX: clipDifferenceJSX(k, false),
-            clip,
-            ...options
-          }),
-          {ariaLabel: "negative difference"}
+      ? clippedArea(
+          data,
+          {...shared, fill: negativeFill, fillOpacity: negativeFillOpacity},
+          clipDifferenceJSX(k, false),
+          "negative difference",
+          render
         )
       : null,
     line(data, {
@@ -189,6 +175,26 @@ function differenceK(
       ...options
     })
   );
+}
+
+// One of the two clipped areas. A user *render* transform is composed outside
+// the clip, as upstream's composeRender(render, clipDifference(k, …))
+// (difference.js:38,60) does: the transform receives the clipped area as its
+// `next`, and whatever it returns is rendered in its place. The line is not
+// given the transform at all, which is why differenceK destructures it.
+function clippedArea(data: Data | undefined, options: any, clipJSX: any, ariaLabel: string, render: any): any {
+  const areaMark = Object.assign(area(data, {...options, renderJSX: clipJSX}), {ariaLabel});
+  if (render == null) return areaMark;
+  // The clip renderJSX is an own property of the area, and an own renderJSX
+  // tells the JSX paths that the mark renders itself, so the imperative bridge
+  // would be skipped (see hasRenderTransform). Inheriting the finished mark
+  // instead — renderJSX then resolves through the prototype — keeps the clip
+  // and still brings the own `render` into the JSX path. `this` stays the area,
+  // so the transform sees the mark's styles and aria-label, as upstream's
+  // composeRender (which preserves `this`) does.
+  const mark = Object.create(areaMark);
+  mark.render = render;
+  return mark;
 }
 
 function memoTuple(x: any, x1: any, x2: any) {
@@ -237,6 +243,13 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
   const f2 = `${f}2`;
   const k1 = `${k}1`;
   const k2 = `${k}2`;
+  // Clip ids are allocated once per facet and group, on this mark's first
+  // render, and reused thereafter. The JSX paths render a mark again whenever
+  // React re-renders the plot — an unrelated state change above it re-renders
+  // the marks without recomputing them — so allocating inside the render would
+  // rewrite every clipPath id and every clip-path ref on each pass. Upstream
+  // never had to cache: its imperative render runs once per mark.
+  const idsByFacet = new Map<number, string[]>();
   return (index: any, scales: any, channels: any, dimensions: any, context: any, next: any): ReactNode => {
     const {[f1]: F1, [f2]: F2} = channels;
     const K1 = new Float32Array(F1.length);
@@ -249,8 +262,14 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
     const gChildren = Children.toArray((gNode as any)?.props?.children).filter(isValidElement);
     const out: ReactNode[] = [];
     const n = Math.min(clipChildren.length, gChildren.length);
+    // Each facet renders the mark with its own index, and so needs its own
+    // clip ids; `fi` is set by the facet render loop, and is undefined (0) for
+    // an unfaceted mark.
+    const fi = (index as any)?.fi ?? 0;
+    let ids = idsByFacet.get(fi);
+    if (ids === undefined) idsByFacet.set(fi, (ids = []));
     for (let i = 0; i < n; i++) {
-      const id = getClipId();
+      const id = ids[i] ?? (ids[i] = getClipId());
       const clipChild = clipChildren[i] as ReactElement;
       const gChild = gChildren[i] as ReactElement;
       out.push(h("clipPath", {key: `cp-${i}`, id}, clipChild));
