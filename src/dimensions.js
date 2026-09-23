@@ -2,6 +2,7 @@ import {extent} from "d3";
 import {projectionAspectRatio} from "./projection.js";
 import {isOrdinalScale} from "./scales.js";
 import {offset} from "./style.js";
+import {warn} from "./warnings.js";
 
 export function createDimensions(scales, marks, options = {}) {
   // Compute the default margins: the maximum of the marks’ margins. While not
@@ -114,9 +115,18 @@ function autoHeight(
     const fyb = fy ? fy.scale.bandwidth() : 1;
     const w = fxb * (width - marginLeftDefault - marginRightDefault) - x.insetLeft - x.insetRight;
     const height = (ratio * w + y.insetTop + y.insetBottom) / fyb + marginTopDefault + marginBottomDefault;
-    // Empty scale domains make the ratio NaN; an SVG must never get a
-    // non-finite height, so fall through to the default height instead.
+    // Upstream returns this height unconditionally (src/dimensions.js has no
+    // guard here), and an empty scale domain — `aspectRatio` with no data, or
+    // with every row filtered out — makes it NaN: a height of "NaN" on the
+    // <svg>, a viewBox of "0 0 640 NaN", and every mark laid out against a NaN
+    // height, which is a broken plot rather than a smaller one. The default
+    // height below is the better answer, but not a silent one: this is a
+    // deliberate divergence from upstream, so it says so, through the same
+    // channel every other plot warning uses (the ⚠️ indicator, and the console).
     if (isFinite(height)) return height;
+    warn(
+      `Warning: the aspect ratio is undefined because a scale domain is empty, so the default height is used instead. Set a non-empty domain, or an explicit height, to size the plot.`
+    );
   }
 
   return !!(y || fy) * Math.max(1, Math.min(60, ny * nfy)) * 20 + !!fx * 30 + 60;
