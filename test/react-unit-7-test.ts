@@ -3,7 +3,7 @@ import assert from "assert";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {validateVector, validateSpike, validateImage} from "../src/react/__validate.js";
+import {validateVector, validateSpike, validateImage} from "./react-fixtures.js";
 
 describe("Unit 7: Vector and Image as imperative façades", () => {
   jsdomit("renders a Vector mark via the new useMark contract", async () => {

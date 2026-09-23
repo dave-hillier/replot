@@ -1,42 +1,45 @@
-// Throwaway validation scaffolding for the new <Plot> + useMark contract.
-// Renders mark façades via the new useMark contract so unit tests can confirm
-// the imperative mount path works end-to-end. Delete once real marks have
-// migrated off the legacy stack.
+// Mark fixtures for the React component tests (react-test.tsx and the
+// react-unit-*-test.ts files). Each `validate*` function renders one mark
+// façade through the useMark contract, so a test can mount it and assert on
+// the resulting DOM without restating the mark's options.
+//
+// These live under test/ rather than src/: they are test scaffolding, not part
+// of the library, and as a src/ module they were being shipped in the package.
 import React from "react";
-import {Replot as Plot} from "./Replot.js";
-import {Frame} from "./marks/Frame.js";
-import {RuleX, RuleY} from "./marks/Rule.js";
-import {TickX, TickY} from "./marks/Tick.js";
-import {Geo, Sphere, Graticule} from "./marks/Geo.js";
-import {Hexgrid} from "./marks/Hexgrid.js";
-import {BarY, BarX} from "./marks/Bar.js";
-import {RectY, Cell, CellY} from "./marks/Rect.js";
-import {Line, LineX, LineY} from "./marks/Line.js";
-import {Area, AreaX, AreaY} from "./marks/Area.js";
-import {Dot} from "./marks/Dot.js";
-import {pointer} from "../interactions/pointer.js";
-import {Text} from "./marks/Text.js";
-import {Link} from "./marks/Link.js";
-import {Arrow} from "./marks/Arrow.js";
-import {Vector, Spike} from "./marks/Vector.js";
-import {Image} from "./marks/Image.js";
-import {AxisX, AxisY, AxisFx, AxisFy, GridX, GridY, GridFx, GridFy} from "./marks/Axis.js";
-import {useMark} from "./useMark.js";
-import {dot as dotMark} from "../marks/dot.js";
-import {BollingerY} from "./marks/Bollinger.js";
-import {DifferenceY} from "./marks/Difference.js";
-import {LinearRegressionY} from "./marks/LinearRegression.js";
-import {BoxY} from "./marks/Box.js";
-import {TreeMark} from "./marks/Tree.js";
-import {Auto} from "./marks/Auto.js";
-import {Density} from "./marks/Density.js";
-import {Contour} from "./marks/Contour.js";
-import {Raster} from "./marks/Raster.js";
-import {DelaunayLink, DelaunayMesh, Hull, Voronoi, VoronoiMesh} from "./marks/Delaunay.js";
-import {WaffleX, WaffleY} from "./marks/Waffle.js";
-import {Tip} from "./interactions/Tip.js";
-import {Crosshair} from "./interactions/Crosshair.js";
-import {Legend} from "./legends/Legend.js";
+import {Replot as Plot} from "../src/react/Replot.js";
+import {Frame} from "../src/react/marks/Frame.js";
+import {RuleX, RuleY} from "../src/react/marks/Rule.js";
+import {TickX, TickY} from "../src/react/marks/Tick.js";
+import {Geo, Sphere, Graticule} from "../src/react/marks/Geo.js";
+import {Hexgrid} from "../src/react/marks/Hexgrid.js";
+import {BarY, BarX} from "../src/react/marks/Bar.js";
+import {RectY, Cell, CellY} from "../src/react/marks/Rect.js";
+import {Line, LineX, LineY} from "../src/react/marks/Line.js";
+import {Area, AreaX, AreaY} from "../src/react/marks/Area.js";
+import {Dot} from "../src/react/marks/Dot.js";
+import {pointer} from "../src/interactions/pointer.js";
+import {Text} from "../src/react/marks/Text.js";
+import {Link} from "../src/react/marks/Link.js";
+import {Arrow} from "../src/react/marks/Arrow.js";
+import {Vector, Spike} from "../src/react/marks/Vector.js";
+import {Image} from "../src/react/marks/Image.js";
+import {AxisX, AxisY, AxisFx, AxisFy, GridX, GridY, GridFx, GridFy} from "../src/react/marks/Axis.js";
+import {useMark} from "../src/react/useMark.js";
+import {dot as dotMark} from "../src/marks/dot.js";
+import {BollingerY} from "../src/react/marks/Bollinger.js";
+import {DifferenceY} from "../src/react/marks/Difference.js";
+import {LinearRegressionY} from "../src/react/marks/LinearRegression.js";
+import {BoxY} from "../src/react/marks/Box.js";
+import {TreeMark} from "../src/react/marks/Tree.js";
+import {Auto} from "../src/react/marks/Auto.js";
+import {Density} from "../src/react/marks/Density.js";
+import {Contour} from "../src/react/marks/Contour.js";
+import {Raster} from "../src/react/marks/Raster.js";
+import {DelaunayLink, DelaunayMesh, Hull, Voronoi, VoronoiMesh} from "../src/react/marks/Delaunay.js";
+import {WaffleX, WaffleY} from "../src/react/marks/Waffle.js";
+import {Tip} from "../src/react/interactions/Tip.js";
+import {Crosshair} from "../src/react/interactions/Crosshair.js";
+import {Legend} from "../src/react/legends/Legend.js";
 
 // Facet axes need an fx/fy scale, which is created by a mark with an fx/fy
 // channel. Seed the facet scale via a dot mark with the appropriate facet data.

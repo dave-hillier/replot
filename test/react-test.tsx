@@ -224,7 +224,7 @@ import {
   validateWaffleY,
   validateLegendSwatches,
   validateLegendRamp
-} from "../src/react/__validate.js";
+} from "./react-fixtures.js";
 
 async function renderAndQuery(element: any) {
   const container = (globalThis as any).document.createElement("div");

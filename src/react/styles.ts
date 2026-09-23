@@ -1,5 +1,5 @@
 import {offset} from "../style.js";
-import {isColor} from "../core/index.js";
+import {isColor} from "../options.js";
 import type {Dimensions} from "./PlotContext.js";
 
 // Returns true if the given value should be treated as a literal color
