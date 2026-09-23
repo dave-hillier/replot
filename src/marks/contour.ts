@@ -3,6 +3,7 @@ import {createElement as h, type ReactNode} from "react";
 import type {ChannelValue} from "../channel.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 // @ts-expect-error — runtime export missing from channel.d.ts
 import {createChannels} from "../channel.js";
 import type {RangeInterval} from "../interval.js";
@@ -147,7 +148,7 @@ export class Contour extends AbstractRaster {
       // hovering a band shows that band’s value.
       const titled = withTitleChild(this, channels, i, null);
       const element: ReactNode = h("path", {key: i, ...direct, ...channel, d: path(G[i]) ?? undefined}, titled);
-      children.push(withHrefWrap(channels, this.target, i, element));
+      children.push(withDatumIndex(withHrefWrap(channels, this.target, i, element), i));
     }
     return h("g", {...indirect, ...transform}, ...children);
   }

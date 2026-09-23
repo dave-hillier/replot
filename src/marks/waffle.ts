@@ -12,6 +12,7 @@ import {BarX, BarY} from "./bar.js";
 import {createElement as h, type ReactNode} from "react";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /** Options for the waffleX and waffleY mark. */
 interface WaffleOptions {
@@ -126,7 +127,7 @@ function waffleRenderJSX(mark: any, index: any, scales: any, values: any, dimens
       },
       withTitleChild(mark, values, i, null)
     );
-    return withHrefWrap(values, mark.target, i, pathEl);
+    return withDatumIndex(withHrefWrap(values, mark.target, i, pathEl), i);
   });
   return h("g", {...indirect, ...transform}, defs, paths);
 }

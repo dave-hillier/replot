@@ -8,6 +8,7 @@ import {markers} from "../marker.js";
 import {offset} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {createElement as h, Fragment, type ReactNode} from "react";
 import {markerToJSX} from "../react/Markers.js";
 
@@ -105,7 +106,7 @@ class AbstractTick extends Mark {
         {key: k, ...direct, ...channel, ...markerAttrs, x1: x1Fn(i), x2: x2Fn(i), y1: y1Fn(i), y2: y2Fn(i)},
         titled
       );
-      return withHrefWrap(channels, this.target, i, lineEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, lineEl), i);
     });
     const defs =
       markerDefs.size > 0

@@ -8,6 +8,7 @@ import {maybeFrameAnchor, maybeNumberChannel, maybeTuple, keyword} from "../opti
 import {applyFrameAnchor} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /**
  * The built-in vector shape implementations; one of:
@@ -194,7 +195,7 @@ export class Vector extends Mark {
       const channel = channelStyleProps(i, channels);
       const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, transform: t, d: `${p}`}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }

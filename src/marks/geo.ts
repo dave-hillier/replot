@@ -8,6 +8,7 @@ import {identity, maybeNumberChannel} from "../options.js";
 import {createElement as h, type ReactNode} from "react";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {centroid} from "../transforms/centroid.js";
 import {withDefaultSort} from "./dot.js";
 
@@ -91,7 +92,7 @@ export class Geo extends Mark {
       const titled = withTitleChild(this, channels, i, null);
       const d = (R ? path.pointRadius(R[i])(G[i]) : path(G[i])) ?? undefined;
       const pathEl = h("path", {key: k, ...direct, ...channel, d}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }

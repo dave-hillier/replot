@@ -17,6 +17,7 @@ import {createElement as h, Fragment, type ReactNode} from "react";
 import {markerToJSX} from "../react/Markers.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /** Options for the Delaunay marks. */
 export interface DelaunayOptions extends MarkOptions, MarkerOptions, CurveOptions {
@@ -155,7 +156,7 @@ class DelaunayLink extends MarkBase {
         const color = newChannels.stroke ? newChannels.stroke[ni] : this.stroke;
         const markerAttrs = markerAttrsFor(color);
         const pathEl = h("path", {key: k, ...direct, ...channel, ...markerAttrs, d: `${p}`}, titled);
-        return withHrefWrap(newChannels, this.target, ni, pathEl);
+        return withDatumIndex(withHrefWrap(newChannels, this.target, ni, pathEl), ni);
       });
     };
 
@@ -294,7 +295,7 @@ class Voronoi extends MarkBase {
       const channel = channelStyleProps(i, channels);
       const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, d: C[i]}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }

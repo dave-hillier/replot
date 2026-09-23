@@ -1,5 +1,4 @@
 import {
-  Children,
   cloneElement,
   Fragment,
   isValidElement,
@@ -27,6 +26,7 @@ import {createPointerStore, type PointerStore} from "./interactions/pointerStore
 import {buildAutoLegends, LegendDisplay} from "./legends/Legend.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode, parseStyleString} from "./domToJsx.js";
+import {datumIndexOf} from "./perDatum.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 import {FigureLayout} from "./FigureLayout.js";
 import {warningIndicatorElement} from "./warningIndicator.js";
@@ -1108,11 +1108,11 @@ function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandl
   }
   if (jsx == null) return null;
   // Per-mark event handlers attach as React event props (no DOM-structure
-  // change): per element when the mark renders one element per datum,
-  // mark-level otherwise. Presence changes rebuild the plot (stamped), so
-  // this render-time decision stays in sync with the registration.
+  // change): per element where the mark tags its per-datum elements, mark-level
+  // otherwise. Presence changes rebuild the plot (stamped), so this render-time
+  // decision stays in sync with the registration.
   const handlers = getHandlers?.(mark);
-  if (handlers) jsx = attachMarkHandlers(jsx, arrayIndex, markData, handlers, () => getHandlers(mark));
+  if (handlers) jsx = attachMarkHandlers(jsx, markData, handlers, () => getHandlers(mark));
   return <>{clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx}</>;
 }
 
@@ -1218,7 +1218,7 @@ function PointerMarkSlot({
   // that wrapper, which is the root this slot renders.
   if (!sel.sticky) jsx = defaultPointerEventsNone(jsx) as ReactElement;
   const handlers = getHandlers?.(mark);
-  if (handlers) jsx = attachMarkHandlers(jsx, renderIndex, markData, handlers, () => getHandlers(mark));
+  if (handlers) jsx = attachMarkHandlers(jsx, markData, handlers, () => getHandlers(mark));
   let out = (clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx) as ReactElement;
   // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
   // drop the attributes now carried by the shared parent and take the facet's
@@ -1249,34 +1249,40 @@ function plainIndex(index: any): any {
   return Object.assign(Array.from(index as any), {fx, fy, fi});
 }
 
-// Attaches the registered handlers to a mark's rendered JSX. Marks that
-// render one element per datum (dot, bar, rect, cell, text, tick, …) emit
-// their per-datum elements as the direct children of the mark's root <g>, in
-// filtered-index order — so when the child count matches the index length,
-// each child gets handlers with its datum index closed over. Otherwise
-// (grouped marks like line/area render one path per series, and some marks
-// nest further) the handlers attach at the mark level with datum/index
-// undefined. Handler identity is read through `live` at dispatch time, so
-// identity-only updates (which don't rebuild the plot) still take effect.
+// Attaches the registered handlers to a mark's rendered JSX. A mark that
+// renders one element per datum tags each element with its datum's index
+// (perDatum.ts); those children get handlers with their datum and index closed
+// over, and any other child — a marker <defs>, a grouped mark's per-series
+// path, a text child — is left untagged and so is covered by the mark-level
+// handler on the root instead, with datum/index undefined. The child count is
+// deliberately not consulted: a line with markers on three points in two
+// series has as many children as data, which is how a <defs> came to be handed
+// datum 0 and every series path shifted by one.
+//
+// The children are read raw rather than through Children.toArray, which
+// rewrites each element's key and so hands back objects that are not the ones
+// the mark tagged. Handler identity is read through `live` at dispatch time,
+// so identity-only updates (which don't rebuild the plot) still take effect.
 function attachMarkHandlers(
   jsx: ReactElement,
-  index: number[] | null,
   data: any,
   attached: MarkEventHandlers,
   live: () => MarkEventHandlers | undefined
 ): ReactElement {
   if (!isValidElement(jsx)) return jsx;
-  const children = Children.toArray((jsx.props as any).children);
-  if (index != null && children.length === index.length && children.every((c) => isValidElement(c))) {
-    return cloneElement(
-      jsx,
-      undefined,
-      children.map((child, k) =>
-        cloneElement(child as ReactElement, handlerProps(attached, live, data?.[index[k]], index[k]))
-      )
-    );
+  const children = (jsx.props as any).children;
+  const list = Array.isArray(children) ? children : [children];
+  if (!list.some((child) => datumIndexOf(child) !== undefined)) {
+    return cloneElement(jsx, handlerProps(attached, live, undefined, undefined));
   }
-  return cloneElement(jsx, handlerProps(attached, live, undefined, undefined));
+  return cloneElement(
+    jsx,
+    undefined,
+    list.map((child) => {
+      const i = datumIndexOf(child);
+      return i === undefined ? child : cloneElement(child as ReactElement, handlerProps(attached, live, data?.[i], i));
+    })
+  );
 }
 
 function handlerProps(

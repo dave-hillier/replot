@@ -42,6 +42,10 @@ export {
   resolveStyles
 } from "./styles.js";
 
+// Per-datum element identity (for building custom marks): tag the element a
+// custom mark renders for a datum so that the datum reaches its handlers.
+export {withDatumIndex} from "./perDatum.js";
+
 // Mark components
 export {Dot, DotX, DotY, Circle, Hexagon} from "./marks/Dot.js";
 export type {DotProps, DotXProps, DotYProps, CircleProps, HexagonProps} from "./marks/Dot.js";

@@ -6,6 +6,7 @@ import {identity, indexOf, maybeColorChannel, maybeTuple} from "../options.js";
 import {applyTransform} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {AbstractBar} from "./bar.js";
 import type {RectCornerOptions} from "./rect.js";
 import {roundedRectPath} from "./rect.js";
@@ -91,7 +92,7 @@ export class Cell extends (AbstractBar as {new (...args: any[]): RenderableMark}
             },
             titled
           );
-      return withHrefWrap(channels, this.target, i, rect);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, rect), i);
     });
     return h("g", {...indirect, ...transform}, rects);
   }
