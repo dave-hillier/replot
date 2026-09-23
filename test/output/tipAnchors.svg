@@ -18,99 +18,81 @@
     <circle cx="319.5" cy="0" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(320,0)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,6h13v26h-38v-26h13z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-0.06em" transform="translate(-11,14)"><tspan x="0" dy="1em">​top</tspan></text>
-      </g><title>top</title>
+    <g transform="translate(320,0)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,6h13v26h-38v-26h13z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-0.06em" transform="translate(-11,14)"><tspan x="0" dy="1em">​top</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="639" cy="79.5" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(639,80)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l-6,-6v-7h-44v26h44v-7z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-42,5)"><tspan x="0" dy="1em">​right</tspan></text>
-      </g><title>right</title>
+    <g transform="translate(639,80)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l-6,-6v-7h-44v26h44v-7z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-42,5)"><tspan x="0" dy="1em">​right</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="319.5" cy="159" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(320,159)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6h22.5v-26h-57v26h22.5z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-20.5,-14)"><tspan x="0" dy="1em">​bottom</tspan></text>
-      </g><title>bottom</title>
+    <g transform="translate(320,159)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6h22.5v-26h-57v26h22.5z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-20.5,-14)"><tspan x="0" dy="1em">​bottom</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="0" cy="79.5" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(0,80)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6v-7h38v26h-38v-7z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(14,5)"><tspan x="0" dy="1em">​left</tspan></text>
-      </g><title>left</title>
+    <g transform="translate(0,80)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6v-7h38v26h-38v-7z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(14,5)"><tspan x="0" dy="1em">​left</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="0" cy="0" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(0,0)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l12,12h47v26h-59z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-0.06em" transform="translate(8,20)"><tspan x="0" dy="1em">​top-left</tspan></text>
-      </g><title>top-left</title>
+    <g transform="translate(0,0)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,6h53v26h-59z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-0.06em" transform="translate(8,14)"><tspan x="0" dy="1em">​top-left</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="639" cy="0" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(639,0)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l-12,12h-53v26h65z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-0.06em" transform="translate(-57,20)"><tspan x="0" dy="1em">​top-right</tspan></text>
-      </g><title>top-right</title>
+    <g transform="translate(639,0)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l-6,6h-59v26h65z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-0.06em" transform="translate(-57,14)"><tspan x="0" dy="1em">​top-right</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="639" cy="159" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(639,159)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l-12,-12h-72v-26h84z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-76,-20)"><tspan x="0" dy="1em">​bottom-right</tspan></text>
-      </g><title>bottom-right</title>
+    <g transform="translate(639,159)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l-6,-6h-78v-26h84z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-76,-14)"><tspan x="0" dy="1em">​bottom-right</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="0" cy="159" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(0,159)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l12,-12h65v-26h-77z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(8,-20)"><tspan x="0" dy="1em">​bottom-left</tspan></text>
-      </g><title>bottom-left</title>
+    <g transform="translate(0,159)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6h71v-26h-77z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(8,-14)"><tspan x="0" dy="1em">​bottom-left</tspan></text>
     </g>
   </g>
   <g aria-label="dot" fill="blue" transform="translate(0.5,0.5)">
     <circle cx="319.5" cy="79.5" r="3"></circle>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(320,80)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M-27,-13h54v26h-54z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-19,5)"><tspan x="0" dy="1em">​middle</tspan></text>
-      </g><title>middle</title>
+    <g transform="translate(320,80)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M-27,-13h54v26h-54z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-19,5)"><tspan x="0" dy="1em">​middle</tspan></text>
     </g>
   </g>
 </svg>

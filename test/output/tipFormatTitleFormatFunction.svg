@@ -20,11 +20,9 @@
     <text transform="translate(320,60)" y="0.71em">0</text>
   </g>
   <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" visibility="hidden">
-    <g>
-      <g transform="translate(320,60)">
-        <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6h16v-26h-44v26h16z"></path>
-        <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-14,-14)"><tspan x="0" dy="1em">​0.02</tspan></text>
-      </g><title>0.019</title>
+    <g transform="translate(320,60)">
+      <path filter="drop-shadow(0 3px 4px rgba(0,0,0,0.2))" d="M0,0l6,-6h16v-26h-44v26h16z"></path>
+      <text fill="currentColor" fill-opacity="1" stroke="none" y="-1.29em" transform="translate(-14,-14)"><tspan x="0" dy="1em">​0.02</tspan></text>
     </g>
   </g>
 </svg>
