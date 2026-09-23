@@ -1304,10 +1304,98 @@ function subarray(index: any): any {
   return index.slice ? index.slice() : Array.from(index);
 }
 
+// Whatever this returns is what decides whether the plot recomputes, which
+// makes two failure modes equally fatal: a key that misses a real change leaves
+// the plot stale, and a key that differs when nothing changed drives the
+// compute effect's setMode in a loop until React gives up. JSON.stringify is
+// the fast path, and its replacer records a function-valued option as present
+// (JSON would drop it) without recording its identity. A value JSON REFUSES —
+// a BigInt, a reference back into a container it is already inside — used to
+// fall back to Math.random(), i.e. a key that differed on every render, which
+// is the loop (#150). The fallback below serializes those by value instead.
 function stableKey(options: Record<string, any>): string {
   try {
     return JSON.stringify(options, (_k, v) => (typeof v === "function" ? "[fn]" : v));
   } catch {
-    return String(Math.random());
+    return stableKeyUnserializable(options);
   }
+}
+
+// A JSON-shaped serializer for the values JSON.stringify refuses, so the key it
+// produces still changes when the REST of the options change (a frozen key
+// would silence the loop by breaking every recompute). Structure is walked
+// exactly as JSON would walk it — objects by sorted key, arrays by index, the
+// JSON representation of every primitive — with the three things JSON has no
+// syntax for spelled out: functions as "[fn]" (matching the replacer above),
+// bigints by their digits, and a reference back to an object already on this
+// path as "[ref:n]", which is both how a cycle terminates and how two
+// cyclically-equal structures produce the same key.
+//
+// `depth` guards one hole the back-reference test cannot: a toJSON that returns
+// a FRESH object every call would nest arbitrarily deep, each level invisible
+// to the other. Past the cap the value degrades to "[deep]", which is a key
+// that ignores deeper changes — the safer of the two failure modes, since a
+// stale key only delays a recompute that the next shallow change will trigger.
+const stableKeyDepthCap = 16;
+
+function stableKeyUnserializable(value: unknown, seen: any[] = [], depth = 0): string {
+  if (value === null) return "null";
+  switch (typeof value) {
+    case "string":
+    case "number":
+    case "boolean":
+      return JSON.stringify(value);
+    case "bigint":
+      return `[bigint:${value.toString()}]`;
+    case "undefined":
+      return "[undefined]";
+    case "function":
+      return "[fn]";
+    case "symbol":
+      return `[symbol:${String(value.description)}]`;
+  }
+  const object = value as any;
+  // toJSON is what JSON.stringify consults first, so it is consulted here too
+  // rather than reporting a Date (say) and a plain object alike.
+  if (typeof object.toJSON === "function") {
+    try {
+      return stableKeyUnserializable(object.toJSON(), seen, depth + 1);
+    } catch {
+      // A toJSON that throws is just another unreadable value; fall through.
+    }
+  }
+  const at = seen.indexOf(object);
+  if (at !== -1) return `[ref:${at}]`;
+  if (depth >= stableKeyDepthCap) return "[deep]";
+  try {
+    seen.push(object);
+    if (Array.isArray(object)) {
+      return `[${object.map((d) => stableKeyUnserializable(d, seen, depth + 1)).join(",")}]`;
+    }
+    return `{${Object.keys(object)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${stableKeyUnserializable(object[k], seen, depth + 1)}`)
+      .join(",")}}`;
+  } catch {
+    // Nothing about the value could be read at all — a throwing getter, a Proxy
+    // that refuses enumeration. Identity is all that is left to key on, and it
+    // is enough: the same reference keeps the same number, so the key is stable
+    // for props that did not change.
+    return `[unreadable:${identityKey(object)}]`;
+  } finally {
+    seen.pop();
+  }
+}
+
+// The identity sequence behind that last resort. A WeakMap so a value that is
+// dropped is not held alive by having been keyed once.
+const identityKeys = new WeakMap<object, number>();
+let identityKeySeq = 0;
+
+function identityKey(value: object): number {
+  const found = identityKeys.get(value);
+  if (found !== undefined) return found;
+  const next = ++identityKeySeq;
+  identityKeys.set(value, next);
+  return next;
 }

@@ -182,3 +182,61 @@ describe("stampOptions with object-valued options", () => {
     assert.strictEqual(a, b);
   });
 });
+
+// #150: the plot's options key is what decides whether a recompute is needed,
+// and it is built by serializing the options. A value JSON cannot serialize (a
+// BigInt, a cycle) used to fall back to Math.random(), which gave a new key on
+// every render: the compute effect re-ran, called setMode, re-rendered, and
+// looped until React gave up with "Maximum update depth exceeded". A plot must
+// settle instead.
+describe("plot options that JSON.stringify refuses", () => {
+  // The cyclic value sits on a prop <Replot> does not interpret, so it reaches
+  // the options key (which covers every prop) but not computePlot's scales.
+  function cyc() {
+    const o: any = {a: 1};
+    o.self = o;
+    return o;
+  }
+
+  jsdomit("settles with a cyclic value in the plot props", async () => {
+    const {container, cleanup} = await mount(
+      <Replot width={200} height={200} meta={cyc()}>
+        <Dot data={dataA} x="x" y="y" />
+      </Replot>
+    );
+    assert.strictEqual(container.querySelectorAll("circle").length, 3);
+    await cleanup();
+  });
+
+  jsdomit("settles with a BigInt in the plot props", async () => {
+    const {container, cleanup} = await mount(
+      <Replot width={200} height={200} meta={{count: 3n}}>
+        <Dot data={dataA} x="x" y="y" />
+      </Replot>
+    );
+    assert.strictEqual(container.querySelectorAll("circle").length, 3);
+    await cleanup();
+  });
+
+  jsdomit("still recomputes when a stable option changes beside an unserializable one", async () => {
+    // The fallback key has to be sensitive to the rest of the options, or the
+    // loop would be fixed by freezing the plot instead of keying it.
+    const cyclic = cyc();
+    let setType;
+    function Harness() {
+      const [type, set] = useState("linear");
+      setType = set;
+      return (
+        <Replot width={200} height={200} meta={cyclic} x={{type}}>
+          <Dot data={dataA} x="x" y="y" />
+        </Replot>
+      );
+    }
+    const {container, cleanup} = await mount(<Harness />);
+    const before = svgMarkup(container);
+    await act(async () => setType("log"));
+    await act(async () => {});
+    assert.notStrictEqual(svgMarkup(container), before, "expected the recompute after the scale type change");
+    await cleanup();
+  });
+});
