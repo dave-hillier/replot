@@ -26,7 +26,7 @@
     <image x="410" y="310.25" width="98" height="98" href="https://placekitten.com/118/118" transform="rotate(-60)" transform-origin="459px 359.25px" clip-path="circle(49px)"></image>
     <image x="11" y="210.5" width="98" height="98" href="https://placekitten.com/120/120" transform="rotate(-40)" transform-origin="60px 259.5px" clip-path="circle(49px)"></image>
     <image x="110.75" y="210.5" width="98" height="98" href="https://placekitten.com/122/122" transform="rotate(-20)" transform-origin="159.75px 259.5px" clip-path="circle(49px)"></image>
-    <image x="210.5" y="210.5" width="98" height="98" href="https://placekitten.com/124/124" clip-path="circle(49px)"></image>
+    <image x="210.5" y="210.5" width="98" height="98" href="https://placekitten.com/124/124" transform="rotate(0)" transform-origin="259.5px 259.5px" clip-path="circle(49px)"></image>
     <image x="310.25" y="210.5" width="98" height="98" href="https://placekitten.com/126/126" transform="rotate(20)" transform-origin="359.25px 259.5px" clip-path="circle(49px)"></image>
     <image x="410" y="210.5" width="98" height="98" href="https://placekitten.com/128/128" transform="rotate(40)" transform-origin="459px 259.5px" clip-path="circle(49px)"></image>
     <image x="11" y="110.75" width="98" height="98" href="https://placekitten.com/130/130" transform="rotate(60)" transform-origin="60px 159.75px" clip-path="circle(49px)"></image>

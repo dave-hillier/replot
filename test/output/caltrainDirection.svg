@@ -59,17 +59,17 @@
   <g>
     <g transform="translate(0,0)">
       <g aria-label="vector" fill="none" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" transform="translate(0.5,0.5)">
-        <path stroke="brown" transform="translate(71.037,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(100.134,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(129.231,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(391.589,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(420.686,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(71.037,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(100.134,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(129.231,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(391.589,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(420.686,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="brown" transform="translate(394.498,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="brown" transform="translate(423.595,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="brown" transform="translate(452.692,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(79.766,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(108.863,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="brown" transform="translate(137.96,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(79.766,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(108.863,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="brown" transform="translate(137.96,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="brown" transform="translate(380.92,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="brown" transform="translate(412.441,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="brown" transform="translate(441.538,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
@@ -83,45 +83,45 @@
         <path stroke="peru" transform="translate(156.388,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(389.164,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(418.746,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(451.722,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(161.237,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(190.334,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(335.819,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(105.468,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(134.565,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(367.341,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(396.438,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(425.535,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(451.722,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(161.237,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(190.334,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(335.819,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(105.468,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(134.565,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(367.341,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(396.438,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(425.535,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(106.438,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(135.535,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(164.632,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(371.221,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(400.318,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(429.415,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(371.221,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(400.318,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(429.415,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(197.124,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(342.609,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(371.706,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(110.318,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(139.415,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(168.512,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(86.07,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(115.167,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(144.264,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(86.07,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(115.167,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(144.264,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(407.107,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(436.204,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(465.301,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(414.866,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="peru" transform="translate(443.963,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(414.866,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="peru" transform="translate(443.963,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="peru" transform="translate(96.254,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
       </g>
     </g>
     <g transform="translate(0,48)">
       <g aria-label="vector" fill="none" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" transform="translate(0.5,0.5)">
-        <path stroke="currentColor" transform="translate(40,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(476.455,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(505.552,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(534.649,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(563.746,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(40,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(476.455,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(505.552,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(534.649,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(563.746,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(186.455,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(215.552,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(244.649,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
@@ -129,20 +129,20 @@
         <path stroke="currentColor" transform="translate(302.843,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(331.94,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(361.037,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(457.057,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(457.057,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(78.796,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(488.579,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(56.973,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(56.973,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(522.525,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(551.622,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(580.719,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(348.913,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(175.786,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(204.883,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(233.98,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(263.077,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(292.174,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-        <path stroke="currentColor" transform="translate(321.271,31) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(348.913,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(175.786,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(204.883,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(233.98,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(263.077,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(292.174,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
+        <path stroke="currentColor" transform="translate(321.271,31) rotate(0) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(64.247,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
         <path stroke="currentColor" transform="translate(620,31) rotate(180) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
       </g>

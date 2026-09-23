@@ -199,7 +199,10 @@ export class Image extends Mark {
         imageRendering: this.imageRendering
       };
       const rotation = A ? A[i] : rotate;
-      if (rotation) {
+      // Both attributes key off the presence of the rotate channel rather than
+      // on its value (image.js:99-100 upstream): a zero angle still rotates the
+      // image about its center.
+      if (A || rotation) {
         const ox = typeof xCenter === "function" ? xCenter(i) : xCenter;
         const oy = typeof yCenter === "function" ? yCenter(i) : yCenter;
         props.transform = `rotate(${rotation})`;
