@@ -532,10 +532,13 @@ export function scale(options = {}) {
   return scale;
 }
 
-export function exposeScales(scales) {
+// Exposes the scales to the figure's .scale(name) method. The projection scale
+// is the exception: it lives on the rendering context, not the scale registry
+// (upstream scales.js:535), so it has to be answered from there.
+export function exposeScales(scales, context) {
   return (key) => {
     if (!registry.has((key = `${key}`))) throw new Error(`unknown scale: ${key}`);
-    return scales[key];
+    return (key === "projection" ? context : scales)[key];
   };
 }
 

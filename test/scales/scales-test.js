@@ -2260,6 +2260,79 @@ it("mark(data, {channels}) rejects unknown scales", () => {
   );
 });
 
+// plot(…).scale("projection") is the one scale that does not come from the
+// scale registry: it is the projection the plot built for its marks, which
+// lives on the rendering context, so it is answered from there (in
+// contrast with, say, a band scale named "projection", which cannot exist).
+it("plot(…).scale('projection') returns undefined when no projection is used", () => {
+  const plot = Plot.frame().plot();
+  assert.strictEqual(plot.scale("projection"), undefined);
+});
+
+it("plot(…).scale('projection') returns the projection for a named projection", () => {
+  const plot = Plot.plot({projection: "mercator", marks: [Plot.graticule()]});
+  const projection = plot.scale("projection");
+  assert.strictEqual(
+    d3.geoPath(projection)({type: "Point", coordinates: [-1.55, 47.22]}),
+    "M316.749,224.179m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z"
+  );
+  assertCloseTo(projection.apply([-1.55, 47.22]), [316.74875, 224.179291]);
+  assertCloseTo(projection.invert([316.74875, 224.179291]), [-1.55, 47.22]);
+});
+
+it("plot(…).scale('projection') returns the projection for a projection implementation", () => {
+  const plot = Plot.plot({projection: d3.geoMercator(), marks: [Plot.graticule()]});
+  const projection = plot.scale("projection");
+  assert.strictEqual(
+    d3.geoPath(projection)({type: "Point", coordinates: [-1.55, 47.22]}),
+    "M475.862,106.646m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z"
+  );
+  assertCloseTo(projection.apply([-1.55, 47.22]), [475.862361, 106.646008]);
+  assertCloseTo(projection.invert([475.862361, 106.646008]), [-1.55, 47.22]);
+});
+
+it("plot(…).scale('projection') is the same for 'mercator' and {type: 'mercator'}", () => {
+  const projection1 = Plot.plot({projection: "mercator", marks: [Plot.graticule()]}).scale("projection");
+  const projection2 = Plot.plot({projection: {type: "mercator"}, marks: [Plot.graticule()]}).scale("projection");
+  assertCloseTo(projection1.apply([-1.55, 47.22]), projection2.apply([-1.55, 47.22]));
+  assertCloseTo(projection1.invert([316.74875, 224.179291]), projection2.invert([316.74875, 224.179291]));
+});
+
+it("plot(…).scale('projection') exposes apply and invert for identity", () => {
+  const layer = {
+    type: "Polygon",
+    coordinates: [
+      [
+        [0, 0],
+        [200, 0],
+        [200, 100],
+        [0, 100],
+        [0, 0]
+      ]
+    ]
+  };
+  const p = Plot.plot({
+    width: 400,
+    height: 200,
+    margin: 0,
+    projection: {type: "identity", domain: layer},
+    marks: [Plot.frame()]
+  }).scale("projection");
+  assertCloseTo(p.apply([0, 0]), [0, 0]);
+  assertCloseTo(p.apply([200, 100]), [400, 200]);
+  assertCloseTo(p.apply([100, 50]), [200, 100]);
+  assertCloseTo(p.invert([0, 0]), [0, 0]);
+  assertCloseTo(p.invert([400, 200]), [200, 100]);
+  assertCloseTo(p.invert([200, 100]), [100, 50]);
+});
+
+it("plot(…).scale('projection') round-trips to a second plot", () => {
+  const p1 = Plot.plot({projection: "mercator", marks: [Plot.graticule()]}).scale("projection");
+  const p2 = Plot.plot({projection: p1, marks: [Plot.graticule()]}).scale("projection");
+  // Same dimensions, so the pixel coordinates match.
+  assertCloseTo(p1.apply([-1.55, 47.22]), p2.apply([-1.55, 47.22]));
+});
+
 // Given a plot specification (or, as shorthand, an array of marks or a single
 // mark), asserts that the given named scales, when materialized from the first
 // plot and used to produce a second plot, produce the same output and the same
@@ -2308,4 +2381,12 @@ function scaleApply(x, pairs) {
     assert.strictEqual(+x.apply(input).toFixed(10), output);
     assert.strictEqual(+x.invert(output).toFixed(10), input);
   }
+}
+
+// Projected points are compared with a tolerance rather than exactly: a
+// projection is computed, so the last digit or two of a pixel coordinate may
+// differ from the expected value (upstream's assert.allCloseTo does the same).
+function assertCloseTo([actualX, actualY], [expectedX, expectedY], epsilon = 1e-6) {
+  assert.ok(Math.abs(actualX - expectedX) < epsilon, `expected x ${actualX} to be within ${epsilon} of ${expectedX}`);
+  assert.ok(Math.abs(actualY - expectedY) < epsilon, `expected y ${actualY} to be within ${epsilon} of ${expectedY}`);
 }

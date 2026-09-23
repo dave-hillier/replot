@@ -324,7 +324,7 @@ export function plot(options: any = {}) {
     figureHolder.current = fig;
   }
 
-  figureHolder.current.scale = exposeScales(scales.scales);
+  figureHolder.current.scale = exposeScales(scales.scales, context);
   // The .legend(key, options) method renders via the React legend components
   // (no d3-selection); serialize to a DOM node in the target document.
   figureHolder.current.legend = (key: string, legendOptions: any = {}) => {
