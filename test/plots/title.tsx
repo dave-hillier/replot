@@ -1,4 +1,4 @@
-import {Replot, DotX} from "../../src/react/index.js";
+import {Replot, DotX} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {html} from "htl";
 

@@ -1,5 +1,5 @@
 import {useState, type ReactNode} from "react";
-import {Replot} from "../../src/react/index.js";
+import {Replot} from "../../src/react/api.js";
 
 // Upstream's viewof idiom, in React. Its pointer test plots
 // (observablehq-plot test/plots/pointer.ts and arrow.ts) put the plot and a

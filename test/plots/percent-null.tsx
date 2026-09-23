@@ -1,4 +1,4 @@
-import {Replot, Dot} from "../../src/react/index.js";
+import {Replot, Dot} from "../../src/react/api.js";
 
 export async function percentNull() {
   const time = [1, 2, 3, 4, 5];

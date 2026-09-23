@@ -39,7 +39,7 @@ import {
   RectX,
   RectY,
   Text
-} from "../src/react/index.js";
+} from "../src/react/api.js";
 import {Bin, BinX, BinY} from "../src/react/transforms/Bin.js";
 import {Centroid} from "../src/react/transforms/Centroid.js";
 import {DodgeY} from "../src/react/transforms/Dodge.js";

@@ -1,4 +1,4 @@
-import {Replot, Frame, Text} from "../../src/react/index.js";
+import {Replot, Frame, Text} from "../../src/react/api.js";
 
 export async function thisIsJustToSay() {
   return (

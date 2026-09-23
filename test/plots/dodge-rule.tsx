@@ -1,4 +1,4 @@
-import {Replot, RuleX, dodgeY} from "../../src/react/index.js";
+import {Replot, RuleX, dodgeY} from "../../src/react/api.js";
 
 export async function dodgeRule() {
   return (

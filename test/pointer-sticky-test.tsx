@@ -7,7 +7,7 @@
 // events that drive it (upstream style.js defaults pointer-events from
 // context.pointerSticky), and when it is pinned it must.
 import assert from "assert";
-import {Crosshair, Dot, Replot} from "../src/react/index.js";
+import {Crosshair, Dot, Replot} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {click, hover, leave, mountPlot, tipGroups, tipTexts, type PointerHarness} from "./pointer-harness.js";
 

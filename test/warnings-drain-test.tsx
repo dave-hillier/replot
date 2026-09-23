@@ -6,7 +6,7 @@ import React from "react";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {Replot, Dot} from "../src/react/index.js";
+import {Replot, Dot} from "../src/react/api.js";
 import {plot} from "../src/plot.js";
 import {dot} from "../src/marks/dot.js";
 import {warn} from "../src/warnings.js";

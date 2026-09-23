@@ -58,7 +58,7 @@ import {
   VectorX,
   VectorY,
   VoronoiMesh
-} from "../src/react/index.js";
+} from "../src/react/api.js";
 
 /** Renders `node` into a fresh jsdom container and returns the <svg> it drew. */
 async function renderSvg(node) {

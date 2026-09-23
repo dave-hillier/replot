@@ -6,6 +6,7 @@ import {isNoneish, isScaleOptions, maybeColorChannel, maybeNumberChannel} from "
 import {isOrdinalScale, isThresholdScale, normalizeScale} from "../../scales.js";
 import {maybeClassName} from "../../style.js";
 import type {LegendScales} from "../../legends.js";
+import {legendStyleSheet, swatchesStyle} from "./legendStyles.js";
 
 // Pure-JSX port of `src/legends/swatches.js`. Emits the same HTML+SVG tree the
 // imperative renderer builds (a wrapping <div> with a <style> block, then a
@@ -194,53 +195,9 @@ function SwatchesContainer({
     ...(fontVariant !== undefined && fontVariant !== "normal" ? {fontVariant: fontVariant as any} : null)
   };
 
-  const styleBlockBase = `:where(.${cls}-swatches) {
-  font-family: system-ui, sans-serif;
-  font-size: 10px;
-  margin-bottom: 0.5em;
-}
-:where(.${cls}-swatch > svg) {
-  margin-right: 0.5em;
-  overflow: visible;
-}
-`;
-
-  const extraColumns = `:where(.${cls}-swatches-columns .${cls}-swatch) {
-  display: flex;
-  align-items: center;
-  break-inside: avoid;
-  padding-bottom: 1px;
-}
-:where(.${cls}-swatches-columns .${cls}-swatch::before) {
-  flex-shrink: 0;
-}
-:where(.${cls}-swatches-columns .${cls}-swatch-label) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}`;
-
-  const extraWrap = `:where(.${cls}-swatches-wrap) {
-  display: flex;
-  align-items: center;
-  min-height: 33px;
-  flex-wrap: wrap;
-}
-:where(.${cls}-swatches-wrap .${cls}-swatch) {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 1em;
-}`;
-
-  const styleBlock = styleBlockBase + (columns != null ? extraColumns : extraWrap);
-
   return (
-    <div
-      className={`${cls}-swatches ${cls}-swatches-${layout}`}
-      style={containerStyle}
-      // The string is built from a controlled className and constant CSS.
-    >
-      <style>{styleBlock}</style>
+    <div className={`${cls}-swatches ${cls}-swatches-${layout}`} style={containerStyle}>
+      {legendStyleSheet(swatchesStyle(cls, layout))}
       {scale.domain.map((d: any, i: number) => {
         const label = tf.call(null, d, i);
         return columns != null ? (

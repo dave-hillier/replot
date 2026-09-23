@@ -1,4 +1,4 @@
-import {Replot, formatNumber} from "../../src/react/index.js";
+import {Replot, formatNumber} from "../../src/react/api.js";
 
 export async function logTickFormatFunction() {
   return <Replot x={{type: "log", domain: [1, 4200], tickFormat: formatNumber()}} />;

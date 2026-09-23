@@ -1,4 +1,4 @@
-import {Replot, Line, RuleY} from "../../src/react/index.js";
+import {Replot, Line, RuleY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 const parseDate = d3.utcParse("%b-%Y");

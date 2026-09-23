@@ -1,5 +1,11 @@
 // replot/react — React component API for Replot
 //
+// This module is the package's "./react" entry point (see the `exports` map in
+// package.json, the "replot/react" path in tsconfig.json and the docs alias in
+// docs/vite.docs.config.ts). It is named api rather than index because the
+// project does not use index.* modules: a re-export surface should say what it
+// is. Its own re-exports are grouped below by the layer they come from.
+//
 // Usage:
 //   import { Replot, Dot, Line, BarY, AxisX, AxisY } from "replot/react";
 //

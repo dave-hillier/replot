@@ -13,7 +13,7 @@ import {
   selectMinY,
   selectMaxX,
   selectMaxY
-} from "../src/react/index.js";
+} from "../src/react/api.js";
 import {
   SelectFirst,
   SelectLast,

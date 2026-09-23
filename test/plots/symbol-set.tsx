@@ -1,4 +1,4 @@
-import {Replot, DotX, indexOf} from "../../src/react/index.js";
+import {Replot, DotX, indexOf} from "../../src/react/api.js";
 
 export async function symbolSetFill() {
   return (

@@ -1,4 +1,4 @@
-import {Replot, Frame, AxisX, AxisY, RuleX, RuleY} from "../../src/react/index.js";
+import {Replot, Frame, AxisX, AxisY, RuleX, RuleY} from "../../src/react/api.js";
 
 export async function axisLabelX() {
   return (

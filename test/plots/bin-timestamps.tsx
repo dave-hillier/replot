@@ -1,4 +1,4 @@
-import {Replot, RectY, binX} from "../../src/react/index.js";
+import {Replot, RectY, binX} from "../../src/react/api.js";
 
 export async function binTimestamps() {
   const timestamps = Float64Array.of(

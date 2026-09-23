@@ -16,7 +16,7 @@ import {
   mapY,
   shiftX,
   shiftY
-} from "../src/react/index.js";
+} from "../src/react/api.js";
 import {NormalizeX, NormalizeY} from "../src/react/transforms/Normalize.js";
 import {MapX, MapY} from "../src/react/transforms/Map.js";
 import {ShiftX, ShiftY} from "../src/react/transforms/Shift.js";

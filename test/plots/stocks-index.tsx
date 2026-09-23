@@ -1,4 +1,4 @@
-import {Replot, RuleY, Line, Text, normalizeY, selectLast} from "../../src/react/index.js";
+import {Replot, RuleY, Line, Text, normalizeY, selectLast} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 const format = d3.format("+d");

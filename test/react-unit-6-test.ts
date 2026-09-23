@@ -3,7 +3,7 @@ import assert from "assert";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import {validateText, validateLink, validateArrow} from "../src/react/__validate.js";
+import {validateText, validateLink, validateArrow} from "./react-fixtures.js";
 
 async function renderInto(element) {
   const container = (globalThis as any).document.createElement("div");

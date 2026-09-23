@@ -8,7 +8,7 @@
 // sharpest instrument available for the second: it puts four pointer marks —
 // two of them sharing an aria-label with each other — into one plot.
 import assert from "assert";
-import {BoxX, Crosshair, Dot, Replot, Tip, pointer} from "../src/react/index.js";
+import {BoxX, Crosshair, Dot, Replot, Tip, pointer} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {hover, mountPlot, tipTexts, type PointerHarness} from "./pointer-harness.js";
 

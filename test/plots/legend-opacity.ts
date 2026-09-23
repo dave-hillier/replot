@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import {legend} from "../../src/react/index.js";
+import {legend} from "../../src/react/api.js";
 
 export function opacityLegendSwatches() {
   return legend({opacity: {type: "ordinal", domain: d3.range(10)}});

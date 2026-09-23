@@ -9,7 +9,7 @@
     "jsx": "react-jsx",
     "paths": {
       "replot": ["index"],
-      "replot/react": ["react/index"],
+      "replot/react": ["react/api"],
       "react": ["../node_modules/@types/react"],
       "react/jsx-runtime": ["../node_modules/@types/react/jsx-runtime"],
       "react-dom": ["../node_modules/@types/react-dom"],

@@ -1,4 +1,4 @@
-import {Replot, Line} from "../../src/react/index.js";
+import {Replot, Line} from "../../src/react/api.js";
 import {range} from "d3";
 
 export async function groupMarker() {

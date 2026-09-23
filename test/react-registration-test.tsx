@@ -11,7 +11,7 @@ import React, {useState} from "react";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {Replot, RuleY, Dot, ScaleY, BarY, Legend, usePlotContext} from "../src/react/index.js";
+import {Replot, RuleY, Dot, ScaleY, BarY, Legend, usePlotContext} from "../src/react/api.js";
 
 const data = [
   {x: 1, y: 2, c: "a"},

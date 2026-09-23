@@ -1,4 +1,4 @@
-import {Replot, Frame, BarY, Rect, Cell, RectX, RectY, RuleX, RuleY, binX, binY} from "../../src/react/index.js";
+import {Replot, Frame, BarY, Rect, Cell, RectX, RectY, RuleX, RuleY, binX, binY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export function roundedBarYR() {

@@ -10,7 +10,7 @@
 // rect's x/width) rather than recomputed from the scales, so a change in
 // default margins or nice-ing cannot silently move a test's hover off target.
 import assert from "assert";
-import {BarY, Dot, RectY, Replot, RuleY, binX, pointer, pointerX, pointerY} from "../src/react/index.js";
+import {BarY, Dot, RectY, Replot, RuleY, binX, pointer, pointerX, pointerY} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {hover, leave, mountPlot, tipGroups, tipLines, type PointerHarness} from "./pointer-harness.js";
 

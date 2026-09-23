@@ -1,4 +1,4 @@
-import {Replot, Line, Dot, groupX, binY} from "../../src/react/index.js";
+import {Replot, Line, Dot, groupX, binY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export async function carsMpg() {

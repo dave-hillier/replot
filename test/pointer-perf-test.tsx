@@ -14,7 +14,7 @@
 // the registration path reads per registration — is turned into a counting
 // accessor.
 import assert from "assert";
-import {Dot, Replot, pointer, useMark} from "../src/react/index.js";
+import {Dot, Replot, pointer, useMark} from "../src/react/api.js";
 import {dot} from "../src/marks/dot.js";
 import {tip} from "../src/marks/tip.js";
 import jsdomit from "./jsdom.js";

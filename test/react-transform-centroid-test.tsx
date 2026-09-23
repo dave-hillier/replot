@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import {Replot, Text, centroid, geoCentroid} from "../src/react/index.js";
+import {Replot, Text, centroid, geoCentroid} from "../src/react/api.js";
 import {Centroid, GeoCentroid} from "../src/react/transforms/Centroid.js";
 
 const countries = [

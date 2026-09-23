@@ -1,4 +1,4 @@
-import {Replot, Dot, GridX, GridY, AxisX, AxisY} from "../../src/react/index.js";
+import {Replot, Dot, GridX, GridY, AxisX, AxisY} from "../../src/react/api.js";
 
 export async function axisFilter() {
   return (

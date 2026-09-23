@@ -13,7 +13,7 @@ import {
   AreaY,
   RuleY,
   Dot
-} from "../../src/react/index.js";
+} from "../../src/react/api.js";
 import * as d3 from "d3";
 import * as Arrow from "apache-arrow";
 import {PointerViewof} from "./viewof.js";

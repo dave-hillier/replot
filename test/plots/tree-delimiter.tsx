@@ -1,4 +1,4 @@
-import {Replot, TreeMark} from "../../src/react/index.js";
+import {Replot, TreeMark} from "../../src/react/api.js";
 
 export async function treeDelimiter() {
   return (

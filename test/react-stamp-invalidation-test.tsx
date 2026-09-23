@@ -26,7 +26,7 @@ import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
 import * as d3 from "d3";
-import {Replot, Dot, AxisY, ScaleX, useMark, stampOptions} from "../src/react/index.js";
+import {Replot, Dot, AxisY, ScaleX, useMark, stampOptions} from "../src/react/api.js";
 import {dot} from "../src/marks/dot.js";
 
 const data = [

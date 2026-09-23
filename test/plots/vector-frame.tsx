@@ -1,4 +1,4 @@
-import {Replot, Frame, Vector, Text} from "../../src/react/index.js";
+import {Replot, Frame, Vector, Text} from "../../src/react/api.js";
 
 export async function vectorFrame() {
   return (

@@ -1,4 +1,4 @@
-import {Replot, Sphere, Graticule} from "../../src/react/index.js";
+import {Replot, Sphere, Graticule} from "../../src/react/api.js";
 
 export async function graticule() {
   return (

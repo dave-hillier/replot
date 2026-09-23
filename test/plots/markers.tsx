@@ -1,4 +1,4 @@
-import {Replot, RuleX, RuleY, TickX, TickY, LineY} from "../../src/react/index.js";
+import {Replot, RuleX, RuleY, TickX, TickY, LineY} from "../../src/react/api.js";
 
 export async function markerDasharray() {
   return (

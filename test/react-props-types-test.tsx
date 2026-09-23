@@ -6,7 +6,7 @@
 // — so a misspelled or wrongly typed prop is a compile error instead of a prop
 // that is silently ignored at runtime.
 import React from "react";
-import {Replot, Dot} from "../src/react/index.js";
+import {Replot, Dot} from "../src/react/api.js";
 
 const points = [
   {x: 1, y: 2},

@@ -1,4 +1,4 @@
-import {Replot, RuleX} from "../../src/react/index.js";
+import {Replot, RuleX} from "../../src/react/api.js";
 
 export async function shorthandRuleX() {
   const numbers = [

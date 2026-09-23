@@ -1,4 +1,4 @@
-import {Replot, Dot, dodgeY} from "../../src/react/index.js";
+import {Replot, Dot, dodgeY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 // A channel of explicit symbols does not show in the tip nor has a legend.

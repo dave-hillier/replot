@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import {Replot, LineX, LineY, windowX, windowY} from "../src/react/index.js";
+import {Replot, LineX, LineY, windowX, windowY} from "../src/react/api.js";
 import {WindowX, WindowY} from "../src/react/transforms/Window.js";
 
 // A noisy series to smooth, mirroring the rolling-window usage in

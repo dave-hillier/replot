@@ -1,4 +1,4 @@
-import {Replot, BarY} from "../../src/react/index.js";
+import {Replot, BarY} from "../../src/react/api.js";
 
 export async function shorthandBarY() {
   const numbers = [

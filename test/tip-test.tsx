@@ -8,7 +8,7 @@
 // measured one. These tests install a measurement (a monospace grid, or a
 // fixed box) and read the geometry back off the DOM.
 import assert from "assert";
-import {Dot, Replot} from "../src/react/index.js";
+import {Dot, Replot} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {hover, mountPlot, shimTextMeasurement, tipGroups, tipTexts, type PointerHarness} from "./pointer-harness.js";
 

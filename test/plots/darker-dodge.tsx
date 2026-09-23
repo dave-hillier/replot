@@ -1,4 +1,4 @@
-import {Replot, DotX, dodgeY} from "../../src/react/index.js";
+import {Replot, DotX, dodgeY} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {remap} from "../transforms/remap.js";
 

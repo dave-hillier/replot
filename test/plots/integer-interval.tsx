@@ -1,4 +1,4 @@
-import {Replot, Line, AreaY} from "../../src/react/index.js";
+import {Replot, Line, AreaY} from "../../src/react/api.js";
 
 export async function integerInterval() {
   const requests = [

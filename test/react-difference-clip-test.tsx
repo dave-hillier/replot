@@ -4,7 +4,7 @@ import React from "react";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {Replot, DifferenceY, DifferenceX} from "../src/react/index.js";
+import {Replot, DifferenceY, DifferenceX} from "../src/react/api.js";
 
 // A difference mark clips its two areas against a line by emitting one
 // <clipPath> per area and pointing that area's <path> at it with url(#…). The

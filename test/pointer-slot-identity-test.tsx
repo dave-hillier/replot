@@ -27,7 +27,7 @@
 // transforms, filters, empty data — are in pointer-application-test.tsx.
 import assert from "assert";
 import {createElement, useState} from "react";
-import {Dot, Replot} from "../src/react/index.js";
+import {Dot, Replot} from "../src/react/api.js";
 import {renderMarksWith} from "../src/react/Replot.js";
 import jsdomit from "./jsdom.js";
 import {click, hover, mountPlot, tipGroups, tipTexts} from "./pointer-harness.js";

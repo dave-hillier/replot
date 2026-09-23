@@ -1,4 +1,4 @@
-import {Replot, Text, AxisX, AxisY, BarX, TickX, Frame, valueof} from "../../src/react/index.js";
+import {Replot, Text, AxisX, AxisY, BarX, TickX, Frame, valueof} from "../../src/react/api.js";
 import type * as Plot_ from "replot";
 import * as d3 from "d3";
 

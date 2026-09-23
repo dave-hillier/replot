@@ -1,4 +1,4 @@
-import {Replot, AreaY} from "../../src/react/index.js";
+import {Replot, AreaY} from "../../src/react/api.js";
 
 export async function shorthandAreaY() {
   const numbers = [

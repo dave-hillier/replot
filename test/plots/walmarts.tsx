@@ -1,4 +1,4 @@
-import {Replot, Geo, Dot, hexbin} from "../../src/react/index.js";
+import {Replot, Geo, Dot, hexbin} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {mesh} from "topojson-client";
 

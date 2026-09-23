@@ -1,4 +1,4 @@
-import {Replot, Auto, Line, TickX, CellX, BarY} from "../../src/react/index.js";
+import {Replot, Auto, Line, TickX, CellX, BarY} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 const integers = d3.range(40).map((int) => ({

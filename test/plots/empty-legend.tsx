@@ -1,4 +1,4 @@
-import {Replot, Frame} from "../../src/react/index.js";
+import {Replot, Frame} from "../../src/react/api.js";
 
 export async function emptyLegend() {
   return (

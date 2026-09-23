@@ -25,7 +25,7 @@
 // with "Maximum update depth exceeded".
 import assert from "assert";
 import {StrictMode, useLayoutEffect, useState, type ReactElement} from "react";
-import {BarY, Dot, GroupX, Replot} from "../src/react/index.js";
+import {BarY, Dot, GroupX, Replot} from "../src/react/api.js";
 import jsdomit from "./jsdom.js";
 import {click, hover, mountPlot, tipGroups, tipTexts} from "./pointer-harness.js";
 

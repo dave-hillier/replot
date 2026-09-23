@@ -1,4 +1,4 @@
-import {Replot, Image} from "../../src/react/index.js";
+import {Replot, Image} from "../../src/react/api.js";
 
 export async function imagePixelated() {
   return (
