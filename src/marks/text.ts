@@ -312,7 +312,10 @@ export class Text extends Mark {
       const tx = X ? X[i] : cx;
       const ty = Y ? Y[i] : cy;
       const r = R ? R[i] : rotate;
-      const transformAttr = `translate(${tx},${ty})${r ? ` rotate(${r})` : ""}`;
+      // The rotate clause keys off the presence of the rotate channel rather
+      // than on its value (text.js:110-114 upstream): a zero angle is written,
+      // not skipped.
+      const transformAttr = `translate(${tx},${ty})${R || r ? ` rotate(${r})` : ""}`;
       const fontSizeAttr = FS ? FS[i] : undefined;
       const raw = T ? formatDefault(T[i]) ?? "" : "";
       const lines: string[] = T ? splitLines(raw).map(clipLine) : [];

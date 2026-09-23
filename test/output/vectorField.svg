@@ -62,7 +62,7 @@
     <text transform="translate(590.065,570)" y="0.71em">6</text>
   </g>
   <g aria-label="vector" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" transform="translate(0.5,0.5)">
-    <path transform="translate(52,558) translate(0,0.833)" d="M0,0L0,-1.667M-0.333,-1.333L0,-1.667L0.333,-1.333"></path>
+    <path transform="translate(52,558) rotate(0) translate(0,0.833)" d="M0,0L0,-1.667M-0.333,-1.333L0,-1.667L0.333,-1.333"></path>
     <path transform="translate(52,541.032) rotate(-11.92) translate(0,1)" d="M0,0L0,-2M-0.4,-1.6L0,-2L0.4,-1.6"></path>
     <path transform="translate(52,524.065) rotate(-23.365) translate(0,1.167)" d="M0,0L0,-2.333M-0.467,-1.867L0,-2.333L0.467,-1.867"></path>
     <path transform="translate(52,507.097) rotate(-33.879) translate(0,1.333)" d="M0,0L0,-2.667M-0.533,-2.133L0,-2.667L0.533,-2.133"></path>
@@ -95,7 +95,7 @@
     <path transform="translate(52,48.968) rotate(16.765) translate(0,5.833)" d="M0,0L0,-11.667M-2.333,-9.333L0,-11.667L2.333,-9.333"></path>
     <path transform="translate(52,32) rotate(4.985) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
     <path transform="translate(69.935,558) rotate(11.92) translate(0,1)" d="M0,0L0,-2M-0.4,-1.6L0,-2L0.4,-1.6"></path>
-    <path transform="translate(69.935,541.032) translate(0,1.167)" d="M0,0L0,-2.333M-0.467,-1.867L0,-2.333L0.467,-1.867"></path>
+    <path transform="translate(69.935,541.032) rotate(0) translate(0,1.167)" d="M0,0L0,-2.333M-0.467,-1.867L0,-2.333L0.467,-1.867"></path>
     <path transform="translate(69.935,524.065) rotate(-11.445) translate(0,1.333)" d="M0,0L0,-2.667M-0.533,-2.133L0,-2.667L0.533,-2.133"></path>
     <path transform="translate(69.935,507.097) rotate(-21.958) translate(0,1.5)" d="M0,0L0,-3M-0.6,-2.4L0,-3L0.6,-2.4"></path>
     <path transform="translate(69.935,490.129) rotate(-31.121) translate(0,1.667)" d="M0,0L0,-3.333M-0.667,-2.667L0,-3.333L0.667,-2.667"></path>
@@ -128,7 +128,7 @@
     <path transform="translate(69.935,32) rotate(16.906) translate(0,6.167)" d="M0,0L0,-12.333M-2.467,-9.867L0,-12.333L2.467,-9.867"></path>
     <path transform="translate(87.871,558) rotate(23.365) translate(0,1.167)" d="M0,0L0,-2.333M-0.467,-1.867L0,-2.333L0.467,-1.867"></path>
     <path transform="translate(87.871,541.032) rotate(11.445) translate(0,1.333)" d="M0,0L0,-2.667M-0.533,-2.133L0,-2.667L0.533,-2.133"></path>
-    <path transform="translate(87.871,524.065) translate(0,1.5)" d="M0,0L0,-3M-0.6,-2.4L0,-3L0.6,-2.4"></path>
+    <path transform="translate(87.871,524.065) rotate(0) translate(0,1.5)" d="M0,0L0,-3M-0.6,-2.4L0,-3L0.6,-2.4"></path>
     <path transform="translate(87.871,507.097) rotate(-10.513) translate(0,1.667)" d="M0,0L0,-3.333M-0.667,-2.667L0,-3.333L0.667,-2.667"></path>
     <path transform="translate(87.871,490.129) rotate(-19.676) translate(0,1.833)" d="M0,0L0,-3.667M-0.733,-2.933L0,-3.667L0.733,-2.933"></path>
     <path transform="translate(87.871,473.161) rotate(-27.123) translate(0,2)" d="M0,0L0,-4M-0.8,-3.2L0,-4L0.8,-3.2"></path>
@@ -161,7 +161,7 @@
     <path transform="translate(105.806,558) rotate(33.879) translate(0,1.333)" d="M0,0L0,-2.667M-0.533,-2.133L0,-2.667L0.533,-2.133"></path>
     <path transform="translate(105.806,541.032) rotate(21.958) translate(0,1.5)" d="M0,0L0,-3M-0.6,-2.4L0,-3L0.6,-2.4"></path>
     <path transform="translate(105.806,524.065) rotate(10.513) translate(0,1.667)" d="M0,0L0,-3.333M-0.667,-2.667L0,-3.333L0.667,-2.667"></path>
-    <path transform="translate(105.806,507.097) translate(0,1.833)" d="M0,0L0,-3.667M-0.733,-2.933L0,-3.667L0.733,-2.933"></path>
+    <path transform="translate(105.806,507.097) rotate(0) translate(0,1.833)" d="M0,0L0,-3.667M-0.733,-2.933L0,-3.667L0.733,-2.933"></path>
     <path transform="translate(105.806,490.129) rotate(-9.163) translate(0,2)" d="M0,0L0,-4M-0.8,-3.2L0,-4L0.8,-3.2"></path>
     <path transform="translate(105.806,473.161) rotate(-16.61) translate(0,2.167)" d="M0,0L0,-4.333M-0.867,-3.467L0,-4.333L0.867,-3.467"></path>
     <path transform="translate(105.806,456.194) rotate(-22.044) translate(0,2.333)" d="M0,0L0,-4.667M-0.933,-3.733L0,-4.667L0.933,-3.733"></path>
@@ -194,7 +194,7 @@
     <path transform="translate(123.742,541.032) rotate(31.121) translate(0,1.667)" d="M0,0L0,-3.333M-0.667,-2.667L0,-3.333L0.667,-2.667"></path>
     <path transform="translate(123.742,524.065) rotate(19.676) translate(0,1.833)" d="M0,0L0,-3.667M-0.733,-2.933L0,-3.667L0.733,-2.933"></path>
     <path transform="translate(123.742,507.097) rotate(9.163) translate(0,2)" d="M0,0L0,-4M-0.8,-3.2L0,-4L0.8,-3.2"></path>
-    <path transform="translate(123.742,490.129) translate(0,2.167)" d="M0,0L0,-4.333M-0.867,-3.467L0,-4.333L0.867,-3.467"></path>
+    <path transform="translate(123.742,490.129) rotate(0) translate(0,2.167)" d="M0,0L0,-4.333M-0.867,-3.467L0,-4.333L0.867,-3.467"></path>
     <path transform="translate(123.742,473.161) rotate(-7.447) translate(0,2.333)" d="M0,0L0,-4.667M-0.933,-3.733L0,-4.667L0.933,-3.733"></path>
     <path transform="translate(123.742,456.194) rotate(-12.881) translate(0,2.5)" d="M0,0L0,-5M-1,-4L0,-5L1,-4"></path>
     <path transform="translate(123.742,439.226) rotate(-16.086) translate(0,2.667)" d="M0,0L0,-5.333M-1.067,-4.267L0,-5.333L1.067,-4.267"></path>
@@ -227,7 +227,7 @@
     <path transform="translate(141.677,524.065) rotate(27.123) translate(0,2)" d="M0,0L0,-4M-0.8,-3.2L0,-4L0.8,-3.2"></path>
     <path transform="translate(141.677,507.097) rotate(16.61) translate(0,2.167)" d="M0,0L0,-4.333M-0.867,-3.467L0,-4.333L0.867,-3.467"></path>
     <path transform="translate(141.677,490.129) rotate(7.447) translate(0,2.333)" d="M0,0L0,-4.667M-0.933,-3.733L0,-4.667L0.933,-3.733"></path>
-    <path transform="translate(141.677,473.161) translate(0,2.5)" d="M0,0L0,-5M-1,-4L0,-5L1,-4"></path>
+    <path transform="translate(141.677,473.161) rotate(0) translate(0,2.5)" d="M0,0L0,-5M-1,-4L0,-5L1,-4"></path>
     <path transform="translate(141.677,456.194) rotate(-5.434) translate(0,2.667)" d="M0,0L0,-5.333M-1.067,-4.267L0,-5.333L1.067,-4.267"></path>
     <path transform="translate(141.677,439.226) rotate(-8.639) translate(0,2.833)" d="M0,0L0,-5.667M-1.133,-4.533L0,-5.667L1.133,-4.533"></path>
     <path transform="translate(141.677,422.258) rotate(-9.486) translate(0,3)" d="M0,0L0,-6M-1.2,-4.8L0,-6L1.2,-4.8"></path>
@@ -260,7 +260,7 @@
     <path transform="translate(159.613,507.097) rotate(22.044) translate(0,2.333)" d="M0,0L0,-4.667M-0.933,-3.733L0,-4.667L0.933,-3.733"></path>
     <path transform="translate(159.613,490.129) rotate(12.881) translate(0,2.5)" d="M0,0L0,-5M-1,-4L0,-5L1,-4"></path>
     <path transform="translate(159.613,473.161) rotate(5.434) translate(0,2.667)" d="M0,0L0,-5.333M-1.067,-4.267L0,-5.333L1.067,-4.267"></path>
-    <path transform="translate(159.613,456.194) translate(0,2.833)" d="M0,0L0,-5.667M-1.133,-4.533L0,-5.667L1.133,-4.533"></path>
+    <path transform="translate(159.613,456.194) rotate(0) translate(0,2.833)" d="M0,0L0,-5.667M-1.133,-4.533L0,-5.667L1.133,-4.533"></path>
     <path transform="translate(159.613,439.226) rotate(-3.205) translate(0,3)" d="M0,0L0,-6M-1.2,-4.8L0,-6L1.2,-4.8"></path>
     <path transform="translate(159.613,422.258) rotate(-4.052) translate(0,3.167)" d="M0,0L0,-6.333M-1.267,-5.067L0,-6.333L1.267,-5.067"></path>
     <path transform="translate(159.613,405.29) rotate(-2.509) translate(0,3.333)" d="M0,0L0,-6.667M-1.333,-5.333L0,-6.667L1.333,-5.333"></path>
@@ -293,7 +293,7 @@
     <path transform="translate(177.548,490.129) rotate(16.086) translate(0,2.667)" d="M0,0L0,-5.333M-1.067,-4.267L0,-5.333L1.067,-4.267"></path>
     <path transform="translate(177.548,473.161) rotate(8.639) translate(0,2.833)" d="M0,0L0,-5.667M-1.133,-4.533L0,-5.667L1.133,-4.533"></path>
     <path transform="translate(177.548,456.194) rotate(3.205) translate(0,3)" d="M0,0L0,-6M-1.2,-4.8L0,-6L1.2,-4.8"></path>
-    <path transform="translate(177.548,439.226) translate(0,3.167)" d="M0,0L0,-6.333M-1.267,-5.067L0,-6.333L1.267,-5.067"></path>
+    <path transform="translate(177.548,439.226) rotate(0) translate(0,3.167)" d="M0,0L0,-6.333M-1.267,-5.067L0,-6.333L1.267,-5.067"></path>
     <path transform="translate(177.548,422.258) rotate(-0.847) translate(0,3.333)" d="M0,0L0,-6.667M-1.333,-5.333L0,-6.667L1.333,-5.333"></path>
     <path transform="translate(177.548,405.29) rotate(0.696) translate(0,3.5)" d="M0,0L0,-7M-1.4,-5.6L0,-7L1.4,-5.6"></path>
     <path transform="translate(177.548,388.323) rotate(4.569) translate(0,3.667)" d="M0,0L0,-7.333M-1.467,-5.867L0,-7.333L1.467,-5.867"></path>
@@ -326,7 +326,7 @@
     <path transform="translate(195.484,473.161) rotate(9.486) translate(0,3)" d="M0,0L0,-6M-1.2,-4.8L0,-6L1.2,-4.8"></path>
     <path transform="translate(195.484,456.194) rotate(4.052) translate(0,3.167)" d="M0,0L0,-6.333M-1.267,-5.067L0,-6.333L1.267,-5.067"></path>
     <path transform="translate(195.484,439.226) rotate(0.847) translate(0,3.333)" d="M0,0L0,-6.667M-1.333,-5.333L0,-6.667L1.333,-5.333"></path>
-    <path transform="translate(195.484,422.258) translate(0,3.5)" d="M0,0L0,-7M-1.4,-5.6L0,-7L1.4,-5.6"></path>
+    <path transform="translate(195.484,422.258) rotate(0) translate(0,3.5)" d="M0,0L0,-7M-1.4,-5.6L0,-7L1.4,-5.6"></path>
     <path transform="translate(195.484,405.29) rotate(1.544) translate(0,3.667)" d="M0,0L0,-7.333M-1.467,-5.867L0,-7.333L1.467,-5.867"></path>
     <path transform="translate(195.484,388.323) rotate(5.417) translate(0,3.833)" d="M0,0L0,-7.667M-1.533,-6.133L0,-7.667L1.533,-6.133"></path>
     <path transform="translate(195.484,371.355) rotate(11.465) translate(0,4)" d="M0,0L0,-8M-1.6,-6.4L0,-8L1.6,-6.4"></path>
@@ -359,7 +359,7 @@
     <path transform="translate(213.419,456.194) rotate(2.509) translate(0,3.333)" d="M0,0L0,-6.667M-1.333,-5.333L0,-6.667L1.333,-5.333"></path>
     <path transform="translate(213.419,439.226) rotate(-0.696) translate(0,3.5)" d="M0,0L0,-7M-1.4,-5.6L0,-7L1.4,-5.6"></path>
     <path transform="translate(213.419,422.258) rotate(-1.544) translate(0,3.667)" d="M0,0L0,-7.333M-1.467,-5.867L0,-7.333L1.467,-5.867"></path>
-    <path transform="translate(213.419,405.29) translate(0,3.833)" d="M0,0L0,-7.667M-1.533,-6.133L0,-7.667L1.533,-6.133"></path>
+    <path transform="translate(213.419,405.29) rotate(0) translate(0,3.833)" d="M0,0L0,-7.667M-1.533,-6.133L0,-7.667L1.533,-6.133"></path>
     <path transform="translate(213.419,388.323) rotate(3.873) translate(0,4)" d="M0,0L0,-8M-1.6,-6.4L0,-8L1.6,-6.4"></path>
     <path transform="translate(213.419,371.355) rotate(9.921) translate(0,4.167)" d="M0,0L0,-8.333M-1.667,-6.667L0,-8.333L1.667,-6.667"></path>
     <path transform="translate(213.419,354.387) rotate(17.903) translate(0,4.333)" d="M0,0L0,-8.667M-1.733,-6.933L0,-8.667L1.733,-6.933"></path>
@@ -392,7 +392,7 @@
     <path transform="translate(231.355,439.226) rotate(-4.569) translate(0,3.667)" d="M0,0L0,-7.333M-1.467,-5.867L0,-7.333L1.467,-5.867"></path>
     <path transform="translate(231.355,422.258) rotate(-5.417) translate(0,3.833)" d="M0,0L0,-7.667M-1.533,-6.133L0,-7.667L1.533,-6.133"></path>
     <path transform="translate(231.355,405.29) rotate(-3.873) translate(0,4)" d="M0,0L0,-8M-1.6,-6.4L0,-8L1.6,-6.4"></path>
-    <path transform="translate(231.355,388.323) translate(0,4.167)" d="M0,0L0,-8.333M-1.667,-6.667L0,-8.333L1.667,-6.667"></path>
+    <path transform="translate(231.355,388.323) rotate(0) translate(0,4.167)" d="M0,0L0,-8.333M-1.667,-6.667L0,-8.333L1.667,-6.667"></path>
     <path transform="translate(231.355,371.355) rotate(6.048) translate(0,4.333)" d="M0,0L0,-8.667M-1.733,-6.933L0,-8.667L1.733,-6.933"></path>
     <path transform="translate(231.355,354.387) rotate(14.03) translate(0,4.5)" d="M0,0L0,-9M-1.8,-7.2L0,-9L1.8,-7.2"></path>
     <path transform="translate(231.355,337.419) rotate(23.628) translate(0,4.667)" d="M0,0L0,-9.333M-1.867,-7.467L0,-9.333L1.867,-7.467"></path>
@@ -425,7 +425,7 @@
     <path transform="translate(249.29,422.258) rotate(-11.465) translate(0,4)" d="M0,0L0,-8M-1.6,-6.4L0,-8L1.6,-6.4"></path>
     <path transform="translate(249.29,405.29) rotate(-9.921) translate(0,4.167)" d="M0,0L0,-8.333M-1.667,-6.667L0,-8.333L1.667,-6.667"></path>
     <path transform="translate(249.29,388.323) rotate(-6.048) translate(0,4.333)" d="M0,0L0,-8.667M-1.733,-6.933L0,-8.667L1.733,-6.933"></path>
-    <path transform="translate(249.29,371.355) translate(0,4.5)" d="M0,0L0,-9M-1.8,-7.2L0,-9L1.8,-7.2"></path>
+    <path transform="translate(249.29,371.355) rotate(0) translate(0,4.5)" d="M0,0L0,-9M-1.8,-7.2L0,-9L1.8,-7.2"></path>
     <path transform="translate(249.29,354.387) rotate(7.982) translate(0,4.667)" d="M0,0L0,-9.333M-1.867,-7.467L0,-9.333L1.867,-7.467"></path>
     <path transform="translate(249.29,337.419) rotate(17.58) translate(0,4.833)" d="M0,0L0,-9.667M-1.933,-7.733L0,-9.667L1.933,-7.733"></path>
     <path transform="translate(249.29,320.452) rotate(28.41) translate(0,5)" d="M0,0L0,-10M-2,-8L0,-10L2,-8"></path>
@@ -458,7 +458,7 @@
     <path transform="translate(267.226,405.29) rotate(-17.903) translate(0,4.333)" d="M0,0L0,-8.667M-1.733,-6.933L0,-8.667L1.733,-6.933"></path>
     <path transform="translate(267.226,388.323) rotate(-14.03) translate(0,4.5)" d="M0,0L0,-9M-1.8,-7.2L0,-9L1.8,-7.2"></path>
     <path transform="translate(267.226,371.355) rotate(-7.982) translate(0,4.667)" d="M0,0L0,-9.333M-1.867,-7.467L0,-9.333L1.867,-7.467"></path>
-    <path transform="translate(267.226,354.387) translate(0,4.833)" d="M0,0L0,-9.667M-1.933,-7.733L0,-9.667L1.933,-7.733"></path>
+    <path transform="translate(267.226,354.387) rotate(0) translate(0,4.833)" d="M0,0L0,-9.667M-1.933,-7.733L0,-9.667L1.933,-7.733"></path>
     <path transform="translate(267.226,337.419) rotate(9.598) translate(0,5)" d="M0,0L0,-10M-2,-8L0,-10L2,-8"></path>
     <path transform="translate(267.226,320.452) rotate(20.429) translate(0,5.167)" d="M0,0L0,-10.333M-2.067,-8.267L0,-10.333L2.067,-8.267"></path>
     <path transform="translate(267.226,303.484) rotate(32.061) translate(0,5.333)" d="M0,0L0,-10.667M-2.133,-8.533L0,-10.667L2.133,-8.533"></path>
@@ -491,7 +491,7 @@
     <path transform="translate(285.161,388.323) rotate(-23.628) translate(0,4.667)" d="M0,0L0,-9.333M-1.867,-7.467L0,-9.333L1.867,-7.467"></path>
     <path transform="translate(285.161,371.355) rotate(-17.58) translate(0,4.833)" d="M0,0L0,-9.667M-1.933,-7.733L0,-9.667L1.933,-7.733"></path>
     <path transform="translate(285.161,354.387) rotate(-9.598) translate(0,5)" d="M0,0L0,-10M-2,-8L0,-10L2,-8"></path>
-    <path transform="translate(285.161,337.419) translate(0,5.167)" d="M0,0L0,-10.333M-2.067,-8.267L0,-10.333L2.067,-8.267"></path>
+    <path transform="translate(285.161,337.419) rotate(0) translate(0,5.167)" d="M0,0L0,-10.333M-2.067,-8.267L0,-10.333L2.067,-8.267"></path>
     <path transform="translate(285.161,320.452) rotate(10.831) translate(0,5.333)" d="M0,0L0,-10.667M-2.133,-8.533L0,-10.667L2.133,-8.533"></path>
     <path transform="translate(285.161,303.484) rotate(22.463) translate(0,5.5)" d="M0,0L0,-11M-2.2,-8.8L0,-11L2.2,-8.8"></path>
     <path transform="translate(285.161,286.516) rotate(34.433) translate(0,5.667)" d="M0,0L0,-11.333M-2.267,-9.067L0,-11.333L2.267,-9.067"></path>
@@ -524,7 +524,7 @@
     <path transform="translate(303.097,371.355) rotate(-28.41) translate(0,5)" d="M0,0L0,-10M-2,-8L0,-10L2,-8"></path>
     <path transform="translate(303.097,354.387) rotate(-20.429) translate(0,5.167)" d="M0,0L0,-10.333M-2.067,-8.267L0,-10.333L2.067,-8.267"></path>
     <path transform="translate(303.097,337.419) rotate(-10.831) translate(0,5.333)" d="M0,0L0,-10.667M-2.133,-8.533L0,-10.667L2.133,-8.533"></path>
-    <path transform="translate(303.097,320.452) translate(0,5.5)" d="M0,0L0,-11M-2.2,-8.8L0,-11L2.2,-8.8"></path>
+    <path transform="translate(303.097,320.452) rotate(0) translate(0,5.5)" d="M0,0L0,-11M-2.2,-8.8L0,-11L2.2,-8.8"></path>
     <path transform="translate(303.097,303.484) rotate(11.632) translate(0,5.667)" d="M0,0L0,-11.333M-2.267,-9.067L0,-11.333L2.267,-9.067"></path>
     <path transform="translate(303.097,286.516) rotate(23.602) translate(0,5.833)" d="M0,0L0,-11.667M-2.333,-9.333L0,-11.667L2.333,-9.333"></path>
     <path transform="translate(303.097,269.548) rotate(35.432) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
@@ -557,7 +557,7 @@
     <path transform="translate(321.032,354.387) rotate(-32.061) translate(0,5.333)" d="M0,0L0,-10.667M-2.133,-8.533L0,-10.667L2.133,-8.533"></path>
     <path transform="translate(321.032,337.419) rotate(-22.463) translate(0,5.5)" d="M0,0L0,-11M-2.2,-8.8L0,-11L2.2,-8.8"></path>
     <path transform="translate(321.032,320.452) rotate(-11.632) translate(0,5.667)" d="M0,0L0,-11.333M-2.267,-9.067L0,-11.333L2.267,-9.067"></path>
-    <path transform="translate(321.032,303.484) translate(0,5.833)" d="M0,0L0,-11.667M-2.333,-9.333L0,-11.667L2.333,-9.333"></path>
+    <path transform="translate(321.032,303.484) rotate(0) translate(0,5.833)" d="M0,0L0,-11.667M-2.333,-9.333L0,-11.667L2.333,-9.333"></path>
     <path transform="translate(321.032,286.516) rotate(11.97) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
     <path transform="translate(321.032,269.548) rotate(23.8) translate(0,6.167)" d="M0,0L0,-12.333M-2.467,-9.867L0,-12.333L2.467,-9.867"></path>
     <path transform="translate(321.032,252.581) rotate(35.018) translate(0,6.333)" d="M0,0L0,-12.667M-2.533,-10.133L0,-12.667L2.533,-10.133"></path>
@@ -590,7 +590,7 @@
     <path transform="translate(338.968,337.419) rotate(-34.433) translate(0,5.667)" d="M0,0L0,-11.333M-2.267,-9.067L0,-11.333L2.267,-9.067"></path>
     <path transform="translate(338.968,320.452) rotate(-23.602) translate(0,5.833)" d="M0,0L0,-11.667M-2.333,-9.333L0,-11.667L2.333,-9.333"></path>
     <path transform="translate(338.968,303.484) rotate(-11.97) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
-    <path transform="translate(338.968,286.516) translate(0,6.167)" d="M0,0L0,-12.333M-2.467,-9.867L0,-12.333L2.467,-9.867"></path>
+    <path transform="translate(338.968,286.516) rotate(0) translate(0,6.167)" d="M0,0L0,-12.333M-2.467,-9.867L0,-12.333L2.467,-9.867"></path>
     <path transform="translate(338.968,269.548) rotate(11.83) translate(0,6.333)" d="M0,0L0,-12.667M-2.533,-10.133L0,-12.667L2.533,-10.133"></path>
     <path transform="translate(338.968,252.581) rotate(23.049) translate(0,6.5)" d="M0,0L0,-13M-2.6,-10.4L0,-13L2.6,-10.4"></path>
     <path transform="translate(338.968,235.613) rotate(33.209) translate(0,6.667)" d="M0,0L0,-13.333M-2.667,-10.667L0,-13.333L2.667,-10.667"></path>
@@ -623,7 +623,7 @@
     <path transform="translate(356.903,320.452) rotate(-35.432) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
     <path transform="translate(356.903,303.484) rotate(-23.8) translate(0,6.167)" d="M0,0L0,-12.333M-2.467,-9.867L0,-12.333L2.467,-9.867"></path>
     <path transform="translate(356.903,286.516) rotate(-11.83) translate(0,6.333)" d="M0,0L0,-12.667M-2.533,-10.133L0,-12.667L2.533,-10.133"></path>
-    <path transform="translate(356.903,269.548) translate(0,6.5)" d="M0,0L0,-13M-2.6,-10.4L0,-13L2.6,-10.4"></path>
+    <path transform="translate(356.903,269.548) rotate(0) translate(0,6.5)" d="M0,0L0,-13M-2.6,-10.4L0,-13L2.6,-10.4"></path>
     <path transform="translate(356.903,252.581) rotate(11.219) translate(0,6.667)" d="M0,0L0,-13.333M-2.667,-10.667L0,-13.333L2.667,-10.667"></path>
     <path transform="translate(356.903,235.613) rotate(21.379) translate(0,6.833)" d="M0,0L0,-13.667M-2.733,-10.933L0,-13.667L2.733,-10.933"></path>
     <path transform="translate(356.903,218.645) rotate(30.076) translate(0,7)" d="M0,0L0,-14M-2.8,-11.2L0,-14L2.8,-11.2"></path>
@@ -656,7 +656,7 @@
     <path transform="translate(374.839,303.484) rotate(-35.018) translate(0,6.333)" d="M0,0L0,-12.667M-2.533,-10.133L0,-12.667L2.533,-10.133"></path>
     <path transform="translate(374.839,286.516) rotate(-23.049) translate(0,6.5)" d="M0,0L0,-13M-2.6,-10.4L0,-13L2.6,-10.4"></path>
     <path transform="translate(374.839,269.548) rotate(-11.219) translate(0,6.667)" d="M0,0L0,-13.333M-2.667,-10.667L0,-13.333L2.667,-10.667"></path>
-    <path transform="translate(374.839,252.581) translate(0,6.833)" d="M0,0L0,-13.667M-2.733,-10.933L0,-13.667L2.733,-10.933"></path>
+    <path transform="translate(374.839,252.581) rotate(0) translate(0,6.833)" d="M0,0L0,-13.667M-2.733,-10.933L0,-13.667L2.733,-10.933"></path>
     <path transform="translate(374.839,235.613) rotate(10.16) translate(0,7)" d="M0,0L0,-14M-2.8,-11.2L0,-14L2.8,-11.2"></path>
     <path transform="translate(374.839,218.645) rotate(18.857) translate(0,7.167)" d="M0,0L0,-14.333M-2.867,-11.467L0,-14.333L2.867,-11.467"></path>
     <path transform="translate(374.839,201.677) rotate(25.743) translate(0,7.333)" d="M0,0L0,-14.667M-2.933,-11.733L0,-14.667L2.933,-11.733"></path>
@@ -689,7 +689,7 @@
     <path transform="translate(392.774,286.516) rotate(-33.209) translate(0,6.667)" d="M0,0L0,-13.333M-2.667,-10.667L0,-13.333L2.667,-10.667"></path>
     <path transform="translate(392.774,269.548) rotate(-21.379) translate(0,6.833)" d="M0,0L0,-13.667M-2.733,-10.933L0,-13.667L2.733,-10.933"></path>
     <path transform="translate(392.774,252.581) rotate(-10.16) translate(0,7)" d="M0,0L0,-14M-2.8,-11.2L0,-14L2.8,-11.2"></path>
-    <path transform="translate(392.774,235.613) translate(0,7.167)" d="M0,0L0,-14.333M-2.867,-11.467L0,-14.333L2.867,-11.467"></path>
+    <path transform="translate(392.774,235.613) rotate(0) translate(0,7.167)" d="M0,0L0,-14.333M-2.867,-11.467L0,-14.333L2.867,-11.467"></path>
     <path transform="translate(392.774,218.645) rotate(8.697) translate(0,7.333)" d="M0,0L0,-14.667M-2.933,-11.733L0,-14.667L2.933,-11.733"></path>
     <path transform="translate(392.774,201.677) rotate(15.583) translate(0,7.5)" d="M0,0L0,-15M-3,-12L0,-15L3,-12"></path>
     <path transform="translate(392.774,184.71) rotate(20.385) translate(0,7.667)" d="M0,0L0,-15.333M-3.067,-12.267L0,-15.333L3.067,-12.267"></path>
@@ -722,7 +722,7 @@
     <path transform="translate(410.71,269.548) rotate(-30.076) translate(0,7)" d="M0,0L0,-14M-2.8,-11.2L0,-14L2.8,-11.2"></path>
     <path transform="translate(410.71,252.581) rotate(-18.857) translate(0,7.167)" d="M0,0L0,-14.333M-2.867,-11.467L0,-14.333L2.867,-11.467"></path>
     <path transform="translate(410.71,235.613) rotate(-8.697) translate(0,7.333)" d="M0,0L0,-14.667M-2.933,-11.733L0,-14.667L2.933,-11.733"></path>
-    <path transform="translate(410.71,218.645) translate(0,7.5)" d="M0,0L0,-15M-3,-12L0,-15L3,-12"></path>
+    <path transform="translate(410.71,218.645) rotate(0) translate(0,7.5)" d="M0,0L0,-15M-3,-12L0,-15L3,-12"></path>
     <path transform="translate(410.71,201.677) rotate(6.886) translate(0,7.667)" d="M0,0L0,-15.333M-3.067,-12.267L0,-15.333L3.067,-12.267"></path>
     <path transform="translate(410.71,184.71) rotate(11.688) translate(0,7.833)" d="M0,0L0,-15.667M-3.133,-12.533L0,-15.667L3.133,-12.533"></path>
     <path transform="translate(410.71,167.742) rotate(14.213) translate(0,8)" d="M0,0L0,-16M-3.2,-12.8L0,-16L3.2,-12.8"></path>
@@ -755,7 +755,7 @@
     <path transform="translate(428.645,252.581) rotate(-25.743) translate(0,7.333)" d="M0,0L0,-14.667M-2.933,-11.733L0,-14.667L2.933,-11.733"></path>
     <path transform="translate(428.645,235.613) rotate(-15.583) translate(0,7.5)" d="M0,0L0,-15M-3,-12L0,-15L3,-12"></path>
     <path transform="translate(428.645,218.645) rotate(-6.886) translate(0,7.667)" d="M0,0L0,-15.333M-3.067,-12.267L0,-15.333L3.067,-12.267"></path>
-    <path transform="translate(428.645,201.677) translate(0,7.833)" d="M0,0L0,-15.667M-3.133,-12.533L0,-15.667L3.133,-12.533"></path>
+    <path transform="translate(428.645,201.677) rotate(0) translate(0,7.833)" d="M0,0L0,-15.667M-3.133,-12.533L0,-15.667L3.133,-12.533"></path>
     <path transform="translate(428.645,184.71) rotate(4.802) translate(0,8)" d="M0,0L0,-16M-3.2,-12.8L0,-16L3.2,-12.8"></path>
     <path transform="translate(428.645,167.742) rotate(7.327) translate(0,8.167)" d="M0,0L0,-16.333M-3.267,-13.067L0,-16.333L3.267,-13.067"></path>
     <path transform="translate(428.645,150.774) rotate(7.475) translate(0,8.333)" d="M0,0L0,-16.667M-3.333,-13.333L0,-16.667L3.333,-13.333"></path>
@@ -788,7 +788,7 @@
     <path transform="translate(446.581,235.613) rotate(-20.385) translate(0,7.667)" d="M0,0L0,-15.333M-3.067,-12.267L0,-15.333L3.067,-12.267"></path>
     <path transform="translate(446.581,218.645) rotate(-11.688) translate(0,7.833)" d="M0,0L0,-15.667M-3.133,-12.533L0,-15.667L3.133,-12.533"></path>
     <path transform="translate(446.581,201.677) rotate(-4.802) translate(0,8)" d="M0,0L0,-16M-3.2,-12.8L0,-16L3.2,-12.8"></path>
-    <path transform="translate(446.581,184.71) translate(0,8.167)" d="M0,0L0,-16.333M-3.267,-13.067L0,-16.333L3.267,-13.067"></path>
+    <path transform="translate(446.581,184.71) rotate(0) translate(0,8.167)" d="M0,0L0,-16.333M-3.267,-13.067L0,-16.333L3.267,-13.067"></path>
     <path transform="translate(446.581,167.742) rotate(2.525) translate(0,8.333)" d="M0,0L0,-16.667M-3.333,-13.333L0,-16.667L3.333,-13.333"></path>
     <path transform="translate(446.581,150.774) rotate(2.674) translate(0,8.5)" d="M0,0L0,-17M-3.4,-13.6L0,-17L3.4,-13.6"></path>
     <path transform="translate(446.581,133.806) rotate(0.439) translate(0,8.667)" d="M0,0L0,-17.333M-3.467,-13.867L0,-17.333L3.467,-13.867"></path>
@@ -821,7 +821,7 @@
     <path transform="translate(464.516,218.645) rotate(-14.213) translate(0,8)" d="M0,0L0,-16M-3.2,-12.8L0,-16L3.2,-12.8"></path>
     <path transform="translate(464.516,201.677) rotate(-7.327) translate(0,8.167)" d="M0,0L0,-16.333M-3.267,-13.067L0,-16.333L3.267,-13.067"></path>
     <path transform="translate(464.516,184.71) rotate(-2.525) translate(0,8.333)" d="M0,0L0,-16.667M-3.333,-13.333L0,-16.667L3.333,-13.333"></path>
-    <path transform="translate(464.516,167.742) translate(0,8.5)" d="M0,0L0,-17M-3.4,-13.6L0,-17L3.4,-13.6"></path>
+    <path transform="translate(464.516,167.742) rotate(0) translate(0,8.5)" d="M0,0L0,-17M-3.4,-13.6L0,-17L3.4,-13.6"></path>
     <path transform="translate(464.516,150.774) rotate(0.148) translate(0,8.667)" d="M0,0L0,-17.333M-3.467,-13.867L0,-17.333L3.467,-13.867"></path>
     <path transform="translate(464.516,133.806) rotate(-2.086) translate(0,8.833)" d="M0,0L0,-17.667M-3.533,-14.133L0,-17.667L3.533,-14.133"></path>
     <path transform="translate(464.516,116.839) rotate(-6.614) translate(0,9)" d="M0,0L0,-18M-3.6,-14.4L0,-18L3.6,-14.4"></path>
@@ -854,7 +854,7 @@
     <path transform="translate(482.452,201.677) rotate(-7.475) translate(0,8.333)" d="M0,0L0,-16.667M-3.333,-13.333L0,-16.667L3.333,-13.333"></path>
     <path transform="translate(482.452,184.71) rotate(-2.674) translate(0,8.5)" d="M0,0L0,-17M-3.4,-13.6L0,-17L3.4,-13.6"></path>
     <path transform="translate(482.452,167.742) rotate(-0.148) translate(0,8.667)" d="M0,0L0,-17.333M-3.467,-13.867L0,-17.333L3.467,-13.867"></path>
-    <path transform="translate(482.452,150.774) translate(0,8.833)" d="M0,0L0,-17.667M-3.533,-14.133L0,-17.667L3.533,-14.133"></path>
+    <path transform="translate(482.452,150.774) rotate(0) translate(0,8.833)" d="M0,0L0,-17.667M-3.533,-14.133L0,-17.667L3.533,-14.133"></path>
     <path transform="translate(482.452,133.806) rotate(-2.234) translate(0,9)" d="M0,0L0,-18M-3.6,-14.4L0,-18L3.6,-14.4"></path>
     <path transform="translate(482.452,116.839) rotate(-6.763) translate(0,9.167)" d="M0,0L0,-18.333M-3.667,-14.667L0,-18.333L3.667,-14.667"></path>
     <path transform="translate(482.452,99.871) rotate(-13.404) translate(0,9.333)" d="M0,0L0,-18.667M-3.733,-14.933L0,-18.667L3.733,-14.933"></path>
@@ -887,7 +887,7 @@
     <path transform="translate(500.387,184.71) rotate(-0.439) translate(0,8.667)" d="M0,0L0,-17.333M-3.467,-13.867L0,-17.333L3.467,-13.867"></path>
     <path transform="translate(500.387,167.742) rotate(2.086) translate(0,8.833)" d="M0,0L0,-17.667M-3.533,-14.133L0,-17.667L3.533,-14.133"></path>
     <path transform="translate(500.387,150.774) rotate(2.234) translate(0,9)" d="M0,0L0,-18M-3.6,-14.4L0,-18L3.6,-14.4"></path>
-    <path transform="translate(500.387,133.806) translate(0,9.167)" d="M0,0L0,-18.333M-3.667,-14.667L0,-18.333L3.667,-14.667"></path>
+    <path transform="translate(500.387,133.806) rotate(0) translate(0,9.167)" d="M0,0L0,-18.333M-3.667,-14.667L0,-18.333L3.667,-14.667"></path>
     <path transform="translate(500.387,116.839) rotate(-4.528) translate(0,9.333)" d="M0,0L0,-18.667M-3.733,-14.933L0,-18.667L3.733,-14.933"></path>
     <path transform="translate(500.387,99.871) rotate(-11.17) translate(0,9.5)" d="M0,0L0,-19M-3.8,-15.2L0,-19L3.8,-15.2"></path>
     <path transform="translate(500.387,82.903) rotate(-19.659) translate(0,9.667)" d="M0,0L0,-19.333M-3.867,-15.467L0,-19.333L3.867,-15.467"></path>
@@ -920,7 +920,7 @@
     <path transform="translate(518.323,167.742) rotate(6.614) translate(0,9)" d="M0,0L0,-18M-3.6,-14.4L0,-18L3.6,-14.4"></path>
     <path transform="translate(518.323,150.774) rotate(6.763) translate(0,9.167)" d="M0,0L0,-18.333M-3.667,-14.667L0,-18.333L3.667,-14.667"></path>
     <path transform="translate(518.323,133.806) rotate(4.528) translate(0,9.333)" d="M0,0L0,-18.667M-3.733,-14.933L0,-18.667L3.733,-14.933"></path>
-    <path transform="translate(518.323,116.839) translate(0,9.5)" d="M0,0L0,-19M-3.8,-15.2L0,-19L3.8,-15.2"></path>
+    <path transform="translate(518.323,116.839) rotate(0) translate(0,9.5)" d="M0,0L0,-19M-3.8,-15.2L0,-19L3.8,-15.2"></path>
     <path transform="translate(518.323,99.871) rotate(-6.641) translate(0,9.667)" d="M0,0L0,-19.333M-3.867,-15.467L0,-19.333L3.867,-15.467"></path>
     <path transform="translate(518.323,82.903) rotate(-15.131) translate(0,9.833)" d="M0,0L0,-19.667M-3.933,-15.733L0,-19.667L3.933,-15.733"></path>
     <path transform="translate(518.323,65.935) rotate(-25.131) translate(0,10)" d="M0,0L0,-20M-4,-16L0,-20L4,-16"></path>
@@ -953,7 +953,7 @@
     <path transform="translate(536.258,150.774) rotate(13.404) translate(0,9.333)" d="M0,0L0,-18.667M-3.733,-14.933L0,-18.667L3.733,-14.933"></path>
     <path transform="translate(536.258,133.806) rotate(11.17) translate(0,9.5)" d="M0,0L0,-19M-3.8,-15.2L0,-19L3.8,-15.2"></path>
     <path transform="translate(536.258,116.839) rotate(6.641) translate(0,9.667)" d="M0,0L0,-19.333M-3.867,-15.467L0,-19.333L3.867,-15.467"></path>
-    <path transform="translate(536.258,99.871) translate(0,9.833)" d="M0,0L0,-19.667M-3.933,-15.733L0,-19.667L3.933,-15.733"></path>
+    <path transform="translate(536.258,99.871) rotate(0) translate(0,9.833)" d="M0,0L0,-19.667M-3.933,-15.733L0,-19.667L3.933,-15.733"></path>
     <path transform="translate(536.258,82.903) rotate(-8.49) translate(0,10)" d="M0,0L0,-20M-4,-16L0,-20L4,-16"></path>
     <path transform="translate(536.258,65.935) rotate(-18.49) translate(0,10.167)" d="M0,0L0,-20.333M-4.067,-16.267L0,-20.333L4.067,-16.267"></path>
     <path transform="translate(536.258,48.968) rotate(-29.601) translate(0,10.333)" d="M0,0L0,-20.667M-4.133,-16.533L0,-20.667L4.133,-16.533"></path>
@@ -986,7 +986,7 @@
     <path transform="translate(554.194,133.806) rotate(19.659) translate(0,9.667)" d="M0,0L0,-19.333M-3.867,-15.467L0,-19.333L3.867,-15.467"></path>
     <path transform="translate(554.194,116.839) rotate(15.131) translate(0,9.833)" d="M0,0L0,-19.667M-3.933,-15.733L0,-19.667L3.933,-15.733"></path>
     <path transform="translate(554.194,99.871) rotate(8.49) translate(0,10)" d="M0,0L0,-20M-4,-16L0,-20L4,-16"></path>
-    <path transform="translate(554.194,82.903) translate(0,10.167)" d="M0,0L0,-20.333M-4.067,-16.267L0,-20.333L4.067,-16.267"></path>
+    <path transform="translate(554.194,82.903) rotate(0) translate(0,10.167)" d="M0,0L0,-20.333M-4.067,-16.267L0,-20.333L4.067,-16.267"></path>
     <path transform="translate(554.194,65.935) rotate(-10) translate(0,10.333)" d="M0,0L0,-20.667M-4.133,-16.533L0,-20.667L4.133,-16.533"></path>
     <path transform="translate(554.194,48.968) rotate(-21.111) translate(0,10.5)" d="M0,0L0,-21M-4.2,-16.8L0,-21L4.2,-16.8"></path>
     <path transform="translate(554.194,32) rotate(-32.891) translate(0,10.667)" d="M0,0L0,-21.333M-4.267,-17.067L0,-21.333L4.267,-17.067"></path>
@@ -1019,7 +1019,7 @@
     <path transform="translate(572.129,116.839) rotate(25.131) translate(0,10)" d="M0,0L0,-20M-4,-16L0,-20L4,-16"></path>
     <path transform="translate(572.129,99.871) rotate(18.49) translate(0,10.167)" d="M0,0L0,-20.333M-4.067,-16.267L0,-20.333L4.067,-16.267"></path>
     <path transform="translate(572.129,82.903) rotate(10) translate(0,10.333)" d="M0,0L0,-20.667M-4.133,-16.533L0,-20.667L4.133,-16.533"></path>
-    <path transform="translate(572.129,65.935) translate(0,10.5)" d="M0,0L0,-21M-4.2,-16.8L0,-21L4.2,-16.8"></path>
+    <path transform="translate(572.129,65.935) rotate(0) translate(0,10.5)" d="M0,0L0,-21M-4.2,-16.8L0,-21L4.2,-16.8"></path>
     <path transform="translate(572.129,48.968) rotate(-11.111) translate(0,10.667)" d="M0,0L0,-21.333M-4.267,-17.067L0,-21.333L4.267,-17.067"></path>
     <path transform="translate(572.129,32) rotate(-22.891) translate(0,10.833)" d="M0,0L0,-21.667M-4.333,-17.333L0,-21.667L4.333,-17.333"></path>
     <path transform="translate(590.065,558) rotate(-16.765) translate(0,5.833)" d="M0,0L0,-11.667M-2.333,-9.333L0,-11.667L2.333,-9.333"></path>
@@ -1052,7 +1052,7 @@
     <path transform="translate(590.065,99.871) rotate(29.601) translate(0,10.333)" d="M0,0L0,-20.667M-4.133,-16.533L0,-20.667L4.133,-16.533"></path>
     <path transform="translate(590.065,82.903) rotate(21.111) translate(0,10.5)" d="M0,0L0,-21M-4.2,-16.8L0,-21L4.2,-16.8"></path>
     <path transform="translate(590.065,65.935) rotate(11.111) translate(0,10.667)" d="M0,0L0,-21.333M-4.267,-17.067L0,-21.333L4.267,-17.067"></path>
-    <path transform="translate(590.065,48.968) translate(0,10.833)" d="M0,0L0,-21.667M-4.333,-17.333L0,-21.667L4.333,-17.333"></path>
+    <path transform="translate(590.065,48.968) rotate(0) translate(0,10.833)" d="M0,0L0,-21.667M-4.333,-17.333L0,-21.667L4.333,-17.333"></path>
     <path transform="translate(590.065,32) rotate(-11.78) translate(0,11)" d="M0,0L0,-22M-4.4,-17.6L0,-22L4.4,-17.6"></path>
     <path transform="translate(608,558) rotate(-4.985) translate(0,6)" d="M0,0L0,-12M-2.4,-9.6L0,-12L2.4,-9.6"></path>
     <path transform="translate(608,541.032) rotate(-16.906) translate(0,6.167)" d="M0,0L0,-12.333M-2.467,-9.867L0,-12.333L2.467,-9.867"></path>
@@ -1085,6 +1085,6 @@
     <path transform="translate(608,82.903) rotate(32.891) translate(0,10.667)" d="M0,0L0,-21.333M-4.267,-17.067L0,-21.333L4.267,-17.067"></path>
     <path transform="translate(608,65.935) rotate(22.891) translate(0,10.833)" d="M0,0L0,-21.667M-4.333,-17.333L0,-21.667L4.333,-17.333"></path>
     <path transform="translate(608,48.968) rotate(11.78) translate(0,11)" d="M0,0L0,-22M-4.4,-17.6L0,-22L4.4,-17.6"></path>
-    <path transform="translate(608,32) translate(0,11.167)" d="M0,0L0,-22.333M-4.467,-17.867L0,-22.333L4.467,-17.867"></path>
+    <path transform="translate(608,32) rotate(0) translate(0,11.167)" d="M0,0L0,-22.333M-4.467,-17.867L0,-22.333L4.467,-17.867"></path>
   </g>
 </svg>

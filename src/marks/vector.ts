@@ -182,8 +182,13 @@ export class Vector extends Mark {
       const ty = Y ? Y[i] : cy;
       const ang = A ? A[i] : rotate;
       const len = L ? L[i] : length;
-      const shift = anchor === "start" ? 0 : anchor === "end" ? len : len / 2;
-      const t = `translate(${tx},${ty})${ang ? ` rotate(${ang})` : ""}${shift ? ` translate(0,${shift})` : ""}`;
+      // The rotate clause turns on the presence of the rotate channel rather
+      // than on its value, so a zero angle is written (vector.js:106-114
+      // upstream); likewise the anchor translate is written for every anchor
+      // but start, even when the length is zero.
+      const rotationAttr = A || ang ? ` rotate(${ang})` : "";
+      const anchorAttr = anchor === "start" ? "" : ` translate(0,${anchor === "end" ? len : len / 2})`;
+      const t = `translate(${tx},${ty})${rotationAttr}${anchorAttr}`;
       const p = path();
       shape.draw(p as unknown as CanvasPath, len, r);
       const channel = channelStyleProps(i, channels);
