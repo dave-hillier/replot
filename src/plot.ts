@@ -415,7 +415,6 @@ class Render extends Mark {
     super();
     this.renderJSX = renderJSX;
   }
-  renderJSX() {}
 }
 
 // Note: mutates channel.value to apply the scale transform, if any.
