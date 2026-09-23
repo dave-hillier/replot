@@ -859,22 +859,34 @@ function PlotSvg({
   );
 }
 
-// Computes the per-facet transform string by invoking the imperative
-// facetTranslator against a minimal element shim (it sets a "transform"
-// attribute for <g> hosts). Returns undefined when there is no offset.
-function facetTransform(facetTranslate: any, f: any): string | undefined {
+// The attributes one facet's cell translation asks for, keyed by attribute
+// name, out of facetTranslator.
+export type FacetCell = Record<string, string>;
+
+// Asks the imperative facetTranslator for this facet's cell offset, by
+// invoking it against minimal element shims. Which attributes it writes
+// depends on the node it is handed (facet.js:65): a nested <svg> — what a mark
+// whose render option returns a whole plot produces, so the facet's node IS an
+// svg — takes x/y, and any other node takes a transform. The node does not
+// exist yet at the point the walker needs the offset, so both forms are
+// collected here, through a shim standing in for each kind of host, and the
+// applier takes the pair its own node needs. Returns undefined when the plot
+// has no facetTranslator to ask.
+export function facetCell(facetTranslate: any, f: any): FacetCell | undefined {
   if (typeof facetTranslate !== "function") return undefined;
-  let transform: string | undefined;
-  facetTranslate.call(
-    {
-      tagName: "g",
-      setAttribute: (k: string, v: string) => {
-        if (k === "transform") transform = v;
-      }
-    },
-    f
-  );
-  return transform;
+  const cell: FacetCell = {};
+  for (const tagName of ["svg", "g"]) {
+    facetTranslate.call(
+      {
+        tagName,
+        setAttribute: (k: string, v: string) => {
+          cell[k] = String(v);
+        }
+      },
+      f
+    );
+  }
+  return cell;
 }
 
 // Completes the registered marks' keys with the marks computePlot creates for
@@ -914,11 +926,12 @@ export type RenderOne = (
   // by render order rather than by the order React fires effects in.
   order: number,
   // Set only for one facet of a PROMOTED group (see renderMarksWith): the cell
-  // transform this facet's node must carry in place of the mark transform,
-  // which the walker has hoisted onto the shared parent along with the mark's
-  // ARIA attributes. Undefined everywhere else, including every facet of an
-  // unpromoted mark, whose node the walker wraps in its own <g transform>.
-  facetTransform?: string
+  // offset this facet's node must carry in place of the mark transform, which
+  // the walker has hoisted onto the shared parent along with the mark's ARIA
+  // attributes. Undefined for an unfaceted mark, or when the plot has no
+  // facetTranslator to ask for a cell offset, in which case the walker wraps
+  // each facet in its own <g transform> instead.
+  facetCell?: FacetCell
 ) => ReactNode;
 
 // Walks the computed marks, resolving each mark's per-facet index and (for
@@ -963,17 +976,16 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
       // aria-description, aria-hidden and the mark transform off the per-facet
       // nodes onto a single shared <g> per mark, then writes each facet's cell
       // transform onto the children in the vacated transform's place
-      // (plot.js:313-325). Replot does that for pointer consumers only — the
-      // same promotion for axes and every other faceted mark is a far larger
-      // baseline change that this work does not own. The two-level target is
-      // upstream's own tipDotFacets.svg baseline: an outer
-      // <g aria-label="tip" transform="translate(0.5,0.5)"> holding one plain
-      // <g fill=… stroke=… pointer-events=… transform="translate(295,148)">
-      // per facet.
+      // (plot.js:313-325, "Promote ARIA attributes and mark transform to avoid
+      // repetition on each facet"). Every faceted mark goes through it, so the
+      // shape for a mark with no aria attributes at all is still ONE <g
+      // transform="translate(cell)"> per facet carrying the mark's own
+      // attributes, not the two nested <g>s (one at the cell, one holding the
+      // mark transform) that an unpromoted facet would need.
       // The facetTranslate guard is what makes `cell` a string for every facet
       // below, and the promotion is all-or-nothing per mark: a facet left with
       // its own ARIA attributes would defeat the whole point.
-      const promote = isPointerConsumer(mark) && typeof facetTranslate === "function";
+      const promote = typeof facetTranslate === "function";
       for (const f of facets) {
         if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty)) continue;
         let index: any = null;
@@ -985,7 +997,7 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
           if (!faceted && index === indexes[0]) index = subarray(index);
           (index.fx = f.x), (index.fy = f.y), (index.fi = f.i);
         }
-        const cell = facetTransform(facetTranslate, f);
+        const cell = facetCell(facetTranslate, f);
         const inner = renderOne(
           mark,
           index,
@@ -1007,7 +1019,7 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
           promote ? (
             inner
           ) : (
-            <g key={f.i} transform={cell}>
+            <g key={f.i} transform={cell?.transform}>
               {inner}
             </g>
           )
@@ -1032,15 +1044,16 @@ export function renderMarksWith(computed: any, renderOne: RenderOne, clipReg?: C
 // group (plot.js:318-321), read off the mark as it renders AT REST.
 //
 // Upstream reads them back off a real DOM node it has just appended. Here the
-// interactive path's facets are <PointerMarkSlot> COMPONENT elements, whose
-// output the walker cannot inspect at all, so the mark is rendered once more
-// with an empty index purely to read its root. That is sound because none of
-// the four depends on the index — the transform is the crispness offset plus
-// dx/dy plus any band offset — and cheap because an empty index is exactly
-// what a pointer consumer renders until something is hovered. The clip wrap is
-// reproduced because it is the OUTERMOST node upstream reads: a frame-clipped
-// mark's wrapper carries the ARIA attributes and no transform, so the mark
-// transform correctly stays inside.
+// interactive path's facets are <MarkSlot>/<PointerMarkSlot> COMPONENT
+// elements, whose output the walker cannot inspect at all, so the mark is
+// rendered once more with an empty index purely to read its root. That is
+// sound because none of the four depends on the index — the transform is the
+// crispness offset plus dx/dy plus any band offset (computeTransform, which
+// reads the mark and the scales, never the datum) and the ARIA attributes come
+// from the mark's options — and cheap because an empty index renders no data.
+// The clip wrap is reproduced because it is the OUTERMOST node upstream reads:
+// a frame-clipped mark's wrapper carries the ARIA attributes and no transform,
+// so the mark transform correctly stays inside.
 function promotedProps(
   mark: any,
   values: any,
@@ -1070,19 +1083,31 @@ const promotedNames = ["aria-label", "aria-description", "aria-hidden", "transfo
 
 // One facet of a promoted group: the attributes the walker hoisted onto the
 // shared parent are removed here (upstream removeAttribute, plot.js:321) and
-// the facet's cell transform is written in the vacated transform's place
+// the facet's cell offset is written in the vacated transform's place
 // (upstream's facetTranslate pass, plot.js:325).
-export function promoteFacetChild(node: ReactNode, cell: string): ReactNode {
+export function promoteFacetChild(node: ReactNode, cell: FacetCell): ReactNode {
   if (!isValidElement(node)) return node;
-  return cloneElement(
-    node as ReactElement<any>,
-    {
-      "aria-label": undefined,
-      "aria-description": undefined,
-      "aria-hidden": undefined,
-      transform: cell
-    } as any
-  );
+  // Which form the offset takes is a property of the facet's own node, exactly
+  // as it is for upstream's facetTranslate (facet.js:65, `this.tagName ===
+  // "svg"`): a nested <svg> — a mark whose render option returns a whole plot,
+  // so the facet's node IS that svg — is positioned with x/y, and everything
+  // else with a transform. The transform is cleared for the nested svg because
+  // the promotion has taken the mark transform off it: leaving both would
+  // apply the offset twice.
+  const nested = (node as ReactElement).type === "svg";
+  const props: Record<string, any> = {
+    "aria-label": undefined,
+    "aria-description": undefined,
+    "aria-hidden": undefined
+  };
+  if (nested) {
+    props.x = cell.x;
+    props.y = cell.y;
+    props.transform = undefined;
+  } else {
+    props.transform = cell.transform;
+  }
+  return cloneElement(node as ReactElement<any>, props as any);
 }
 
 function renderMarks(
@@ -1092,7 +1117,7 @@ function renderMarks(
 ): ReactNode[] {
   return renderMarksWith(
     computed,
-    (mark, index, values, dims, scales, context, key, order, facetTransform) => {
+    (mark, index, values, dims, scales, context, key, order, facetCell) => {
       // The split is on the component TYPE, not on a prop or a branch inside
       // one component: <MarkSlot> holds no useContext(PointerContext) and no
       // pointer state at all, so an ordinary mark is structurally incapable of
@@ -1111,7 +1136,7 @@ function renderMarks(
           clipReg={clipReg}
           getHandlers={getHandlers}
           markData={getHandlers?.(mark) ? computed.stateByMark.get(mark)?.data : undefined}
-          facetTransform={facetTransform}
+          facetCell={facetCell}
         />
       );
     },
@@ -1124,7 +1149,7 @@ function renderMarks(
 // interaction can reach it: a plot of ten thousand dots is not rebuilt because
 // a tip moved. Pointer consumers go through <PointerMarkSlot> instead, chosen
 // by component type in renderMarks.
-function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandlers, markData}: any) {
+function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandlers, markData, facetCell}: any) {
   if (typeof mark.renderJSX !== "function") return null;
   const arrayIndex = plainIndex(index);
   // renderJSX usually returns its own <g> wrapper; we don't add another, to
@@ -1148,7 +1173,14 @@ function MarkSlot({mark, index, scales, values, dims, context, clipReg, getHandl
   // decision stays in sync with the registration.
   const handlers = getHandlers?.(mark);
   if (handlers) jsx = attachMarkHandlers(jsx, markData, handlers, () => getHandlers(mark));
-  return <>{clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx}</>;
+  let out: ReactElement = clipReg ? clipReg.wrap(jsx, mark, dims, context) : jsx;
+  // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
+  // drop the attributes now carried by the shared parent and take the facet's
+  // cell transform instead of the mark transform. Applied to the OUTERMOST
+  // node, which is the clip wrapper when there is one — the same node upstream
+  // reads its attributes off after render.
+  if (facetCell !== undefined) out = promoteFacetChild(out, facetCell) as ReactElement;
+  return <>{out}</>;
 }
 
 // Renders one pointer-consumer mark (a tip, a crosshair sub-mark, or any
@@ -1167,7 +1199,7 @@ function PointerMarkSlot({
   getHandlers,
   markData,
   order,
-  facetTransform
+  facetCell
 }: any) {
   const store = pointerStoreOf(useContext(PointerContext));
 
@@ -1251,7 +1283,7 @@ function PointerMarkSlot({
   // One facet of a promoted ARIA group (renderMarksWith's faceted branch):
   // drop the attributes now carried by the shared parent and take the facet's
   // cell transform instead of the mark transform.
-  if (facetTransform !== undefined) out = promoteFacetChild(out, facetTransform) as ReactElement;
+  if (facetCell !== undefined) out = promoteFacetChild(out, facetCell) as ReactElement;
   // The store needs the rendered root to answer "was this pointerdown inside an
   // already-pinned mark?". rootRef is bound once per record, so attaching it
   // costs no detach/attach churn on a re-render.

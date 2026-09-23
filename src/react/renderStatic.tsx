@@ -7,7 +7,8 @@ import {
   plainIndex,
   plotStyleSheet,
   plotSvgAttributes,
-  pointerIndex
+  pointerIndex,
+  type FacetCell
 } from "./Replot.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode} from "./domToJsx.js";
@@ -36,8 +37,8 @@ export function buildStaticPlotSvg(computed: any, classNameProp?: string): React
   registerClips(computed, clipReg);
   const marks = renderMarksWith(
     computed,
-    (mark, index, values, dims, scales, context, key, _order, facetTransform) =>
-      staticRenderOne(mark, index, values, dims, scales, context, key, clipReg, facetTransform),
+    (mark, index, values, dims, scales, context, key, _order, facetCell) =>
+      staticRenderOne(mark, index, values, dims, scales, context, key, clipReg, facetCell),
     clipReg
   );
   // The shell is the one <PlotSvg> renders (plotSvgAttributes/plotStyleSheet in
@@ -61,7 +62,7 @@ function staticRenderOne(
   context: any,
   key: string,
   clipReg: ClipRegistry,
-  facetTransform?: string
+  facetCell?: FacetCell
 ): ReactNode {
   if (typeof mark.renderJSX !== "function") return null;
   // A pointer consumer renders at rest here — no pointer can reach a static
@@ -88,8 +89,8 @@ function staticRenderOne(
   // One facet of a promoted ARIA group (renderMarksWith's faceted branch). The
   // key goes on the mark's own node rather than on a <Fragment> wrapper,
   // because the walker adds no per-facet <g> here for it to key.
-  if (facetTransform !== undefined) {
-    const child = promoteFacetChild(node, facetTransform);
+  if (facetCell !== undefined) {
+    const child = promoteFacetChild(node, facetCell);
     return isValidElement(child) ? cloneElement(child as ReactElement, {key}) : child;
   }
   return h(Fragment, {key}, node);

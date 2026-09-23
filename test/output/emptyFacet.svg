@@ -13,16 +13,12 @@
       white-space: pre;
     }
   </style>
-  <g>
+  <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
     <g transform="translate(0,0)">
-      <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
-        <text transform="translate(177.5,30)">a</text>
-      </g>
+      <text transform="translate(177.5,30)">a</text>
     </g>
     <g transform="translate(305,0)">
-      <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
-        <text transform="translate(177.5,30)">b</text>
-      </g>
+      <text transform="translate(177.5,30)">b</text>
     </g>
   </g>
   <g aria-label="fx-axis label" transform="translate(0.5,-26.5)">
@@ -31,32 +27,24 @@
   <g aria-label="y-axis label" text-anchor="start" transform="translate(-36.5,-26.5)">
     <text transform="translate(40,30)" y="0.71em">VALUE</text>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(59,0)">
-        <path transform="translate(54,400)" d="M0,0L0,6"></path>
-        <path transform="translate(184,400)" d="M0,0L0,6"></path>
-      </g>
+  <g aria-label="x-axis tick" aria-hidden="true" transform="translate(59,0)">
+    <g fill="none" stroke="currentColor" transform="translate(0,0)">
+      <path transform="translate(54,400)" d="M0,0L0,6"></path>
+      <path transform="translate(184,400)" d="M0,0L0,6"></path>
     </g>
-    <g transform="translate(305,0)">
-      <g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(59,0)">
-        <path transform="translate(54,400)" d="M0,0L0,6"></path>
-        <path transform="translate(184,400)" d="M0,0L0,6"></path>
-      </g>
+    <g fill="none" stroke="currentColor" transform="translate(305,0)">
+      <path transform="translate(54,400)" d="M0,0L0,6"></path>
+      <path transform="translate(184,400)" d="M0,0L0,6"></path>
     </g>
   </g>
-  <g>
+  <g aria-label="x-axis tick label" transform="translate(59,9.5)">
     <g transform="translate(0,0)">
-      <g aria-label="x-axis tick label" transform="translate(59,9.5)">
-        <text transform="translate(54,400)" y="0.71em">1</text>
-        <text transform="translate(184,400)" y="0.71em">2</text>
-      </g>
+      <text transform="translate(54,400)" y="0.71em">1</text>
+      <text transform="translate(184,400)" y="0.71em">2</text>
     </g>
     <g transform="translate(305,0)">
-      <g aria-label="x-axis tick label" transform="translate(59,9.5)">
-        <text transform="translate(54,400)" y="0.71em">1</text>
-        <text transform="translate(184,400)" y="0.71em">2</text>
-      </g>
+      <text transform="translate(54,400)" y="0.71em">1</text>
+      <text transform="translate(184,400)" y="0.71em">2</text>
     </g>
   </g>
   <g aria-label="x-axis label" transform="translate(0.5,27.5)">
