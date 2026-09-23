@@ -9,11 +9,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The Node LTS lines that are still maintained.
+        node-version: [22, 24]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
           cache: yarn
       - run: yarn --frozen-lockfile
       - run: yarn test:mocha
@@ -21,6 +26,7 @@ jobs:
       - run: yarn test:lint
       - run: yarn test:prettier
       - run: yarn prepublishOnly
+      - run: yarn test:smoke
       - run: yarn docs:build
       - uses: actions/upload-artifact@v4
         if: failure()

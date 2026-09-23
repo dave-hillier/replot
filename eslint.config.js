@@ -1,3 +1,4 @@
+import reactHooks from "eslint-plugin-react-hooks";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
@@ -61,6 +62,22 @@ export default [
           varsIgnorePattern: "^_"
         }
       ]
+    }
+  },
+  {
+    ...reactHooks.configs.flat.recommended,
+    files: ["src/react/**/*.tsx", "src/react/**/*.ts"],
+    rules: {
+      ...reactHooks.configs.flat.recommended.rules,
+      // The mark registry registers marks during render and records resolved
+      // options on the mark instance, by design: <Plot> must see every mark
+      // before its compute effect runs. The React Compiler rules read those
+      // patterns as violations, so they are reported rather than failed.
+      // react-hooks/rules-of-hooks stays an error: hook order is not something
+      // this layer is allowed to get wrong.
+      "react-hooks/immutability": "warn",
+      "react-hooks/refs": "warn",
+      "react-hooks/set-state-in-effect": "warn"
     }
   },
   {
