@@ -271,7 +271,9 @@ src/
 │   ├── interactions/
 │   │   ├── Tip.tsx
 │   │   ├── Crosshair.tsx
-│   │   └── usePointer.ts          # Pointer interaction hook
+│   │   ├── PointerContext.tsx     # Pointer events in, the store published to marks
+│   │   ├── pointerStore.ts        # Registration + selection state (React-free)
+│   │   └── pointerHitTest.ts      # Nearest-datum search (upstream pointer.js)
 │   │
 │   └── facets/
 │       └── FacetGroup.tsx
@@ -484,7 +486,11 @@ Both should be supported. The Legend component reads scale info from context.
 
 ### Step 10: Implement Interactions
 
-- `usePointer` hook: tracks mouse/touch position relative to SVG
+- Pointer consumers are declared the way Observable Plot declares them: the
+  **tip** option on a mark, or the `<Tip>` and `<Crosshair>` components (no
+  public hook: the store below is reached through the plot, not by the caller)
+- `PointerContext` + `pointerStore`: one registration per rendered (mark,
+  facet) slot, re-resolved at the pointer position after every recompute
 - `<Tip>` component: renders tooltip based on nearest data point
 - `<Crosshair>` component: renders crosshair lines
 - Event dispatch for `viewof` compatibility (Observable notebooks)
