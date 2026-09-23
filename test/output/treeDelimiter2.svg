@@ -34,63 +34,25 @@
     <path stroke="#bdbdbd" d="M313.333,140C381.667,140,381.667,140,450,140"></path>
   </g>
   <g aria-label="dot" transform="translate(0.5,0.5)">
-    <g>
-      <circle fill="#636363" cx="40" cy="72.833" r="3"></circle><title>/foo</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="14.333" r="3"></circle><title>/foo/a</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="36" r="3"></circle><title>/foo/b</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="53.333" r="3"></circle><title>/foo/c;c</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="70.667" r="3"></circle><title>/foo/e\\;e</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="88" r="3"></circle><title>/foo/f\/f</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="105.333" r="3"></circle><title>/foo/g\\\/g</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="176.667" cy="131.333" r="3"></circle><title>/foo/d\\</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="10" r="3"></circle><title>/foo/a/\/\/example</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="18.667" r="3"></circle><title>/foo/a/\/\/example\/1</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="36" r="3"></circle><title>/foo/b/\/\/example\/2</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="53.333" r="3"></circle><title>/foo/c;c/\/\/example2</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="70.667" r="3"></circle><title>/foo/e\\;e/\/\/example2</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="88" r="3"></circle><title>/foo/f\/f/\/\/example4</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="313.333" cy="105.333" r="3"></circle><title>/foo/g\\\/g/\/\/example3</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="313.333" cy="122.667" r="3"></circle><title>/foo/d\\/d</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="313.333" cy="140" r="3"></circle><title>/foo/d\\/\d</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="450" cy="122.667" r="3"></circle><title>/foo/d\\/d/\/\/example2</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="450" cy="140" r="3"></circle><title>/foo/d\\/\d/\/\/example2</title>
-    </g>
+    <circle fill="#636363" cx="40" cy="72.833" r="3"><title>/foo</title></circle>
+    <circle fill="#636363" cx="176.667" cy="14.333" r="3"><title>/foo/a</title></circle>
+    <circle fill="#636363" cx="176.667" cy="36" r="3"><title>/foo/b</title></circle>
+    <circle fill="#636363" cx="176.667" cy="53.333" r="3"><title>/foo/c;c</title></circle>
+    <circle fill="#636363" cx="176.667" cy="70.667" r="3"><title>/foo/e\\;e</title></circle>
+    <circle fill="#636363" cx="176.667" cy="88" r="3"><title>/foo/f\/f</title></circle>
+    <circle fill="#636363" cx="176.667" cy="105.333" r="3"><title>/foo/g\\\/g</title></circle>
+    <circle fill="#636363" cx="176.667" cy="131.333" r="3"><title>/foo/d\\</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="10" r="3"><title>/foo/a/\/\/example</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="18.667" r="3"><title>/foo/a/\/\/example\/1</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="36" r="3"><title>/foo/b/\/\/example\/2</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="53.333" r="3"><title>/foo/c;c/\/\/example2</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="70.667" r="3"><title>/foo/e\\;e/\/\/example2</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="88" r="3"><title>/foo/f\/f/\/\/example4</title></circle>
+    <circle fill="#bdbdbd" cx="313.333" cy="105.333" r="3"><title>/foo/g\\\/g/\/\/example3</title></circle>
+    <circle fill="#636363" cx="313.333" cy="122.667" r="3"><title>/foo/d\\/d</title></circle>
+    <circle fill="#636363" cx="313.333" cy="140" r="3"><title>/foo/d\\/\d</title></circle>
+    <circle fill="#bdbdbd" cx="450" cy="122.667" r="3"><title>/foo/d\\/d/\/\/example2</title></circle>
+    <circle fill="#bdbdbd" cx="450" cy="140" r="3"><title>/foo/d\\/\d/\/\/example2</title></circle>
   </g>
   <g aria-label="text" stroke="var(--plot-background)" stroke-width="3" stroke-linejoin="round" paint-order="stroke" text-anchor="start" transform="translate(6.5,0.5)">
     <text transform="translate(313.333,10)" y="0.32em">//example<title>/foo/a/\/\/example</title></text>

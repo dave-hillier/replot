@@ -1881,200 +1881,144 @@
   <g>
     <g transform="translate(0,6)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="616.379" cy="29" r="3"></circle><title>2,440</title>
-        </g>
+        <circle cx="616.379" cy="29" r="3"><title>2,440</title></circle>
       </g>
     </g>
     <g transform="translate(0,26)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="612.371" cy="29" r="3"></circle><title>2,154</title>
-        </g>
+        <circle cx="612.371" cy="29" r="3"><title>2,154</title></circle>
       </g>
     </g>
     <g transform="translate(0,46)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="580.69" cy="29" r="3"></circle><title>2,010</title>
-        </g>
+        <circle cx="580.69" cy="29" r="3"><title>2,010</title></circle>
       </g>
     </g>
     <g transform="translate(0,66)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="612.371" cy="29" r="3"></circle><title>1,804</title>
-        </g>
+        <circle cx="612.371" cy="29" r="3"><title>1,804</title></circle>
       </g>
     </g>
     <g transform="translate(0,86)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="616.379" cy="29" r="3"></circle><title>1,740</title>
-        </g>
+        <circle cx="616.379" cy="29" r="3"><title>1,740</title></circle>
       </g>
     </g>
     <g transform="translate(0,106)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="600.474" cy="29" r="3"></circle><title>1,280</title>
-        </g>
+        <circle cx="600.474" cy="29" r="3"><title>1,280</title></circle>
       </g>
     </g>
     <g transform="translate(0,126)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="588.578" cy="29" r="3"></circle><title>1,129</title>
-        </g>
+        <circle cx="588.578" cy="29" r="3"><title>1,129</title></circle>
       </g>
     </g>
     <g transform="translate(0,146)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="612.371" cy="29" r="3"></circle><title>730</title>
-        </g>
+        <circle cx="612.371" cy="29" r="3"><title>730</title></circle>
       </g>
     </g>
     <g transform="translate(0,166)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="616.379" cy="29" r="3"></circle><title>708</title>
-        </g>
+        <circle cx="616.379" cy="29" r="3"><title>708</title></circle>
       </g>
     </g>
     <g transform="translate(0,186)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="612.371" cy="29" r="3"></circle><title>657</title>
-        </g>
+        <circle cx="612.371" cy="29" r="3"><title>657</title></circle>
       </g>
     </g>
     <g transform="translate(0,206)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="612.371" cy="29" r="3"></circle><title>609</title>
-        </g>
+        <circle cx="612.371" cy="29" r="3"><title>609</title></circle>
       </g>
     </g>
     <g transform="translate(0,226)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="588.578" cy="29" r="3"></circle><title>373</title>
-        </g>
+        <circle cx="588.578" cy="29" r="3"><title>373</title></circle>
       </g>
     </g>
     <g transform="translate(0,246)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="612.371" cy="29" r="3"></circle><title>318</title>
-        </g>
+        <circle cx="612.371" cy="29" r="3"><title>318</title></circle>
       </g>
     </g>
     <g transform="translate(0,266)">
       <g aria-label="dot" fill="black" stroke="#fff" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="576.81" cy="29" r="3"></circle><title>125</title>
-        </g>
+        <circle cx="576.81" cy="29" r="3"><title>125</title></circle>
       </g>
     </g>
   </g>
   <g>
     <g transform="translate(0,6)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="163.534" cy="29" r="3"></circle><title>384</title>
-        </g>
+        <circle cx="163.534" cy="29" r="3"><title>384</title></circle>
       </g>
     </g>
     <g transform="translate(0,26)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="179.44" cy="29" r="3"></circle><title>701</title>
-        </g>
+        <circle cx="179.44" cy="29" r="3"><title>701</title></circle>
       </g>
     </g>
     <g transform="translate(0,46)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="498.06" cy="29" r="3"></circle><title>596</title>
-        </g>
+        <circle cx="498.06" cy="29" r="3"><title>596</title></circle>
       </g>
     </g>
     <g transform="translate(0,66)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="171.552" cy="29" r="3"></circle><title>636</title>
-        </g>
+        <circle cx="171.552" cy="29" r="3"><title>636</title></circle>
       </g>
     </g>
     <g transform="translate(0,86)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="175.431" cy="29" r="3"></circle><title>504</title>
-        </g>
+        <circle cx="175.431" cy="29" r="3"><title>504</title></circle>
       </g>
     </g>
     <g transform="translate(0,106)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="183.319" cy="29" r="3"></circle><title>293</title>
-        </g>
+        <circle cx="183.319" cy="29" r="3"><title>293</title></circle>
       </g>
     </g>
     <g transform="translate(0,126)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="151.767" cy="29" r="3"></circle><title>269</title>
-        </g>
+        <circle cx="151.767" cy="29" r="3"><title>269</title></circle>
       </g>
     </g>
     <g transform="translate(0,146)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="183.319" cy="29" r="3"></circle><title>178</title>
-        </g>
+        <circle cx="183.319" cy="29" r="3"><title>178</title></circle>
       </g>
     </g>
     <g transform="translate(0,166)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="179.44" cy="29" r="3"></circle><title>184</title>
-        </g>
+        <circle cx="179.44" cy="29" r="3"><title>184</title></circle>
       </g>
     </g>
     <g transform="translate(0,186)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="179.44" cy="29" r="3"></circle><title>129</title>
-        </g>
+        <circle cx="179.44" cy="29" r="3"><title>129</title></circle>
       </g>
     </g>
     <g transform="translate(0,206)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="175.431" cy="29" r="3"></circle><title>161</title>
-        </g>
+        <circle cx="175.431" cy="29" r="3"><title>161</title></circle>
       </g>
     </g>
     <g transform="translate(0,226)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="482.284" cy="29" r="3"></circle><title>77</title>
-        </g>
+        <circle cx="482.284" cy="29" r="3"><title>77</title></circle>
       </g>
     </g>
     <g transform="translate(0,246)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="442.974" cy="29" r="3"></circle><title>35</title>
-        </g>
+        <circle cx="442.974" cy="29" r="3"><title>35</title></circle>
       </g>
     </g>
     <g transform="translate(0,266)">
       <g aria-label="dot" fill="#333" transform="translate(0.5,0.5)">
-        <g>
-          <circle cx="411.552" cy="29" r="3"></circle><title>2</title>
-        </g>
+        <circle cx="411.552" cy="29" r="3"><title>2</title></circle>
       </g>
     </g>
   </g>
