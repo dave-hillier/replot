@@ -748,6 +748,67 @@ function WarningIndicator({computed}: {computed: any}) {
   return warningIndicatorElement(computed, warnings);
 }
 
+// THE PLOT'S <svg> SHELL, DEFINED ONCE. Both entry points build an <svg>
+// around the marks they render — this file's <PlotSvg>, which renders it as
+// React children, and renderStatic.tsx's buildStaticPlotSvg, which builds the
+// element for the imperative plot() — and the two had drifted: the attributes,
+// the inline stylesheet and the xmlns declarations were written twice, so a
+// change to one (the xmlns pair, added to the JSX path only) never reached the
+// other. The shell is what the two renderers have in common; what differs is
+// how the marks inside it are rendered, which is what each path still owns.
+//
+// The stylesheet, which is the plot's only forced CSS: it makes the svg scale
+// with its container and stops text being collapsed, all through :where() so
+// the selectors carry no specificity a user's own rules have to fight. The
+// class name is the plot's (meant to be unique per plot); upstream writes the
+// same two rules in style.js, with a comment that changing them means changing
+// defaultClassName there too.
+export function plotStyleSheet(className: string): string {
+  return `:where(.${className}) {
+  --plot-background: white;
+  display: block;
+  height: auto;
+  height: intrinsic;
+  max-width: 100%;
+}
+:where(.${className} text),
+:where(.${className} tspan) {
+  white-space: pre;
+}`;
+}
+
+// The shell's attributes, in the order they are written to the element — the
+// order React writes them in for the JSX path, and the order the markup
+// serializes in on both. `style` is deliberately NOT here: the JSX path passes
+// it as a prop (so React can clear a key a later render drops, and so it lands
+// last, as upstream applies the style option after the svg's attributes are
+// set, plot.js:278), while the imperative path applies it to the element it has
+// just built.
+//
+// The xmlns declarations are not needed to render: React creates svg elements
+// in the SVG namespace and the HTML parser puts an <svg> it meets into it. They
+// are here so the SERIALIZED plot — a server-rendered page, an <img>, a saved
+// .svg file — carries its namespace, which is what every one of upstream's
+// committed test outputs does.
+export function plotSvgAttributes(computed: any, classNameProp?: string): Record<string, any> {
+  const {className, ariaLabel, ariaDescription, dimensions} = computed;
+  const {width, height} = dimensions;
+  return {
+    className: [className, classNameProp].filter(Boolean).join(" ") || undefined,
+    fill: "currentColor",
+    fontFamily: "system-ui, sans-serif",
+    fontSize: 10,
+    textAnchor: "middle",
+    width,
+    height,
+    viewBox: `0 0 ${width} ${height}`,
+    "aria-label": ariaLabel ?? undefined,
+    "aria-description": ariaDescription ?? undefined,
+    xmlns: "http://www.w3.org/2000/svg",
+    xmlnsXlink: "http://www.w3.org/1999/xlink"
+  };
+}
+
 // Renders the whole plot as a JSX <svg> tree.
 function PlotSvg({
   computed,
@@ -759,24 +820,11 @@ function PlotSvg({
   onValueRef,
   getHandlers
 }: any) {
-  const {className, ariaLabel, ariaDescription, dimensions} = computed;
-  const {width, height} = dimensions;
   const internalSvgRef = useRef<SVGSVGElement | null>(null);
   const setSvgRef = (el: SVGSVGElement | null) => {
     internalSvgRef.current = el;
     if (typeof svgRef === "function") svgRef(el);
   };
-  const styleText = `:where(.${className}) {
-  --plot-background: white;
-  display: block;
-  height: auto;
-  height: intrinsic;
-  max-width: 100%;
-}
-:where(.${className} text),
-:where(.${className} tspan) {
-  white-space: pre;
-}`;
   // Allocate clip-path defs up front (pre-pass) so they're known before the
   // marks that reference them are rendered, then render them in the <svg>. The
   // plot's context is handed over so a mark that emits its own <clipPath> defs
@@ -786,7 +834,7 @@ function PlotSvg({
   registerClips(computed, clipReg);
   const inner = (
     <>
-      <style>{styleText}</style>
+      <style>{plotStyleSheet(computed.className)}</style>
       {clipReg.defs}
       {renderMarks(computed, clipReg, getHandlers)}
       <WarningIndicator computed={computed} />
@@ -795,22 +843,9 @@ function PlotSvg({
   return (
     <svg
       ref={setSvgRef}
-      className={[className, classNameProp].filter(Boolean).join(" ") || undefined}
-      fill="currentColor"
-      fontFamily="system-ui, sans-serif"
-      fontSize={10}
-      textAnchor="middle"
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      aria-label={ariaLabel ?? undefined}
-      aria-description={ariaDescription ?? undefined}
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      // Last, and so last in the serialized element: React writes attributes in
-      // prop order, and upstream's plot() applies the style option after the
-      // svg's attributes are set (plot.js:278), which puts the style attribute
-      // at the end there too.
+      {...plotSvgAttributes(computed, classNameProp)}
+      // After the shell attributes, and so last in the serialized element: the
+      // rationale is in plotSvgAttributes.
       style={style}
     >
       {pointerEnabled ? (
@@ -1184,16 +1219,9 @@ function PointerMarkSlot({
 
   if (typeof mark.renderJSX !== "function") return null;
 
-  // The substituted index: upstream's `const I = i == null ? [] : [i]`, with
-  // the facet markers carried across so a faceted mark still knows its cell —
-  // a tip reads index.fx/index.fy to report the facet channels. The marker is
-  // `fi`, exactly as upstream tests it (`const faceted = index.fi != null`):
-  // a plot faceted only by fy has no fx at all.
-  let renderIndex: any = index;
-  if (index != null) {
-    renderIndex = sel.i != null ? [sel.i] : [];
-    if (index.fi != null) (renderIndex.fx = index.fx), (renderIndex.fy = index.fy), (renderIndex.fi = index.fi);
-  }
+  // The substituted index: the datum the pointer has awarded this slot, or
+  // nothing at all until it has awarded one.
+  const renderIndex = pointerIndex(index, sel.i);
 
   // No plainIndex() here: a pointer consumer's index is one this slot built,
   // so it is already a plain Array (or the null a channel-less mark was given).
@@ -1239,11 +1267,28 @@ function pointerStoreOf(store: PointerStore | null): PointerStore {
   return store;
 }
 
+// The index a pointer consumer renders: the selected datum alone, or — until
+// the pointer has awarded one — none at all (upstream's `const I = i == null ?
+// [] : [i]`, pointer.js). The facet markers travel with it either way, so a
+// faceted mark still knows its cell: a tip reads index.fx/index.fy to report
+// the facet channels. `fi` is the marker, exactly as upstream tests it (`const
+// faceted = index.fi != null`) — a plot faceted only by fy has no fx at all. A
+// channel-less mark's index is null and stays null: it has nothing to
+// hit-test, and `[sel.i]` would invent a datum for it. Shared with the static
+// renderer, which renders every pointer consumer at rest.
+export function pointerIndex(index: any, selected?: number | null): any {
+  if (index == null) return null;
+  const out: any = selected == null ? [] : [selected];
+  if (index.fi != null) (out.fx = index.fx), (out.fy = index.fy), (out.fi = index.fi);
+  return out;
+}
+
 // Coerces an index to a plain Array, preserving the facet markers. Marks call
 // (index as number[]).map(...), but `index` is often a TypedArray (e.g.
 // Uint32Array), whose .map() coerces the returned React elements back to
-// numbers and corrupts the output.
-function plainIndex(index: any): any {
+// numbers and corrupts the output. Shared with the static renderer, which
+// renders the same indexes through the same marks.
+export function plainIndex(index: any): any {
   if (index == null || !ArrayBuffer.isView(index)) return index;
   const {fx, fy, fi} = index as any;
   return Object.assign(Array.from(index as any), {fx, fy, fi});

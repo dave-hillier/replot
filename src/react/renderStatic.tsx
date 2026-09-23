@@ -1,5 +1,14 @@
 import {cloneElement, createElement as h, Fragment, isValidElement, type ReactElement, type ReactNode} from "react";
-import {renderMarksWith, isPointerConsumer, defaultPointerEventsNone, promoteFacetChild} from "./Replot.js";
+import {
+  renderMarksWith,
+  isPointerConsumer,
+  defaultPointerEventsNone,
+  promoteFacetChild,
+  plainIndex,
+  plotStyleSheet,
+  plotSvgAttributes,
+  pointerIndex
+} from "./Replot.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode} from "./domToJsx.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
@@ -19,19 +28,6 @@ import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 // drain afterwards (and after the legends, which can warn too) and append the
 // indicator itself — see withWarningIndicator.
 export function buildStaticPlotSvg(computed: any, classNameProp?: string): ReactElement {
-  const {className, ariaLabel, ariaDescription, dimensions} = computed;
-  const {width, height} = dimensions;
-  const styleText = `:where(.${className}) {
-  --plot-background: white;
-  display: block;
-  height: auto;
-  height: intrinsic;
-  max-width: 100%;
-}
-:where(.${className} text),
-:where(.${className} tspan) {
-  white-space: pre;
-}`;
   // The plot's context is handed to the registry so a mark that emits its own
   // <clipPath> defs (the difference mark) allocates its ids from this render's
   // counter rather than from style.js's module-global one — see
@@ -44,21 +40,13 @@ export function buildStaticPlotSvg(computed: any, classNameProp?: string): React
       staticRenderOne(mark, index, values, dims, scales, context, key, clipReg, facetTransform),
     clipReg
   );
+  // The shell is the one <PlotSvg> renders (plotSvgAttributes/plotStyleSheet in
+  // Replot.tsx), so the two entry points cannot drift apart again. The style
+  // option is not part of it: plot() applies that to the element it has built.
   return h(
     "svg",
-    {
-      className: [className, classNameProp].filter(Boolean).join(" ") || undefined,
-      fill: "currentColor",
-      fontFamily: "system-ui, sans-serif",
-      fontSize: 10,
-      textAnchor: "middle",
-      width,
-      height,
-      viewBox: `0 0 ${width} ${height}`,
-      "aria-label": ariaLabel ?? undefined,
-      "aria-description": ariaDescription ?? undefined
-    },
-    h("style", null, styleText),
+    plotSvgAttributes(computed, classNameProp),
+    h("style", null, plotStyleSheet(computed.className)),
     ...clipReg.defs,
     ...marks
   );
@@ -76,26 +64,10 @@ function staticRenderOne(
   facetTransform?: string
 ): ReactNode {
   if (typeof mark.renderJSX !== "function") return null;
-  let renderIndex = index;
-  if (isPointerConsumer(mark) && index != null) {
-    const empty: any = [];
-    // `fi`, exactly as upstream tests it (`const faceted = index.fi != null`,
-    // pointer.js:111) and as <PointerMarkSlot> does. A plot faceted by fy alone
-    // has no fx at all, so testing fx drops the facet markers there.
-    if ((index as any).fi != null)
-      (empty.fx = (index as any).fx), (empty.fy = (index as any).fy), (empty.fi = (index as any).fi);
-    renderIndex = empty;
-  }
-  // Coerce TypedArray indexes to a plain Array (their .map() coerces returned
-  // React elements back to numbers); preserve facet markers.
-  const arrayIndex =
-    renderIndex == null || !ArrayBuffer.isView(renderIndex)
-      ? renderIndex
-      : Object.assign(Array.from(renderIndex as any), {
-          fx: (renderIndex as any).fx,
-          fy: (renderIndex as any).fy,
-          fi: (renderIndex as any).fi
-        });
+  // A pointer consumer renders at rest here — no pointer can reach a static
+  // render — through the same substitution <PointerMarkSlot> makes when nothing
+  // is hovered (pointerIndex).
+  const arrayIndex = plainIndex(isPointerConsumer(mark) ? pointerIndex(index) : index);
   // A user render option (a render transform) executes against the
   // imperative contract, with the default renderJSX output supplied as
   // `next`.
