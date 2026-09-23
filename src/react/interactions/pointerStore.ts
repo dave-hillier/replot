@@ -215,7 +215,9 @@ export function createPointerStore() {
    *   1. every record that unmounted is cleared. Its slot is gone, so the plot
    *      has stopped SHOWING that datum; it must stop REPORTING it too, or the
    *      duplicate-value guard below stays poisoned with a datum nothing draws
-   *      and swallows the next genuine selection of it.
+   *      and swallows the next genuine selection of it. Only the clearing
+   *      happens here: the report is step 3's, because the reported value is
+   *      the plot's and only the plot can say whether anything still shows.
    *   2. the survivors are re-resolved at the last pointer position, which is
    *      an ordinary hit test — the same arbitration, the same pooling, the
    *      same publish and dispatch rules as a pointermove. An index that went
@@ -242,7 +244,16 @@ export function createPointerStore() {
     departed.length = 0;
     const cleared = gone.filter((reg) => publish(reg, null));
     if (last !== null) resolve(last.x, last.y);
-    void cleared;
+    // 3. Nothing showing while something is reported means the report is stale.
+    // After the re-resolution above, so that a survivor which picked a datum up
+    // in this commit has already reported that instead, and AT THE PLOT LEVEL
+    // rather than per departed record, because the per-record dispatches
+    // reproduce upstream's faceted suppression quirk (see
+    // suppressesClearingDispatch): a suppressed clearing would leave the guard
+    // holding a vanished datum for good. The departed record is passed for the
+    // record-level dispatchValue fallback the store's own unit tests use; with
+    // no record left at all, the plot-level sink is what reports.
+    if (lastValue != null && !regs.some((reg) => reg.sel.i != null)) dispatch(null, gone[0]);
     // The departed records' own subscribers, for the one path that unregisters
     // without unmounting: a slot whose index went null re-runs its effect and
     // takes the early return, so it is still listening.
