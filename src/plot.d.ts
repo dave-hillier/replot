@@ -415,7 +415,11 @@ export interface Plot {
    */
   legend(name: ScaleName, options?: LegendOptions): SVGSVGElement | HTMLElement | undefined;
 
-  /** For interactive plots, the current value. */
+  /**
+   * The current value of an interactive plot, set on selection by the React
+   * entry point (`replot/react`), which also dispatches a bubbling `input`
+   * event. The static `plot` entry point is synchronous and never assigns it.
+   */
   value?: any;
 }
 
