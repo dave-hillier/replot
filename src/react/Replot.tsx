@@ -24,6 +24,7 @@ import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode} from "./domToJsx.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 import {FigureLayout} from "./FigureLayout.js";
+import {warningIndicatorElement} from "./warningIndicator.js";
 
 // <Plot> renders a JSX <svg> populated entirely by each mark's renderJSX();
 // there is no imperative (d3-selection) render fallback.
@@ -133,7 +134,6 @@ type Mode =
       computed: any;
       onSvgRef: (svg: SVGSVGElement | null) => void;
       pointerEnabled: boolean;
-      warnings: number;
     };
 
 export function Replot({
@@ -462,12 +462,12 @@ export function Replot({
     resolvedRef.current = nextResolved;
     setResolved(nextResolved);
 
-    // Drain the global warning counter just as the imperative plot() does, so
-    // the warn() dedupe state (lastMessage) doesn't leak across plots and we
-    // can render the ⚠️ indicator. computePlot emits warnings during mark
-    // initialization above.
-    const warnings = consumeWarnings();
-
+    // NOTE the warning counter is deliberately NOT drained here. computePlot is
+    // only the first of the two phases that can warn: its marks warn while they
+    // RENDER, which has not happened yet at this point in the effect. Draining
+    // here would count the compute-phase warnings and leave the rest in the
+    // counter for the next plot to claim. <WarningIndicator> drains instead,
+    // after the whole render phase.
     const onSvgRef = (svg: SVGSVGElement | null) => {
       if (!svg) return;
       // Expose scale on the svg, matching imperative API.
@@ -494,7 +494,7 @@ export function Replot({
     }
 
     const pointerEnabled = computed.marks.some(isPointerConsumer);
-    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled, warnings});
+    setMode({kind: "jsx", computed, onSvgRef, pointerEnabled});
     // No dependency array: the inputs key above is the guard, and it is taken
     // over the registries as the reconciliation above just ordered them.
   });
@@ -593,7 +593,6 @@ export function Replot({
         pointerEnabled={mode.pointerEnabled}
         pointerStore={pointerStore}
         onValueRef={onValueRef}
-        warnings={mode.warnings}
         getHandlers={getMarkHandlers}
       />
     ) : (
@@ -661,6 +660,37 @@ function containsFunctionChild(node: unknown): boolean {
   return typeof node === "function" || (Array.isArray(node) && node.some(containsFunctionChild));
 }
 
+// The ⚠️ warning indicator, and the only thing on the React path that drains
+// the global warning counter. It has to be a component of its own, rendered
+// last inside the <svg> after the marks, because the warnings it counts are
+// raised while the marks RENDER: their renderJSX runs in the render phase this
+// component is part of, and layout effects run only once that phase is over, so
+// the drain belongs in an effect of a child that comes after them. Draining in
+// the compute effect instead — which is what this replaces — missed every
+// warning raised while rendering and left it for the next plot to claim.
+//
+// It drains ONCE PER COMPUTED PLOT, guarded by a ref holding that computed
+// object, because its own state update re-renders it in a second pass: without
+// the guard, that pass would drain an already-empty counter, set the count back
+// to zero and take the indicator out of the DOM again. The update is local to
+// this component, so the marks are not re-rendered by it and cannot warn again
+// — which is what makes showing a render-time warning safe rather than a loop.
+//
+// The effect therefore has NO dependency array on purpose. The ref, not a deps
+// list, is what makes the redundant passes (this component's own re-render, and
+// StrictMode's simulated remount, which re-runs every effect it created) cheap
+// no-ops; a deps list would only add a way to get this wrong.
+function WarningIndicator({computed}: {computed: any}) {
+  const [warnings, setWarnings] = useState(0);
+  const drainedRef = useRef<any>(null);
+  useLayoutEffect(() => {
+    if (drainedRef.current === computed) return;
+    drainedRef.current = computed;
+    setWarnings(consumeWarnings());
+  });
+  return warningIndicatorElement(computed, warnings);
+}
+
 // Renders the whole plot as a JSX <svg> tree.
 function PlotSvg({
   computed,
@@ -669,7 +699,6 @@ function PlotSvg({
   pointerEnabled,
   pointerStore,
   onValueRef,
-  warnings,
   getHandlers
 }: any) {
   const {className, ariaLabel, ariaDescription, dimensions} = computed;
@@ -690,17 +719,6 @@ function PlotSvg({
 :where(.${className} tspan) {
   white-space: pre;
 }`;
-  // Render the ⚠️ warning indicator after the marks, matching the imperative
-  // plot() (font-family="initial" fixes emoji rendering in Chrome).
-  const warningIndicator =
-    warnings > 0 ? (
-      <text x={width} y={20} dy="-1em" textAnchor="end" fontFamily="initial">
-        {"⚠️"}
-        <title>{`${warnings.toLocaleString("en-US")} warning${
-          warnings === 1 ? "" : "s"
-        }. Please check the console.`}</title>
-      </text>
-    ) : null;
   // Allocate clip-path defs up front (pre-pass) so they're known before the
   // marks that reference them are rendered, then render them in the <svg>. The
   // plot's context is handed over so a mark that emits its own <clipPath> defs
@@ -713,7 +731,7 @@ function PlotSvg({
       <style>{styleText}</style>
       {clipReg.defs}
       {renderMarks(computed, clipReg, getHandlers)}
-      {warningIndicator}
+      <WarningIndicator computed={computed} />
     </>
   );
   return (

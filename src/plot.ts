@@ -20,6 +20,7 @@ import {initializer} from "./transforms/basic.js";
 import {consumeWarnings, warn} from "./warnings.js";
 import {renderToStaticMarkup} from "react-dom/server";
 import {buildStaticPlotSvg} from "./react/renderStatic.js";
+import {withWarningIndicator} from "./react/warningIndicator.js";
 
 // Returns the pre-render state needed by both the imperative DOM build path
 // (used by `plot()` below) and the React JSX path (used by `<Plot>` in
@@ -319,15 +320,36 @@ export function plot(options: any = {}) {
   const document = context.document;
   const figureHolder: {current: any} = context.figureHolder;
 
-  // Drain warnings emitted during computePlot so the ⚠️ indicator renders and
-  // the warn() dedupe state is reset (matching the React <Plot> path).
-  const warnings = consumeWarnings();
-
   // Render the marks to a detached <svg> via React's renderJSX — no
   // d3-selection. The same renderMarksWith/renderJSX code powers <Plot>, so
-  // the imperative and JSX outputs stay in lockstep. We serialize to markup
-  // and reparse into the target document (which may be a custom jsdom doc).
-  const markup = renderToStaticMarkup(buildStaticPlotSvg(computed, warnings, options.className));
+  // the imperative and JSX outputs stay in lockstep.
+  //
+  // No ⚠️ indicator on it yet: this call is what RENDERS every mark, so a
+  // warning raised while a mark renders only reaches the global counter now,
+  // and the drain below has to come after it. Upstream drains at the very end
+  // of plot() for the same reason (plot.js:346).
+  const svgElement = buildStaticPlotSvg(computed, options.className);
+
+  // Auto-legends render via the React legend components (no d3-selection);
+  // serialize each to a DOM node in the target document, matching the former
+  // createLegends output. Built before the svg is serialized because building
+  // them can warn too, and the drain below counts everything this plot raised.
+  const legends = buildAutoLegends(scaleDescriptors, context, options).map((el) => {
+    const h = document.createElement("div");
+    h.innerHTML = renderToStaticMarkup(el);
+    return h.firstElementChild;
+  });
+
+  // Drain the global warning counter once, after the marks and the legends have
+  // rendered, so the indicator counts warnings raised while RENDERING and not
+  // only while computing — and so the warn() dedupe state (lastMessage) is
+  // reset before the next plot runs.
+  const warnings = consumeWarnings();
+
+  // Serialize to markup and reparse into the target document (which may be a
+  // custom jsdom doc). The indicator is appended last, as the svg's final
+  // child, where upstream puts it (plot.js:346).
+  const markup = renderToStaticMarkup(withWarningIndicator(svgElement, computed, warnings));
   const holder = document.createElement("div");
   holder.innerHTML = markup;
   const svg: any = holder.firstElementChild;
@@ -339,14 +361,6 @@ export function plot(options: any = {}) {
 
   figureHolder.current = svg;
 
-  // Wrap the plot in a figure, if needed. Auto-legends render via the React
-  // legend components (no d3-selection); serialize each to a DOM node in the
-  // target document, matching the former createLegends output.
-  const legends = buildAutoLegends(scaleDescriptors, context, options).map((el) => {
-    const h = document.createElement("div");
-    h.innerHTML = renderToStaticMarkup(el);
-    return h.firstElementChild;
-  });
   const {figure: figured = title != null || subtitle != null || caption != null || legends.length > 0} = options;
   if (figured) {
     const fig: any = document.createElement("figure");
