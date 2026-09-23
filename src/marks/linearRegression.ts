@@ -146,7 +146,10 @@ class LinearRegression extends Mark {
           strokeWidth: null
         });
         const dBand = (this as any)._renderBand(G, X, Y);
-        const bandEl = h("path", {key: `b${k}`, stroke: "none", ...direct, ...bandChannel, d: dBand});
+        // The band carries the same title as its line — upstream applies the
+        // grouped channel styles, title included, to both paths.
+        const bandTitled = withTitleChild(this, channels, G[0], null);
+        const bandEl = h("path", {key: `b${k}`, stroke: "none", ...direct, ...bandChannel, d: dBand}, bandTitled);
         elements.push(withHrefWrap(channels, this.target, G[0], bandEl));
       }
       const lineEl = h("path", {key: `l${k}`, fill: "none", ...direct, ...lineChannel, d: dLine}, lineTitled);

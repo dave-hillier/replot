@@ -41,12 +41,12 @@
   </g>
   <g aria-label="tick" stroke="currentColor" transform="translate(0.5,0)">
     <defs>
-      <marker id="plot-m-arrow-reverse-chl8st" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto-start-reverse" fill="none" stroke="currentColor" stroke-dasharray="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <marker id="plot-marker-1" viewBox="-5 -5 10 10" markerWidth="6.67" markerHeight="6.67" orient="auto-start-reverse" fill="none" stroke="currentColor" stroke-dasharray="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M-1.5,-3l3,3l-3,3"></path>
       </marker>
     </defs>
-    <line marker-start="url(#plot-m-arrow-reverse-chl8st)" marker-mid="url(#plot-m-arrow-reverse-chl8st)" marker-end="url(#plot-m-arrow-reverse-chl8st)" x1="20" x2="20" y1="3" y2="27"></line>
-    <line marker-start="url(#plot-m-arrow-reverse-chl8st)" marker-mid="url(#plot-m-arrow-reverse-chl8st)" marker-end="url(#plot-m-arrow-reverse-chl8st)" x1="320" x2="320" y1="3" y2="27"></line>
-    <line marker-start="url(#plot-m-arrow-reverse-chl8st)" marker-mid="url(#plot-m-arrow-reverse-chl8st)" marker-end="url(#plot-m-arrow-reverse-chl8st)" x1="620" x2="620" y1="3" y2="27"></line>
+    <line marker-start="url(#plot-marker-1)" marker-mid="url(#plot-marker-1)" marker-end="url(#plot-marker-1)" x1="20" x2="20" y1="3" y2="27"></line>
+    <line marker-start="url(#plot-marker-1)" marker-mid="url(#plot-marker-1)" marker-end="url(#plot-marker-1)" x1="320" x2="320" y1="3" y2="27"></line>
+    <line marker-start="url(#plot-marker-1)" marker-mid="url(#plot-marker-1)" marker-end="url(#plot-marker-1)" x1="620" x2="620" y1="3" y2="27"></line>
   </g>
 </svg>

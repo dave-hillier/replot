@@ -5,7 +5,7 @@ import type {Data, MarkOptions} from "../mark.js";
 import {Mark} from "../mark.js";
 import type {MarkerOptions} from "../marker.js";
 import {markers} from "../marker.js";
-import {applyTransform, offset} from "../style.js";
+import {offset} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
 import {createElement as h, Fragment, type ReactNode} from "react";
@@ -60,7 +60,7 @@ class AbstractTick extends Mark {
     super(data, channels, options, defaults);
     markers(this, options);
   }
-  renderJSX(this: any, index: any, scales: any, channels: any, dimensions: any, _context: any): ReactNode {
+  renderJSX(this: any, index: any, scales: any, channels: any, dimensions: any, context: any): ReactNode {
     // A mark whose data is null has no index; render nothing rather than crash.
     if (index == null) index = [];
     const {stroke: S} = channels;
@@ -75,6 +75,10 @@ class AbstractTick extends Mark {
     const x2Fn = typeof x2Of === "function" ? x2Of : () => x2Of;
     const y1Fn = typeof y1Of === "function" ? y1Of : () => y1Of;
     const y2Fn = typeof y2Of === "function" ? y2Of : () => y2Of;
+    // Every line names the same marker and color, so one def serves them all;
+    // the second reference to a def finds it here rather than asking for a
+    // duplicate. custom markers get the render context so they can build their
+    // element in the plot's document.
     const markerDefs = new Map<string, ReactNode>();
     const markerAttrsFor = (color: any) => {
       const out: Record<string, string> = {};
@@ -84,7 +88,7 @@ class AbstractTick extends Mark {
         [this.markerEnd, "markerEnd"]
       ] as const) {
         if (!opt) continue;
-        const m = markerToJSX(opt, color);
+        const m = markerToJSX(opt, color, context);
         if (!m) continue;
         if (!markerDefs.has(m.id)) markerDefs.set(m.id, m.defJSX);
         out[attr] = m.urlRef;
@@ -131,9 +135,6 @@ export class TickX extends AbstractTick {
     this.insetTop = number(insetTop);
     this.insetBottom = number(insetBottom);
   }
-  _transform(selection: any, mark: any, {x}: any) {
-    selection.call(applyTransform, mark, {x}, offset, 0);
-  }
   _transformProp({x}: any) {
     return transformProp(this as any, {x}, offset, 0);
   }
@@ -168,9 +169,6 @@ export class TickY extends AbstractTick {
     );
     this.insetRight = number(insetRight);
     this.insetLeft = number(insetLeft);
-  }
-  _transform(selection: any, mark: any, {y}: any) {
-    selection.call(applyTransform, mark, {y}, 0, offset);
   }
   _transformProp({y}: any) {
     return transformProp(this as any, {y}, 0, offset);
