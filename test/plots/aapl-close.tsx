@@ -16,8 +16,7 @@ export async function aaplClose() {
   const aapl = await d3.csv<any>("data/aapl.csv", d3.autoType);
   return (
     <Replot y={{grid: true}}>
-      <AreaY data={aapl} x="Date" y="Close" fillOpacity={0.1} />
-      <LineY data={aapl} x="Date" y="Close" />
+      <AreaY data={aapl} x="Date" y="Close" line />
       <RuleY data={[0]} />
     </Replot>
   );
