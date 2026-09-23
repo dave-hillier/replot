@@ -1,4 +1,4 @@
-import {Fragment, createElement as h, type ReactNode} from "react";
+import {createElement as h, type ReactNode} from "react";
 import type {InsetOptions} from "../inset.js";
 import type {MarkOptions} from "../mark.js";
 import type {RectCornerOptions} from "./rect.js";
@@ -55,27 +55,33 @@ export class Frame extends Mark {
     const direct = directStyleProps(this);
     const channel = channelStyleProps(0, channels);
     const transform = transformProp(this, {});
+    // The title is the frame element’s own child, as upstream’s
+    // applyChannelStyles appends it; a sibling title would be parented by the
+    // <svg> (the frame is not wrapped in a group) and describe the whole plot.
+    const titled = withTitleChild(this, channels, 0, null);
     const baseProps = {...indirect, ...direct, ...channel, ...transform};
     let element: ReactNode;
-    if (anchor === "left") element = h("line", {...baseProps, x1, x2: x1, y1, y2});
-    else if (anchor === "right") element = h("line", {...baseProps, x1: x2, x2, y1, y2});
-    else if (anchor === "top") element = h("line", {...baseProps, x1, x2, y1, y2: y1});
-    else if (anchor === "bottom") element = h("line", {...baseProps, x1, x2, y1: y2, y2});
+    if (anchor === "left") element = h("line", {...baseProps, x1, x2: x1, y1, y2}, titled);
+    else if (anchor === "right") element = h("line", {...baseProps, x1: x2, x2, y1, y2}, titled);
+    else if (anchor === "top") element = h("line", {...baseProps, x1, x2, y1, y2: y1}, titled);
+    else if (anchor === "bottom") element = h("line", {...baseProps, x1, x2, y1: y2, y2}, titled);
     else if (rx1y1 || rx1y2 || rx2y1 || rx2y2) {
-      element = h("path", {...baseProps, d: roundedRectPath(x1, y1, x2, y2, this)});
+      element = h("path", {...baseProps, d: roundedRectPath(x1, y1, x2, y2, this)}, titled);
     } else {
-      element = h("rect", {
-        ...baseProps,
-        x: x1,
-        y: y1,
-        width: x2 - x1,
-        height: y2 - y1,
-        rx: rx ?? undefined,
-        ry: ry ?? undefined
-      });
+      element = h(
+        "rect",
+        {
+          ...baseProps,
+          x: x1,
+          y: y1,
+          width: x2 - x1,
+          height: y2 - y1,
+          rx: rx ?? undefined,
+          ry: ry ?? undefined
+        },
+        titled
+      );
     }
-    const titled = withTitleChild(this, channels, 0, null);
-    if (titled) element = h(Fragment, null, element, titled);
     return withHrefWrap(channels, this.target, 0, element);
   }
 }
