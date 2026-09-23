@@ -1,5 +1,5 @@
 import assert from "assert";
-import {identity, isNumericString, valueof} from "../src/options.js";
+import {hasX, hasXY, hasY, identity, isNumericString, valueof} from "../src/options.js";
 
 it("isNumericString detects numeric strings", () => {
   assert.strictEqual(isNumericString(["42"]), true);
@@ -138,4 +138,26 @@ it("valueof does not crash on nullish data with an accessor", () => {
   assert.strictEqual(valueof(null, a), null);
   assert.strictEqual(valueof(undefined, a), undefined);
   assert.deepStrictEqual(valueof(0, a), []); // ill-defined, but not crashing
+});
+
+it("hasX, hasY and hasXY answer for a missing options object", () => {
+  // No options at all is "no such channel" rather than a crash, so that a mark
+  // can be created without options and still be asked what it was given.
+  assert.strictEqual(hasX(), false);
+  assert.strictEqual(hasX({}), false);
+  assert.strictEqual(hasY(), false);
+  assert.strictEqual(hasY({}), false);
+  assert.strictEqual(hasXY(), false);
+  assert.strictEqual(hasXY({}), false);
+});
+
+it("hasX, hasY and hasXY see the channels they are told about", () => {
+  assert.strictEqual(hasX({x: 1}), true);
+  assert.strictEqual(hasX({x1: 1}), true);
+  assert.strictEqual(hasX({x2: 1}), true);
+  assert.strictEqual(hasY({y: 1}), true);
+  assert.strictEqual(hasY({y1: 1}), true);
+  assert.strictEqual(hasY({y2: 1}), true);
+  assert.strictEqual(hasXY({interval: 1}), true);
+  assert.strictEqual(hasXY({x: 1}), true);
 });
