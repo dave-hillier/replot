@@ -151,10 +151,18 @@ describe("stampOptions with object-valued options", () => {
     assert.strictEqual(a, b);
   });
 
-  it("excludes function identity inside objects", () => {
+  // A nested function is stamped by identity like a top-level one: `sort={{value:
+  // fn}}` and `tip: {format: {x: fn}}` are the same class of value as a channel
+  // accessor, and a change of either has to recompute the plot (#146).
+  it("includes function identity inside objects", () => {
+    const f = () => "a";
+    assert.strictEqual(
+      stampOptions("dot", null, {tip: {format: {x: f}}}),
+      stampOptions("dot", null, {tip: {format: {x: f}}})
+    );
     const a = stampOptions("dot", null, {tip: {format: {x: () => "a"}}});
     const b = stampOptions("dot", null, {tip: {format: {x: () => "b"}}});
-    assert.strictEqual(a, b);
+    assert.notStrictEqual(a, b);
   });
 
   it("falls back to shape only past the depth cap", () => {
@@ -170,16 +178,22 @@ describe("stampOptions with object-valued options", () => {
     assert.strictEqual(a, b);
   });
 
-  it("stamps class instances by shape only", () => {
+  // A class instance — a d3 scale, a d3 interval, a scale-like object — has no
+  // content the stamp can read, so it is stamped by identity instead of by shape
+  // (#149): swapping one for another has to recompute the plot.
+  it("stamps class instances by identity", () => {
     class Interval {
       step: number;
       constructor(step) {
         this.step = step;
       }
     }
-    const a = stampOptions("dot", null, {interval: new Interval(1)});
-    const b = stampOptions("dot", null, {interval: new Interval(2)});
-    assert.strictEqual(a, b);
+    const one = new Interval(1);
+    assert.strictEqual(stampOptions("dot", null, {interval: one}), stampOptions("dot", null, {interval: one}));
+    assert.notStrictEqual(
+      stampOptions("dot", null, {interval: one}),
+      stampOptions("dot", null, {interval: new Interval(1)})
+    );
   });
 });
 
