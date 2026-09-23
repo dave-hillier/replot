@@ -5,21 +5,23 @@
 // anywhere a graphics element is, and resolves by id).
 //
 // We deliberately skip a Plot-level <defs> registry here. A registry would let
-// identical (markerFn, color) pairs collapse to a single shared <marker>, but
-// it requires Plot.tsx to provide a context and a post-render pass. Inlining
+// identical (marker, color) pairs collapse to a single shared <marker>, but it
+// requires Plot.tsx to provide a context and a post-render pass. Inlining
 // per-mark is simpler, keeps each mark's renderJSX self-contained, and matches
 // the imperative renderer closely enough for Phase 1. The registry is a
 // follow-up optimisation in a Plot.tsx-level switch.
 //
-// Custom marker functions (the ones users pass via options.marker) still
-// produce DOM nodes — those callers stay on the imperative path until a later
-// unit replaces the MarkerFunction contract.
+// Custom marker functions (the ones users pass via options.marker) are drawn
+// too: the function receives the stroke color and the render context (as
+// upstream's MarkerFunction contract promises) and returns a <marker> element,
+// which we convert back into React elements.
 
 import type {ReactElement} from "react";
-import type {Marker, MarkerName} from "../marker.js";
+import type {Marker, MarkerFunction, MarkerName} from "../marker.js";
+import {domToJsx, isDomNode} from "./domToJsx.js";
 
 export interface MarkerJSX {
-  /** Deterministic id derived from the marker shape + color. */
+  /** A document-unique id for this def. */
   id: string;
   /** The <marker> element to include as a sibling of the referencing path. */
   defJSX: ReactElement;
@@ -27,13 +29,45 @@ export interface MarkerJSX {
   urlRef: string;
 }
 
-// Resolve the same shorthand as src/marker.js#maybeMarker, but return a
-// canonical name we can render as JSX. Custom marker functions and the
-// `none`/false/null cases return null so callers can fall back.
-function resolveMarkerName(marker: Marker | "none" | boolean | null | undefined): MarkerName | null {
+/**
+ * A marker option as src/marker.js#markers stores it: the marker itself (a
+ * canonical name, or the user's function) together with the scope that keeps
+ * this mark's defs distinct from every other mark's.
+ */
+export interface ResolvedMarker {
+  marker: MarkerName | MarkerFunction;
+  scope: object;
+}
+
+// The document a custom marker function builds its element in. Upstream passes
+// the render context through (context.document); callers that don't have one to
+// hand fall back to the global document, as src/context.js does. The element is
+// only ever read (domToJsx) and re-created by React in the plot's own document.
+export interface MarkerContext {
+  document?: Document;
+  [key: string]: any;
+}
+
+// A marker option reaches us in either shape: marks store the resolved form
+// (markers() in src/marker.js), while a raw value — a name, a boolean, or a
+// user function — can still be handed in directly. A raw value has no scope of
+// its own, so all raw values share one; that keeps their ids stable and deduped
+// the way a caller that never went through markers() expects.
+const unscoped: object = {};
+
+function isResolvedMarker(value: any): value is ResolvedMarker {
+  return typeof value === "object" && value !== null && "marker" in value && "scope" in value;
+}
+
+// Resolve the same shorthand as src/marker.js#maybeMarker — already-resolved
+// markers pass straight through — but keep custom marker functions as functions
+// so we can call them at render. The `none`/false/null cases return null so
+// callers can fall back.
+function resolveMarker(marker: any): MarkerName | MarkerFunction | null {
+  if (isResolvedMarker(marker)) return marker.marker;
   if (marker == null || marker === false) return null;
   if (marker === true) return "circle-fill";
-  if (typeof marker === "function") return null;
+  if (typeof marker === "function") return marker;
   const k = `${marker}`.toLowerCase();
   if (k === "none") return null;
   if (k === "circle") return "circle-fill";
@@ -52,20 +86,44 @@ function resolveMarkerName(marker: Marker | "none" | boolean | null | undefined)
   throw new Error(`invalid marker: ${marker}`);
 }
 
-// FNV-1a hash, base36. The id only needs to be stable per shape + color
-// within a single document; the `plot-m-` prefix avoids collisions with
-// unrelated DOM ids.
-function shortHash(s: string): string {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < s.length; ++i) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return (h >>> 0).toString(36);
+// Custom marker functions are identified by function identity: two different
+// functions drawing different shapes must not share a def even when they are
+// given the same color. Named markers are identified by their canonical name.
+const markerFunctionIds = new WeakMap<MarkerFunction, number>();
+let nextMarkerFunctionId = 0;
+
+function markerIdentity(marker: MarkerName | MarkerFunction): string {
+  if (typeof marker !== "function") return marker;
+  let id = markerFunctionIds.get(marker);
+  if (id === undefined) markerFunctionIds.set(marker, (id = ++nextMarkerFunctionId));
+  return `fn${id}`;
 }
 
-function markerId(name: MarkerName, color: string): string {
-  return `plot-m-${name}-${shortHash(color)}`;
+// The identity of a (marker, color) pair, ignoring the scope: within one mark a
+// pair draws one def, and every mark draws its own copy of it.
+function markerKey(marker: MarkerName | MarkerFunction, color: string): string {
+  return `${markerIdentity(marker)}|${color}`;
+}
+
+// Upstream mints a fresh id per <marker> node it inserts (marker.js). The ids
+// are document-global and must not repeat: a def resolves currentColor — and
+// any CSS variable — against its own ancestors, not against the path that
+// references it, so a second mark resolving a colliding id would draw the first
+// mark's colors. The scope therefore separates the marks, while the id itself
+// is remembered per (scope, marker, color): an interactive mark re-renders on
+// every pointer move, and an id that changed with each render would remount its
+// defs. The plot-marker- prefix matches upstream, and is what the snapshot
+// harness reindexes into a stable sequence.
+let nextMarkerId = 0;
+const markerIds = new WeakMap<object, Map<string, string>>();
+
+function markerIdFor(scope: object, marker: MarkerName | MarkerFunction, color: string): string {
+  let ids = markerIds.get(scope);
+  if (ids === undefined) markerIds.set(scope, (ids = new Map()));
+  const key = markerKey(marker, color);
+  let id = ids.get(key);
+  if (id === undefined) ids.set(key, (id = `plot-marker-${++nextMarkerId}`));
+  return id;
 }
 
 const tickOrient = {tick: "auto", "tick-x": 90, "tick-y": 0} as const;
@@ -130,15 +188,55 @@ function renderMarker(name: MarkerName, color: string, id: string): ReactElement
   );
 }
 
+// The context handed to a user-supplied marker function: the caller's render
+// context when it has one, else the global document (as src/context.js
+// defaults), else null — a document-less render cannot build the element, so
+// the marker is dropped rather than drawn wrong. A function needs a document to
+// build anything at all, which is why the context is narrowed here.
+function markerRenderContext(context?: MarkerContext): (MarkerContext & {document: Document}) | null {
+  if (context?.document) return context as MarkerContext & {document: Document};
+  const document = typeof window !== "undefined" ? window.document : undefined;
+  return document ? {document} : null;
+}
+
+// Calls a user-supplied marker function and converts the element it builds back
+// into React elements. Upstream sets the id on the node the function returns
+// (marker.js), so we do the same before reading it. A function that returns
+// something other than an element is dropped, like any other invalid channel
+// value.
+function renderMarkerFunction(
+  markerFn: MarkerFunction,
+  color: string,
+  id: string,
+  context: MarkerContext & {document: Document}
+): ReactElement | null {
+  const node = markerFn(color, context);
+  if (!isDomNode(node)) return null;
+  node.setAttribute("id", id);
+  return domToJsx(node) as ReactElement;
+}
+
 /**
  * Resolve a marker option + stroke color to JSX for inline use. Returns null
- * for `none`/false/null/undefined so callers can short-circuit. Custom marker
- * functions (user-supplied) are not yet supported by the JSX path and also
- * return null — those plots stay on the imperative renderer.
+ * for `none`/false/null/undefined so callers can short-circuit. The same
+ * (marker, color) pair on the same mark always yields the same id, so a caller
+ * that draws many references to one marker can dedupe on it; two different
+ * marks never share an id.
  */
-export function markerToJSX(marker: Marker | "none" | boolean | null | undefined, color: string): MarkerJSX | null {
-  const name = resolveMarkerName(marker);
-  if (!name) return null;
-  const id = markerId(name, color);
-  return {id, defJSX: renderMarker(name, color, id), urlRef: `url(#${id})`};
+export function markerToJSX(
+  marker: Marker | ResolvedMarker | "none" | boolean | null | undefined,
+  color: string,
+  context?: MarkerContext
+): MarkerJSX | null {
+  const resolved = resolveMarker(marker);
+  if (!resolved) return null;
+  const id = markerIdFor(isResolvedMarker(marker) ? marker.scope : unscoped, resolved, color);
+  if (typeof resolved === "function") {
+    const renderContext = markerRenderContext(context);
+    if (!renderContext) return null;
+    const defJSX = renderMarkerFunction(resolved, color, id, renderContext);
+    if (!defJSX) return null;
+    return {id, defJSX, urlRef: `url(#${id})`};
+  }
+  return {id, defJSX: renderMarker(resolved, color, id), urlRef: `url(#${id})`};
 }
