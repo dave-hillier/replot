@@ -52,7 +52,7 @@ function Chart({data}) {
 
 - **Native React integration** — Use composable React components (`<Replot>`, `<Dot>`, `<Line>`, etc.) that render directly into the React tree.
 - **Declarative API** — Define charts with JSX, making them easier to read, compose, and maintain alongside other React code.
-- **React ecosystem compatibility** — Works with React state, context, hooks, Suspense, and server-side rendering out of the box.
+- **React ecosystem compatibility** — Works with React state, context, hooks, Suspense, and server rendering, where `renderToString` returns the whole plot. A hydrating client redraws it, because marks register with the plot from an effect.
 - **No manual DOM management** — No need for refs, effects, or manual cleanup.
 - **Built on Observable Plot** — All the power of Observable Plot's scales, transforms, and mark system.
 
