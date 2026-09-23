@@ -5,7 +5,8 @@ import {number, singleton} from "../options.js";
 import {offset} from "../style.js";
 import {sqrt4_3} from "../symbol.js";
 import {ox, oy} from "../transforms/hexbin.js";
-import {indirectStyleProps, directStyleProps, transformProp} from "../react/styles.js";
+import {channelStyleProps, indirectStyleProps, directStyleProps, transformProp} from "../react/styles.js";
+import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
 
 /** Options for the hexgrid mark. */
 export interface HexgridOptions extends MarkOptions {
@@ -53,7 +54,7 @@ export class Hexgrid extends Mark {
     super(singleton, undefined, {clip, ...options}, defaults);
     this.binWidth = number(binWidth);
   }
-  renderJSX(this: any, _index: any, _scales: any, _channels: any, dimensions: any, _context: any): ReactNode {
+  renderJSX(this: any, _index: any, _scales: any, channels: any, dimensions: any, _context: any): ReactNode {
     const {binWidth} = this;
     const {marginTop, marginRight, marginBottom, marginLeft, width, height} = dimensions;
     const x0 = marginLeft - ox,
@@ -79,7 +80,12 @@ export class Hexgrid extends Mark {
     const indirect = indirectStyleProps(this);
     const direct = directStyleProps(this);
     const transform = transformProp(this, {}, offset + ox, offset + oy);
-    return h("g", {...indirect, ...transform}, h("path", {...direct, d}));
+    // The grid is one path over a singleton datum, so its channel values — like
+    // upstream, which renders it with .datum(0) — are read at index 0.
+    const channel = channelStyleProps(0, channels);
+    const titled = withTitleChild(this, channels, 0, null);
+    const pathEl = h("path", {...direct, ...channel, d}, titled);
+    return h("g", {...indirect, ...transform}, withHrefWrap(channels, this.target, 0, pathEl));
   }
 }
 

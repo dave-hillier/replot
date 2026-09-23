@@ -5,7 +5,7 @@ import type {Data, MarkOptions} from "../mark.js";
 import {Mark} from "../mark.js";
 import type {MarkerOptions} from "../marker.js";
 import {markers} from "../marker.js";
-import {applyTransform, offset} from "../style.js";
+import {offset} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
 import {createElement as h, Fragment, type ReactNode} from "react";
@@ -135,9 +135,6 @@ export class TickX extends AbstractTick {
     this.insetTop = number(insetTop);
     this.insetBottom = number(insetBottom);
   }
-  _transform(selection: any, mark: any, {x}: any) {
-    selection.call(applyTransform, mark, {x}, offset, 0);
-  }
   _transformProp({x}: any) {
     return transformProp(this as any, {x}, offset, 0);
   }
@@ -172,9 +169,6 @@ export class TickY extends AbstractTick {
     );
     this.insetRight = number(insetRight);
     this.insetLeft = number(insetLeft);
-  }
-  _transform(selection: any, mark: any, {y}: any) {
-    selection.call(applyTransform, mark, {y}, 0, offset);
   }
   _transformProp({y}: any) {
     return transformProp(this as any, {y}, 0, offset);

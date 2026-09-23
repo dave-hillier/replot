@@ -113,7 +113,7 @@ export class Geo extends Mark {
  * data is *data*.geometries; if *data* is some other GeoJSON object, then the
  * mark’s data is the single-element array [*data*].
  */
-export function geo(data?: Data | GeoPermissibleObjects, options: any = {}): Geo {
+export function geo(data?: Data | GeoPermissibleObjects, options: GeoOptions = {}): Geo {
   if (options.tip && options.x === undefined && options.y === undefined) options = centroid(options);
   else if (options.geometry === undefined) options = {...options, geometry: identity};
   return new Geo(data, options);
