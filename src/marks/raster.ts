@@ -1,4 +1,4 @@
-import {blurImage, Delaunay, randomLcg, rgb} from "d3";
+import {blurImage, Delaunay, randomLcg} from "d3";
 import type {ChannelValueSpec} from "../channel.js";
 import {valueObject} from "../channel.js";
 import type {Data, MarkOptions} from "../mark.js";
@@ -10,7 +10,7 @@ import {impliedString} from "../style.js";
 import {directStyleProps, indirectStyleProps, offset as styleOffset, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
 import {initializer} from "../transforms/basic.js";
-import {createElement as h, Fragment, type ReactNode} from "react";
+import {createElement as h, type ReactNode} from "react";
 
 /**
  * The built-in spatial interpolation methods; one of:
@@ -157,6 +157,14 @@ export interface RasterOptions extends Omit<MarkOptions, "fill" | "fillOpacity">
   imageRendering?: string;
 
   /**
+   * The [color space][1] of the backing canvas. Defaults to *srgb*; set to
+   * *display-p3* for the Display P3 color space.
+   *
+   * [1]: https://developer.mozilla.org/en-US/docs/Web/API/ImageData/colorSpace
+   */
+  colorSpace?: ImageData["colorSpace"];
+
+  /**
    * The fill, typically bound to the *color* scale. Can be specified as a
    * constant, a channel based on the sample *data*, or as a function *f*(*x*,
    * *y*) to be evaluated at each pixel if the *data* is not provided.
@@ -195,6 +203,8 @@ export class AbstractRaster extends Mark {
   pixelSize: any;
   blur: any;
   interpolate: any;
+  colorSpace: string;
+  colorConverter: ((color: any) => Uint8ClampedArray) | undefined;
   constructor(data: any, channels: any, options: any = {}, defaults: any) {
     let {
       width,
@@ -206,7 +216,7 @@ export class AbstractRaster extends Mark {
       x2 = x == null ? width : undefined,
       y2 = y == null ? height : undefined
     } = options;
-    const {pixelSize = defaults.pixelSize, blur = 0, interpolate} = options;
+    const {pixelSize = defaults.pixelSize, blur = 0, interpolate, colorSpace = "srgb"} = options;
     if (width != null) width = integer(width, "width");
     if (height != null) height = integer(height, "height");
     // These represent the (minimum) bounds of the raster; they are not
@@ -246,6 +256,7 @@ export class AbstractRaster extends Mark {
     this.pixelSize = number(pixelSize, "pixelSize");
     this.blur = number(blur, "blur");
     this.interpolate = x == null || y == null ? null : maybeInterpolate(interpolate); // interpolation requires x & y
+    this.colorSpace = String(colorSpace).toLowerCase();
   }
 }
 
@@ -290,10 +301,17 @@ export class Raster extends AbstractRaster {
       if (FO) FO = this.interpolate(index, w, rh, IX, IY, FO);
     } else if ((this as any).data == null && index) offset = index.fi * n;
 
+    // The colour converter is cached on the mark: parsing a colour is done by
+    // the canvas (so that it respects the mark’s colorSpace, and so that
+    // colour syntax the CSS parser knows but d3-format does not, such as
+    // oklch, survives), which makes it far too expensive to do per pixel. It
+    // caches each colour it has seen, so a raster of one colour is parsed once
+    // per render.
+    const colorConverter = ((this as any).colorConverter ??= getColorConverter(this.colorSpace, context));
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = rh;
-    const context2d = canvas.getContext("2d");
+    const context2d = canvas.getContext("2d", {colorSpace: this.colorSpace});
     const image = context2d.createImageData(w, rh);
     const imageData = image.data;
     // rgba is the parsed fill color, including its own alpha (e.g. an
@@ -301,23 +319,16 @@ export class Raster extends AbstractRaster {
     // fillOpacity baseline (or, if present, the per-pixel fillOpacity
     // channel). The final pixel alpha composes the color's own opacity with
     // `a`, matching observablehq-plot's `rgba[3] * a`.
-    let rgba = rgb((this as any).fill ?? "black");
+    let rgba = colorConverter((this as any).fill ?? "black");
     let a = (this as any).fillOpacity ?? 1;
     for (let i = 0; i < n; ++i) {
       const j = i << 2;
-      if (F) {
-        const fi = color(F[i + offset]);
-        if (fi == null) {
-          imageData[j + 3] = 0;
-          continue;
-        }
-        rgba = rgb(fi);
-      }
+      if (F) rgba = colorConverter(color(F[i + offset]));
       if (FO) a = FO[i + offset];
-      imageData[j + 0] = rgba.r;
-      imageData[j + 1] = rgba.g;
-      imageData[j + 2] = rgba.b;
-      imageData[j + 3] = (rgba.opacity ?? 1) * a * 255;
+      imageData[j + 0] = rgba[0];
+      imageData[j + 1] = rgba[1];
+      imageData[j + 2] = rgba[2];
+      imageData[j + 3] = rgba[3] * a;
     }
     if (this.blur > 0) blurImage(image, this.blur);
     context2d.putImageData(image, 0, 0);
@@ -328,20 +339,24 @@ export class Raster extends AbstractRaster {
     // the <image> takes only direct (mark-level) styles, matching the
     // imperative applyDirectStyles (no applyChannelStyles).
     const transform = transformProp(this, scales, styleOffset, styleOffset);
-    const imageRendering = this.imageRendering != null ? {"image-rendering": this.imageRendering} : {};
-    let imageEl: ReactNode = h("image", {
-      transform: `translate(${x1},${y1}) scale(${Math.sign(x2 - x1)},${Math.sign(y2 - y1)})`,
-      width: Math.abs(dx),
-      height: Math.abs(dy),
-      preserveAspectRatio: "none",
-      ...imageRendering,
-      ...direct,
-      xlinkHref: canvas.toDataURL()
-    });
-    const titled = withTitleChild(this, values, 0, null);
-    if (titled) imageEl = h(Fragment, null, imageEl, titled);
-    imageEl = withHrefWrap(values, this.target, 0, imageEl);
-    return h("g", {...indirect, ...transform}, imageEl);
+    // React’s SVG attribute names are camelCase, so image-rendering is spelled
+    // imageRendering here; upstream reaches the same attribute through
+    // applyAttr. The title likewise belongs to the image itself, as upstream’s
+    // applyChannelStyles appends it, rather than to the enclosing group.
+    const imageEl: ReactNode = h(
+      "image",
+      {
+        transform: `translate(${x1},${y1}) scale(${Math.sign(x2 - x1)},${Math.sign(y2 - y1)})`,
+        width: Math.abs(dx),
+        height: Math.abs(dy),
+        preserveAspectRatio: "none",
+        imageRendering: this.imageRendering,
+        ...direct,
+        xlinkHref: canvas.toDataURL()
+      },
+      withTitleChild(this, values, 0, null)
+    );
+    return h("g", {...indirect, ...transform}, withHrefWrap(values, this.target, 0, imageEl));
   }
 }
 
@@ -721,5 +736,31 @@ function denseY(y1: number, y2: number, width: number, height: number) {
       for (let i = 0; i < n; ++i) Y[i] = (Math.floor(i / width) % height) * ky + y0;
       return Y;
     }
+  };
+}
+
+const transparent = new Uint8ClampedArray(4);
+
+// Returns a converter from a CSS color string to its RGBA components, parsed
+// by a canvas in the given color space. Parsing through the canvas (rather
+// than d3-color) is what lets a wide-gamut color space keep its values, and
+// what makes colors like oklch work. Each parsed color is cached, since a
+// raster typically has few distinct colors but very many pixels of each.
+function getColorConverter(colorSpace: string, {document}: any): (color: any) => Uint8ClampedArray {
+  const cache = new Map<any, Uint8ClampedArray>();
+  const canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = 1;
+  const context = canvas.getContext("2d", {colorSpace, willReadFrequently: true});
+  return (color: any) => {
+    if (color == null) return transparent;
+    let data = cache.get(color);
+    if (data !== undefined) return data;
+    context.clearRect(0, 0, 1, 1);
+    context.fillStyle = color;
+    context.fillRect(0, 0, 1, 1);
+    data = context.getImageData(0, 0, 1, 1).data;
+    cache.set(color, data);
+    return data;
   };
 }
