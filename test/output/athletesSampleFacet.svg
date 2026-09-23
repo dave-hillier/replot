@@ -500,427 +500,205 @@
   <g>
     <g transform="translate(0,6)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="395.54" cy="29" r="5"></circle><title>Evan Van Moerkerke</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="328.201" cy="29" r="5"></circle><title>Javier Garcia Gadea</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="264.604" cy="29" r="5"></circle><title>Jordan Coelho</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="298.273" cy="29" r="5"></circle><title>Markus Thormeyer</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="361.871" cy="29" r="5"></circle><title>Mehdi Marzouki</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="302.014" cy="29" r="5"></circle><title>Uvis Kalnins</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="249.64" cy="29" r="5"></circle><title>Ziv Kalontarov</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="275.827" cy="29" r="5"></circle><title>Aria Fischer</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="219.712" cy="29" r="5"></circle><title>Farida Osman</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="223.453" cy="29" r="5"></circle><title>Keesja Gofers</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="260.863" cy="29" r="5"></circle><title>Makenzie Fischer</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="171.079" cy="29" r="5"></circle><title>Mariia Shurochkina</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="189.784" cy="29" r="5"></circle><title>Svetlana Romashina</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="159.856" cy="29" r="5"></circle><title>Yekaterina Nemich</title>
-        </g>
+        <circle fill="#d95f02" cx="395.54" cy="29" r="5"><title>Evan Van Moerkerke</title></circle>
+        <circle fill="#d95f02" cx="328.201" cy="29" r="5"><title>Javier Garcia Gadea</title></circle>
+        <circle fill="#d95f02" cx="264.604" cy="29" r="5"><title>Jordan Coelho</title></circle>
+        <circle fill="#d95f02" cx="298.273" cy="29" r="5"><title>Markus Thormeyer</title></circle>
+        <circle fill="#d95f02" cx="361.871" cy="29" r="5"><title>Mehdi Marzouki</title></circle>
+        <circle fill="#d95f02" cx="302.014" cy="29" r="5"><title>Uvis Kalnins</title></circle>
+        <circle fill="#d95f02" cx="249.64" cy="29" r="5"><title>Ziv Kalontarov</title></circle>
+        <circle fill="#1b9e77" cx="275.827" cy="29" r="5"><title>Aria Fischer</title></circle>
+        <circle fill="#1b9e77" cx="219.712" cy="29" r="5"><title>Farida Osman</title></circle>
+        <circle fill="#1b9e77" cx="223.453" cy="29" r="5"><title>Keesja Gofers</title></circle>
+        <circle fill="#1b9e77" cx="260.863" cy="29" r="5"><title>Makenzie Fischer</title></circle>
+        <circle fill="#1b9e77" cx="171.079" cy="29" r="5"><title>Mariia Shurochkina</title></circle>
+        <circle fill="#1b9e77" cx="189.784" cy="29" r="5"><title>Svetlana Romashina</title></circle>
+        <circle fill="#1b9e77" cx="159.856" cy="29" r="5"><title>Yekaterina Nemich</title></circle>
       </g>
     </g>
     <g transform="translate(0,46)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="223.453" cy="29" r="5"></circle><title>A Jesus Garcia</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="204.748" cy="29" r="5"></circle><title>Bachir Mahamat</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="264.604" cy="29" r="5"></circle><title>Changrui Xue</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="208.489" cy="29" r="5"></circle><title>Erick Barrondo</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="275.827" cy="29" r="5"></circle><title>Jack Green</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="481.583" cy="29" r="5"></circle><title>Joe Kovacs</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="260.863" cy="29" r="5"></circle><title>Kurt Couto</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="189.784" cy="29" r="5"></circle><title>Luguelin Santos</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="159.856" cy="29" r="5"></circle><title>Paul Kipngetich Tanui</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="204.748" cy="29" r="5"></circle><title>Theo Piniau</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="507.77" cy="29" r="5"></circle><title>Tim Nedow</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="223.453" cy="29" r="5"></circle><title>Yuri Floriani</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="171.079" cy="29" r="5"></circle><title>Brenda Flores</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="171.079" cy="29" r="5"></circle><title>Diana Martin</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="141.151" cy="29" r="5"></circle><title>Hye-Song Kim</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="204.748" cy="29" r="5"></circle><title>Jamile Samuel</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="189.784" cy="29" r="5"></circle><title>Kamia Yousufi</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="201.007" cy="29" r="5"></circle><title>Mirela Demireva</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="204.748" cy="29" r="5"></circle><title>Nikkita Holder</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="178.561" cy="29" r="5"></circle><title>Persis William-Mensah</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="159.856" cy="29" r="5"></circle><title>Rosa Godoy</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="152.374" cy="29" r="5"></circle><title>Shijie Qieyang</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="208.489" cy="29" r="5"></circle><title>Vitoria Cristina Rosa</title>
-        </g>
+        <circle fill="#d95f02" cx="223.453" cy="29" r="5"><title>A Jesus Garcia</title></circle>
+        <circle fill="#d95f02" cx="204.748" cy="29" r="5"><title>Bachir Mahamat</title></circle>
+        <circle fill="#d95f02" cx="264.604" cy="29" r="5"><title>Changrui Xue</title></circle>
+        <circle fill="#d95f02" cx="208.489" cy="29" r="5"><title>Erick Barrondo</title></circle>
+        <circle fill="#d95f02" cx="275.827" cy="29" r="5"><title>Jack Green</title></circle>
+        <circle fill="#d95f02" cx="481.583" cy="29" r="5"><title>Joe Kovacs</title></circle>
+        <circle fill="#d95f02" cx="260.863" cy="29" r="5"><title>Kurt Couto</title></circle>
+        <circle fill="#d95f02" cx="189.784" cy="29" r="5"><title>Luguelin Santos</title></circle>
+        <circle fill="#d95f02" cx="159.856" cy="29" r="5"><title>Paul Kipngetich Tanui</title></circle>
+        <circle fill="#d95f02" cx="204.748" cy="29" r="5"><title>Theo Piniau</title></circle>
+        <circle fill="#d95f02" cx="507.77" cy="29" r="5"><title>Tim Nedow</title></circle>
+        <circle fill="#d95f02" cx="223.453" cy="29" r="5"><title>Yuri Floriani</title></circle>
+        <circle fill="#1b9e77" cx="171.079" cy="29" r="5"><title>Brenda Flores</title></circle>
+        <circle fill="#1b9e77" cx="171.079" cy="29" r="5"><title>Diana Martin</title></circle>
+        <circle fill="#1b9e77" cx="141.151" cy="29" r="5"><title>Hye-Song Kim</title></circle>
+        <circle fill="#1b9e77" cx="204.748" cy="29" r="5"><title>Jamile Samuel</title></circle>
+        <circle fill="#1b9e77" cx="189.784" cy="29" r="5"><title>Kamia Yousufi</title></circle>
+        <circle fill="#1b9e77" cx="201.007" cy="29" r="5"><title>Mirela Demireva</title></circle>
+        <circle fill="#1b9e77" cx="204.748" cy="29" r="5"><title>Nikkita Holder</title></circle>
+        <circle fill="#1b9e77" cx="178.561" cy="29" r="5"><title>Persis William-Mensah</title></circle>
+        <circle fill="#1b9e77" cx="159.856" cy="29" r="5"><title>Rosa Godoy</title></circle>
+        <circle fill="#1b9e77" cx="152.374" cy="29" r="5"><title>Shijie Qieyang</title></circle>
+        <circle fill="#1b9e77" cx="208.489" cy="29" r="5"><title>Vitoria Cristina Rosa</title></circle>
       </g>
     </g>
     <g transform="translate(0,66)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="275.827" cy="29" r="5"></circle><title>Dong Keun Lee</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="264.604" cy="29" r="5"></circle><title>Marc Zwiebler</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="253.381" cy="29" r="5"></circle><title>Tontowi Ahmad</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="245.899" cy="29" r="5"></circle><title>Birgit Michels</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="215.971" cy="29" r="5"></circle><title>Liliyana Natsir</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="204.748" cy="29" r="5"></circle><title>Sapsiree Taerattanachai</title>
-        </g>
+        <circle fill="#d95f02" cx="275.827" cy="29" r="5"><title>Dong Keun Lee</title></circle>
+        <circle fill="#d95f02" cx="264.604" cy="29" r="5"><title>Marc Zwiebler</title></circle>
+        <circle fill="#d95f02" cx="253.381" cy="29" r="5"><title>Tontowi Ahmad</title></circle>
+        <circle fill="#1b9e77" cx="245.899" cy="29" r="5"><title>Birgit Michels</title></circle>
+        <circle fill="#1b9e77" cx="215.971" cy="29" r="5"><title>Liliyana Natsir</title></circle>
+        <circle fill="#1b9e77" cx="204.748" cy="29" r="5"><title>Sapsiree Taerattanachai</title></circle>
       </g>
     </g>
     <g transform="translate(0,86)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="298.273" cy="29" r="5"></circle><title>Maryia Papova</title>
-        </g>
+        <circle fill="#1b9e77" cx="298.273" cy="29" r="5"><title>Maryia Papova</title></circle>
       </g>
     </g>
     <g transform="translate(0,126)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="309.496" cy="29" r="5"></circle><title>Emanuel Silva</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="316.978" cy="29" r="5"></circle><title>Filip Dvorak</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="313.237" cy="29" r="5"></circle><title>Ricardas Nekriosius</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="260.863" cy="29" r="5"></circle><title>Serguey Torres</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="305.755" cy="29" r="5"></circle><title>Stephen Bird</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="302.014" cy="29" r="5"></circle><title>Taras Mishchuk</title>
-        </g>
+        <circle fill="#d95f02" cx="309.496" cy="29" r="5"><title>Emanuel Silva</title></circle>
+        <circle fill="#d95f02" cx="316.978" cy="29" r="5"><title>Filip Dvorak</title></circle>
+        <circle fill="#d95f02" cx="313.237" cy="29" r="5"><title>Ricardas Nekriosius</title></circle>
+        <circle fill="#d95f02" cx="260.863" cy="29" r="5"><title>Serguey Torres</title></circle>
+        <circle fill="#d95f02" cx="305.755" cy="29" r="5"><title>Stephen Bird</title></circle>
+        <circle fill="#d95f02" cx="302.014" cy="29" r="5"><title>Taras Mishchuk</title></circle>
       </g>
     </g>
     <g transform="translate(0,146)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="219.712" cy="29" r="5"></circle><title>Alejandro Valverde Belmonte</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="245.899" cy="29" r="5"></circle><title>Chun Hing Chan</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="358.129" cy="29" r="5"></circle><title>Gregory Bauge</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="257.122" cy="29" r="5"></circle><title>Hersony Canelon</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="227.194" cy="29" r="5"></circle><title>Kleber da Silva Ramos</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="305.755" cy="29" r="5"></circle><title>Matthew Glaetzer</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="283.309" cy="29" r="5"></circle><title>Sam Webster</title>
-        </g>
+        <circle fill="#d95f02" cx="219.712" cy="29" r="5"><title>Alejandro Valverde Belmonte</title></circle>
+        <circle fill="#d95f02" cx="245.899" cy="29" r="5"><title>Chun Hing Chan</title></circle>
+        <circle fill="#d95f02" cx="358.129" cy="29" r="5"><title>Gregory Bauge</title></circle>
+        <circle fill="#d95f02" cx="257.122" cy="29" r="5"><title>Hersony Canelon</title></circle>
+        <circle fill="#d95f02" cx="227.194" cy="29" r="5"><title>Kleber da Silva Ramos</title></circle>
+        <circle fill="#d95f02" cx="305.755" cy="29" r="5"><title>Matthew Glaetzer</title></circle>
+        <circle fill="#d95f02" cx="283.309" cy="29" r="5"><title>Sam Webster</title></circle>
       </g>
     </g>
     <g transform="translate(0,166)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="302.014" cy="29" r="5"></circle><title>Jeroen Dubbeldam</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="245.899" cy="29" r="5"></circle><title>Kevin Staut</title>
-        </g>
+        <circle fill="#d95f02" cx="302.014" cy="29" r="5"><title>Jeroen Dubbeldam</title></circle>
+        <circle fill="#d95f02" cx="245.899" cy="29" r="5"><title>Kevin Staut</title></circle>
       </g>
     </g>
     <g transform="translate(0,186)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="294.532" cy="29" r="5"></circle><title>Gauthier Grumier</title>
-        </g>
+        <circle fill="#d95f02" cx="294.532" cy="29" r="5"><title>Gauthier Grumier</title></circle>
       </g>
     </g>
     <g transform="translate(0,206)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="290.791" cy="29" r="5"></circle><title>Davie Selke</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="264.604" cy="29" r="5"></circle><title>Michael Perez</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="223.453" cy="29" r="5"></circle><title>Ashlyn Harris</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="197.266" cy="29" r="5"></circle><title>Isabel Kerschowski</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="212.23" cy="29" r="5"></circle><title>Julie Johnston</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="197.266" cy="29" r="5"></circle><title>Leidy Asprilla</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="208.489" cy="29" r="5"></circle><title>Olivia Schough</title>
-        </g>
+        <circle fill="#d95f02" cx="290.791" cy="29" r="5"><title>Davie Selke</title></circle>
+        <circle fill="#d95f02" cx="264.604" cy="29" r="5"><title>Michael Perez</title></circle>
+        <circle fill="#1b9e77" cx="223.453" cy="29" r="5"><title>Ashlyn Harris</title></circle>
+        <circle fill="#1b9e77" cx="197.266" cy="29" r="5"><title>Isabel Kerschowski</title></circle>
+        <circle fill="#1b9e77" cx="212.23" cy="29" r="5"><title>Julie Johnston</title></circle>
+        <circle fill="#1b9e77" cx="197.266" cy="29" r="5"><title>Leidy Asprilla</title></circle>
+        <circle fill="#1b9e77" cx="208.489" cy="29" r="5"><title>Olivia Schough</title></circle>
       </g>
     </g>
     <g transform="translate(0,226)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="197.266" cy="29" r="5"></circle><title>Chloe Leurquin</title>
-        </g>
+        <circle fill="#1b9e77" cx="197.266" cy="29" r="5"><title>Chloe Leurquin</title></circle>
       </g>
     </g>
     <g transform="translate(0,246)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="163.597" cy="29" r="5"></circle><title>Carolina Rodriguez</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="253.381" cy="29" r="5"></circle><title>Danell Leyva</title>
-        </g>
+        <circle fill="#1b9e77" cx="163.597" cy="29" r="5"><title>Carolina Rodriguez</title></circle>
+        <circle fill="#d95f02" cx="253.381" cy="29" r="5"><title>Danell Leyva</title></circle>
       </g>
     </g>
     <g transform="translate(0,286)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="320.719" cy="29" r="5"></circle><title>Nic Woods</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="260.863" cy="29" r="5"></circle><title>Robert van der Horst</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="245.899" cy="29" r="5"></circle><title>Vicenc Ruiz</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="201.007" cy="29" r="5"></circle><title>Caitlin van Sickle</title>
-        </g>
+        <circle fill="#d95f02" cx="320.719" cy="29" r="5"><title>Nic Woods</title></circle>
+        <circle fill="#d95f02" cx="260.863" cy="29" r="5"><title>Robert van der Horst</title></circle>
+        <circle fill="#d95f02" cx="245.899" cy="29" r="5"><title>Vicenc Ruiz</title></circle>
+        <circle fill="#1b9e77" cx="201.007" cy="29" r="5"><title>Caitlin van Sickle</title></circle>
       </g>
     </g>
     <g transform="translate(0,346)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="283.309" cy="29" r="5"></circle><title>Alexander Sigurbjornsson</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="249.64" cy="29" r="5"></circle><title>Raul Hernandez Hidalgo</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="268.345" cy="29" r="5"></circle><title>Elena-Lavinia Tarlea</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="197.266" cy="29" r="5"></circle><title>Ilse Paulis</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="204.748" cy="29" r="5"></circle><title>Maaike Head</title>
-        </g>
+        <circle fill="#d95f02" cx="283.309" cy="29" r="5"><title>Alexander Sigurbjornsson</title></circle>
+        <circle fill="#d95f02" cx="249.64" cy="29" r="5"><title>Raul Hernandez Hidalgo</title></circle>
+        <circle fill="#1b9e77" cx="268.345" cy="29" r="5"><title>Elena-Lavinia Tarlea</title></circle>
+        <circle fill="#1b9e77" cx="197.266" cy="29" r="5"><title>Ilse Paulis</title></circle>
+        <circle fill="#1b9e77" cx="204.748" cy="29" r="5"><title>Maaike Head</title></circle>
       </g>
     </g>
     <g transform="translate(0,366)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="219.712" cy="29" r="5"></circle><title>Maria Casado</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="328.201" cy="29" r="5"></circle><title>Lomano Lemeki</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="264.604" cy="29" r="5"></circle><title>Moises Duque</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="290.791" cy="29" r="5"></circle><title>Seabelo Senatla</title>
-        </g>
+        <circle fill="#1b9e77" cx="219.712" cy="29" r="5"><title>Maria Casado</title></circle>
+        <circle fill="#d95f02" cx="328.201" cy="29" r="5"><title>Lomano Lemeki</title></circle>
+        <circle fill="#d95f02" cx="264.604" cy="29" r="5"><title>Moises Duque</title></circle>
+        <circle fill="#d95f02" cx="290.791" cy="29" r="5"><title>Seabelo Senatla</title></circle>
       </g>
     </g>
     <g transform="translate(0,386)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="215.971" cy="29" r="5"></circle><title>Gil Cohen</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="238.417" cy="29" r="5"></circle><title>Miho Yoshioka</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="264.604" cy="29" r="5"></circle><title>Aichen Wang</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="354.388" cy="29" r="5"></circle><title>Pieter-Jan Postma</title>
-        </g>
+        <circle fill="#1b9e77" cx="215.971" cy="29" r="5"><title>Gil Cohen</title></circle>
+        <circle fill="#1b9e77" cx="238.417" cy="29" r="5"><title>Miho Yoshioka</title></circle>
+        <circle fill="#d95f02" cx="264.604" cy="29" r="5"><title>Aichen Wang</title></circle>
+        <circle fill="#d95f02" cx="354.388" cy="29" r="5"><title>Pieter-Jan Postma</title></circle>
       </g>
     </g>
     <g transform="translate(0,406)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="257.122" cy="29" r="5"></circle><title>Alin George Moldoveanu</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="212.23" cy="29" r="5"></circle><title>Will Brown</title>
-        </g>
+        <circle fill="#d95f02" cx="257.122" cy="29" r="5"><title>Alin George Moldoveanu</title></circle>
+        <circle fill="#d95f02" cx="212.23" cy="29" r="5"><title>Will Brown</title></circle>
       </g>
     </g>
     <g transform="translate(0,426)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="219.712" cy="29" r="5"></circle><title>Jieni Shao</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="197.266" cy="29" r="5"></circle><title>Xue Li</title>
-        </g>
+        <circle fill="#1b9e77" cx="219.712" cy="29" r="5"><title>Jieni Shao</title></circle>
+        <circle fill="#1b9e77" cx="197.266" cy="29" r="5"><title>Xue Li</title></circle>
       </g>
     </g>
     <g transform="translate(0,446)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="234.676" cy="29" r="5"></circle><title>Nur Tatar</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="215.971" cy="29" r="5"></circle><title>Rabia Guelec</title>
-        </g>
+        <circle fill="#1b9e77" cx="234.676" cy="29" r="5"><title>Nur Tatar</title></circle>
+        <circle fill="#1b9e77" cx="215.971" cy="29" r="5"><title>Rabia Guelec</title></circle>
       </g>
     </g>
     <g transform="translate(0,466)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#1b9e77" cx="238.417" cy="29" r="5"></circle><title>Angelique Kerber</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="204.748" cy="29" r="5"></circle><title>Annika Beck</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="212.23" cy="29" r="5"></circle><title>Daria Gavrilova</title>
-        </g>
+        <circle fill="#1b9e77" cx="238.417" cy="29" r="5"><title>Angelique Kerber</title></circle>
+        <circle fill="#1b9e77" cx="204.748" cy="29" r="5"><title>Annika Beck</title></circle>
+        <circle fill="#1b9e77" cx="212.23" cy="29" r="5"><title>Daria Gavrilova</title></circle>
       </g>
     </g>
     <g transform="translate(0,486)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="245.899" cy="29" r="5"></circle><title>Ben Kanute</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="212.23" cy="29" r="5"></circle><title>Ryan Bailie</title>
-        </g>
+        <circle fill="#d95f02" cx="245.899" cy="29" r="5"><title>Ben Kanute</title></circle>
+        <circle fill="#d95f02" cx="212.23" cy="29" r="5"><title>Ryan Bailie</title></circle>
       </g>
     </g>
     <g transform="translate(0,506)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="313.237" cy="29" r="5"></circle><title>Pablo Herrera Allepuz</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="328.201" cy="29" r="5"></circle><title>Simone Giannelli</title>
-        </g>
+        <circle fill="#d95f02" cx="313.237" cy="29" r="5"><title>Pablo Herrera Allepuz</title></circle>
+        <circle fill="#d95f02" cx="328.201" cy="29" r="5"><title>Simone Giannelli</title></circle>
       </g>
     </g>
     <g transform="translate(0,526)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="242.158" cy="29" r="5"></circle><title>Myong Hyok Kim</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="215.971" cy="29" r="5"></circle><title>Yosuke Nakayama</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="361.871" cy="29" r="5"></circle><title>Anastasiia Lysenko</title>
-        </g>
+        <circle fill="#d95f02" cx="242.158" cy="29" r="5"><title>Myong Hyok Kim</title></circle>
+        <circle fill="#d95f02" cx="215.971" cy="29" r="5"><title>Yosuke Nakayama</title></circle>
+        <circle fill="#1b9e77" cx="361.871" cy="29" r="5"><title>Anastasiia Lysenko</title></circle>
       </g>
     </g>
     <g transform="translate(0,546)">
       <g aria-label="dot" transform="translate(0.5,0.5)">
-        <g>
-          <circle fill="#d95f02" cx="227.194" cy="29" r="5"></circle><title>Amas Daniel</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="230.935" cy="29" r="5"></circle><title>Craig Miller</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="462.878" cy="29" r="5"></circle><title>Eduard Popp</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="227.194" cy="29" r="5"></circle><title>Frank Chamizo Marquez</title>
-        </g>
-        <g>
-          <circle fill="#d95f02" cx="208.489" cy="29" r="5"></circle><title>Soslan Daurov</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="234.676" cy="29" r="5"></circle><title>Adela Hanzlickova</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="182.302" cy="29" r="5"></circle><title>Katarzyna Krawczyk</title>
-        </g>
-        <g>
-          <circle fill="#1b9e77" cx="242.158" cy="29" r="5"></circle><title>Natalia Vorobeva</title>
-        </g>
+        <circle fill="#d95f02" cx="227.194" cy="29" r="5"><title>Amas Daniel</title></circle>
+        <circle fill="#d95f02" cx="230.935" cy="29" r="5"><title>Craig Miller</title></circle>
+        <circle fill="#d95f02" cx="462.878" cy="29" r="5"><title>Eduard Popp</title></circle>
+        <circle fill="#d95f02" cx="227.194" cy="29" r="5"><title>Frank Chamizo Marquez</title></circle>
+        <circle fill="#d95f02" cx="208.489" cy="29" r="5"><title>Soslan Daurov</title></circle>
+        <circle fill="#1b9e77" cx="234.676" cy="29" r="5"><title>Adela Hanzlickova</title></circle>
+        <circle fill="#1b9e77" cx="182.302" cy="29" r="5"><title>Katarzyna Krawczyk</title></circle>
+        <circle fill="#1b9e77" cx="242.158" cy="29" r="5"><title>Natalia Vorobeva</title></circle>
       </g>
     </g>
   </g>

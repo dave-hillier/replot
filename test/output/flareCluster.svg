@@ -267,762 +267,258 @@
     <path stroke="#bdbdbd" d="M396.75,2249.059C457.875,2249.059,457.875,2314.365,519,2314.365"></path>
   </g>
   <g aria-label="dot" transform="translate(0.5,0.5)">
-    <g>
-      <circle fill="#636363" cx="30" cy="780.03" r="3"></circle><title>/flare</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="70.641" r="3"></circle><title>/flare/analytics</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="256.452" r="3"></circle><title>/flare/animate</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="416.496" r="3"></circle><title>/flare/data</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="481.135" r="3"></circle><title>/flare/display</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="513.788" r="3"></circle><title>/flare/flex</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="565.1" r="3"></circle><title>/flare/physics</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="858.494" r="3"></circle><title>/flare/query</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1246.147" r="3"></circle><title>/flare/scale</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="1439.364" r="3"></circle><title>/flare/util</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="152.25" cy="1952.685" r="3"></circle><title>/flare/vis</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="23.994" r="3"></circle><title>/flare/analytics/cluster</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="75.306" r="3"></circle><title>/flare/analytics/graph</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="112.624" r="3"></circle><title>/flare/analytics/optimization</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="131.282" r="3"></circle><title>/flare/animate/Easing</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="140.612" r="3"></circle><title>/flare/animate/FunctionSequence</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="196.588" r="3"></circle><title>/flare/animate/interpolate</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="252.565" r="3"></circle><title>/flare/animate/ISchedulable</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="261.894" r="3"></circle><title>/flare/animate/Parallel</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="271.224" r="3"></circle><title>/flare/animate/Pause</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="280.553" r="3"></circle><title>/flare/animate/Scheduler</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="289.882" r="3"></circle><title>/flare/animate/Sequence</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="299.212" r="3"></circle><title>/flare/animate/Transition</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="308.541" r="3"></circle><title>/flare/animate/Transitioner</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="317.871" r="3"></circle><title>/flare/animate/TransitionEvent</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="327.2" r="3"></circle><title>/flare/animate/Tween</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="364.518" r="3"></circle><title>/flare/data/converters</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="401.835" r="3"></circle><title>/flare/data/DataField</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="411.165" r="3"></circle><title>/flare/data/DataSchema</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="420.494" r="3"></circle><title>/flare/data/DataSet</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="429.824" r="3"></circle><title>/flare/data/DataSource</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="439.153" r="3"></circle><title>/flare/data/DataTable</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="448.482" r="3"></circle><title>/flare/data/DataUtil</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="467.141" r="3"></circle><title>/flare/display/DirtySprite</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="476.471" r="3"></circle><title>/flare/display/LineSprite</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="485.8" r="3"></circle><title>/flare/display/RectSprite</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="495.129" r="3"></circle><title>/flare/display/TextSprite</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="513.788" r="3"></circle><title>/flare/flex/FlareVis</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="532.447" r="3"></circle><title>/flare/physics/DragForce</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="541.776" r="3"></circle><title>/flare/physics/GravityForce</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="551.106" r="3"></circle><title>/flare/physics/IForce</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="560.435" r="3"></circle><title>/flare/physics/NBodyForce</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="569.765" r="3"></circle><title>/flare/physics/Particle</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="579.094" r="3"></circle><title>/flare/physics/Simulation</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="588.424" r="3"></circle><title>/flare/physics/Spring</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="597.753" r="3"></circle><title>/flare/physics/SpringForce</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="616.412" r="3"></circle><title>/flare/query/AggregateExpression</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="625.741" r="3"></circle><title>/flare/query/And</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="635.071" r="3"></circle><title>/flare/query/Arithmetic</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="644.4" r="3"></circle><title>/flare/query/Average</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="653.729" r="3"></circle><title>/flare/query/BinaryExpression</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="663.059" r="3"></circle><title>/flare/query/Comparison</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="672.388" r="3"></circle><title>/flare/query/CompositeExpression</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="681.718" r="3"></circle><title>/flare/query/Count</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="691.047" r="3"></circle><title>/flare/query/DateUtil</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="700.376" r="3"></circle><title>/flare/query/Distinct</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="709.706" r="3"></circle><title>/flare/query/Expression</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="719.035" r="3"></circle><title>/flare/query/ExpressionIterator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="728.365" r="3"></circle><title>/flare/query/Fn</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="737.694" r="3"></circle><title>/flare/query/If</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="747.024" r="3"></circle><title>/flare/query/IsA</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="756.353" r="3"></circle><title>/flare/query/Literal</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="765.682" r="3"></circle><title>/flare/query/Match</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="775.012" r="3"></circle><title>/flare/query/Maximum</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="938.276" r="3"></circle><title>/flare/query/methods</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1101.541" r="3"></circle><title>/flare/query/Minimum</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1110.871" r="3"></circle><title>/flare/query/Not</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1120.2" r="3"></circle><title>/flare/query/Or</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1129.529" r="3"></circle><title>/flare/query/Query</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1138.859" r="3"></circle><title>/flare/query/Range</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1148.188" r="3"></circle><title>/flare/query/StringUtil</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1157.518" r="3"></circle><title>/flare/query/Sum</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1166.847" r="3"></circle><title>/flare/query/Variable</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1176.176" r="3"></circle><title>/flare/query/Variance</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1185.506" r="3"></circle><title>/flare/query/Xor</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1204.165" r="3"></circle><title>/flare/scale/IScaleMap</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1213.494" r="3"></circle><title>/flare/scale/LinearScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1222.824" r="3"></circle><title>/flare/scale/LogScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1232.153" r="3"></circle><title>/flare/scale/OrdinalScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1241.482" r="3"></circle><title>/flare/scale/QuantileScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1250.812" r="3"></circle><title>/flare/scale/QuantitativeScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1260.141" r="3"></circle><title>/flare/scale/RootScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1269.471" r="3"></circle><title>/flare/scale/Scale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1278.8" r="3"></circle><title>/flare/scale/ScaleType</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1288.129" r="3"></circle><title>/flare/scale/TimeScale</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1306.788" r="3"></circle><title>/flare/util/Arrays</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1316.118" r="3"></circle><title>/flare/util/Colors</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1325.447" r="3"></circle><title>/flare/util/Dates</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1334.776" r="3"></circle><title>/flare/util/Displays</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1344.106" r="3"></circle><title>/flare/util/Filter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1353.435" r="3"></circle><title>/flare/util/Geometry</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1376.759" r="3"></circle><title>/flare/util/heap</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1400.082" r="3"></circle><title>/flare/util/IEvaluable</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1409.412" r="3"></circle><title>/flare/util/IPredicate</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1418.741" r="3"></circle><title>/flare/util/IValueProxy</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1446.729" r="3"></circle><title>/flare/util/math</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1474.718" r="3"></circle><title>/flare/util/Maths</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1484.047" r="3"></circle><title>/flare/util/Orientation</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1516.7" r="3"></circle><title>/flare/util/palette</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1549.353" r="3"></circle><title>/flare/util/Property</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1558.682" r="3"></circle><title>/flare/util/Shapes</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1568.012" r="3"></circle><title>/flare/util/Sort</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1577.341" r="3"></circle><title>/flare/util/Stats</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1586.671" r="3"></circle><title>/flare/util/Strings</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1623.988" r="3"></circle><title>/flare/vis/axis</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1707.953" r="3"></circle><title>/flare/vis/controls</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="1828.717" r="3"></circle><title>/flare/vis/data</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1927.194" r="3"></circle><title>/flare/vis/events</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1969.176" r="3"></circle><title>/flare/vis/legend</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="274.5" cy="2222.767" r="3"></circle><title>/flare/vis/operator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2389" r="3"></circle><title>/flare/vis/Visualization</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="10" r="3"></circle><title>/flare/analytics/cluster/AgglomerativeCluster</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="19.329" r="3"></circle><title>/flare/analytics/cluster/CommunityStructure</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="28.659" r="3"></circle><title>/flare/analytics/cluster/HierarchicalCluster</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="37.988" r="3"></circle><title>/flare/analytics/cluster/MergeEdge</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="56.647" r="3"></circle><title>/flare/analytics/graph/BetweennessCentrality</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="65.976" r="3"></circle><title>/flare/analytics/graph/LinkDistance</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="75.306" r="3"></circle><title>/flare/analytics/graph/MaxFlowMinCut</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="84.635" r="3"></circle><title>/flare/analytics/graph/ShortestPaths</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="93.965" r="3"></circle><title>/flare/analytics/graph/SpanningTree</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="112.624" r="3"></circle><title>/flare/analytics/optimization/AspectRatioBanker</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="159.271" r="3"></circle><title>/flare/animate/interpolate/ArrayInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="168.6" r="3"></circle><title>/flare/animate/interpolate/ColorInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="177.929" r="3"></circle><title>/flare/animate/interpolate/DateInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="187.259" r="3"></circle><title>/flare/animate/interpolate/Interpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="196.588" r="3"></circle><title>/flare/animate/interpolate/MatrixInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="205.918" r="3"></circle><title>/flare/animate/interpolate/NumberInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="215.247" r="3"></circle><title>/flare/animate/interpolate/ObjectInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="224.576" r="3"></circle><title>/flare/animate/interpolate/PointInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="233.906" r="3"></circle><title>/flare/animate/interpolate/RectangleInterpolator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="345.859" r="3"></circle><title>/flare/data/converters/Converters</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="355.188" r="3"></circle><title>/flare/data/converters/DelimitedTextConverter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="364.518" r="3"></circle><title>/flare/data/converters/GraphMLConverter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="373.847" r="3"></circle><title>/flare/data/converters/IDataConverter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="383.176" r="3"></circle><title>/flare/data/converters/JSONConverter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="793.671" r="3"></circle><title>/flare/query/methods/add</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="803" r="3"></circle><title>/flare/query/methods/and</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="812.329" r="3"></circle><title>/flare/query/methods/average</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="821.659" r="3"></circle><title>/flare/query/methods/count</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="830.988" r="3"></circle><title>/flare/query/methods/distinct</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="840.318" r="3"></circle><title>/flare/query/methods/div</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="849.647" r="3"></circle><title>/flare/query/methods/eq</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="858.976" r="3"></circle><title>/flare/query/methods/fn</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="868.306" r="3"></circle><title>/flare/query/methods/gt</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="877.635" r="3"></circle><title>/flare/query/methods/gte</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="886.965" r="3"></circle><title>/flare/query/methods/iff</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="896.294" r="3"></circle><title>/flare/query/methods/isa</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="905.624" r="3"></circle><title>/flare/query/methods/lt</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="914.953" r="3"></circle><title>/flare/query/methods/lte</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="924.282" r="3"></circle><title>/flare/query/methods/max</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="933.612" r="3"></circle><title>/flare/query/methods/min</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="942.941" r="3"></circle><title>/flare/query/methods/mod</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="952.271" r="3"></circle><title>/flare/query/methods/mul</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="961.6" r="3"></circle><title>/flare/query/methods/neq</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="970.929" r="3"></circle><title>/flare/query/methods/not</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="980.259" r="3"></circle><title>/flare/query/methods/or</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="989.588" r="3"></circle><title>/flare/query/methods/orderby</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="998.918" r="3"></circle><title>/flare/query/methods/range</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1008.247" r="3"></circle><title>/flare/query/methods/select</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1017.576" r="3"></circle><title>/flare/query/methods/stddev</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1026.906" r="3"></circle><title>/flare/query/methods/sub</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1036.235" r="3"></circle><title>/flare/query/methods/sum</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1045.565" r="3"></circle><title>/flare/query/methods/update</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1054.894" r="3"></circle><title>/flare/query/methods/variance</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1064.224" r="3"></circle><title>/flare/query/methods/where</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1073.553" r="3"></circle><title>/flare/query/methods/xor</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1082.882" r="3"></circle><title>/flare/query/methods/_</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1372.094" r="3"></circle><title>/flare/util/heap/FibonacciHeap</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1381.424" r="3"></circle><title>/flare/util/heap/HeapNode</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1437.4" r="3"></circle><title>/flare/util/math/DenseMatrix</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1446.729" r="3"></circle><title>/flare/util/math/IMatrix</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1456.059" r="3"></circle><title>/flare/util/math/SparseMatrix</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1502.706" r="3"></circle><title>/flare/util/palette/ColorPalette</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1512.035" r="3"></circle><title>/flare/util/palette/Palette</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1521.365" r="3"></circle><title>/flare/util/palette/ShapePalette</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1530.694" r="3"></circle><title>/flare/util/palette/SizePalette</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1605.329" r="3"></circle><title>/flare/vis/axis/Axes</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1614.659" r="3"></circle><title>/flare/vis/axis/Axis</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1623.988" r="3"></circle><title>/flare/vis/axis/AxisGridLine</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1633.318" r="3"></circle><title>/flare/vis/axis/AxisLabel</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1642.647" r="3"></circle><title>/flare/vis/axis/CartesianAxes</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1661.306" r="3"></circle><title>/flare/vis/controls/AnchorControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1670.635" r="3"></circle><title>/flare/vis/controls/ClickControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1679.965" r="3"></circle><title>/flare/vis/controls/Control</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1689.294" r="3"></circle><title>/flare/vis/controls/ControlList</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1698.624" r="3"></circle><title>/flare/vis/controls/DragControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1707.953" r="3"></circle><title>/flare/vis/controls/ExpandControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1717.282" r="3"></circle><title>/flare/vis/controls/HoverControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1726.612" r="3"></circle><title>/flare/vis/controls/IControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1735.941" r="3"></circle><title>/flare/vis/controls/PanZoomControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1745.271" r="3"></circle><title>/flare/vis/controls/SelectionControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1754.6" r="3"></circle><title>/flare/vis/controls/TooltipControl</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1773.259" r="3"></circle><title>/flare/vis/data/Data</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1782.588" r="3"></circle><title>/flare/vis/data/DataList</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1791.918" r="3"></circle><title>/flare/vis/data/DataSprite</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1801.247" r="3"></circle><title>/flare/vis/data/EdgeSprite</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1810.576" r="3"></circle><title>/flare/vis/data/NodeSprite</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="1843.229" r="3"></circle><title>/flare/vis/data/render</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1875.882" r="3"></circle><title>/flare/vis/data/ScaleBinding</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1885.212" r="3"></circle><title>/flare/vis/data/Tree</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1894.541" r="3"></circle><title>/flare/vis/data/TreeBuilder</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1913.2" r="3"></circle><title>/flare/vis/events/DataEvent</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1922.529" r="3"></circle><title>/flare/vis/events/SelectionEvent</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1931.859" r="3"></circle><title>/flare/vis/events/TooltipEvent</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1941.188" r="3"></circle><title>/flare/vis/events/VisualizationEvent</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1959.847" r="3"></circle><title>/flare/vis/legend/Legend</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1969.176" r="3"></circle><title>/flare/vis/legend/LegendItem</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1978.506" r="3"></circle><title>/flare/vis/legend/LegendRange</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="2006.494" r="3"></circle><title>/flare/vis/operator/distortion</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="2053.141" r="3"></circle><title>/flare/vis/operator/encoder</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="2099.788" r="3"></circle><title>/flare/vis/operator/filter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2127.776" r="3"></circle><title>/flare/vis/operator/IOperator</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="2155.765" r="3"></circle><title>/flare/vis/operator/label</title>
-    </g>
-    <g>
-      <circle fill="#636363" cx="396.75" cy="2249.059" r="3"></circle><title>/flare/vis/operator/layout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2333.024" r="3"></circle><title>/flare/vis/operator/Operator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2342.353" r="3"></circle><title>/flare/vis/operator/OperatorList</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2351.682" r="3"></circle><title>/flare/vis/operator/OperatorSequence</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2361.012" r="3"></circle><title>/flare/vis/operator/OperatorSwitch</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2370.341" r="3"></circle><title>/flare/vis/operator/SortOperator</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1829.235" r="3"></circle><title>/flare/vis/data/render/ArrowType</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1838.565" r="3"></circle><title>/flare/vis/data/render/EdgeRenderer</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1847.894" r="3"></circle><title>/flare/vis/data/render/IRenderer</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1857.224" r="3"></circle><title>/flare/vis/data/render/ShapeRenderer</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="1997.165" r="3"></circle><title>/flare/vis/operator/distortion/BifocalDistortion</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2006.494" r="3"></circle><title>/flare/vis/operator/distortion/Distortion</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2015.824" r="3"></circle><title>/flare/vis/operator/distortion/FisheyeDistortion</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2034.482" r="3"></circle><title>/flare/vis/operator/encoder/ColorEncoder</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2043.812" r="3"></circle><title>/flare/vis/operator/encoder/Encoder</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2053.141" r="3"></circle><title>/flare/vis/operator/encoder/PropertyEncoder</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2062.471" r="3"></circle><title>/flare/vis/operator/encoder/ShapeEncoder</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2071.8" r="3"></circle><title>/flare/vis/operator/encoder/SizeEncoder</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2090.459" r="3"></circle><title>/flare/vis/operator/filter/FisheyeTreeFilter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2099.788" r="3"></circle><title>/flare/vis/operator/filter/GraphDistanceFilter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2109.118" r="3"></circle><title>/flare/vis/operator/filter/VisibilityFilter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2146.435" r="3"></circle><title>/flare/vis/operator/label/Labeler</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2155.765" r="3"></circle><title>/flare/vis/operator/label/RadialLabeler</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2165.094" r="3"></circle><title>/flare/vis/operator/label/StackedAreaLabeler</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2183.753" r="3"></circle><title>/flare/vis/operator/layout/AxisLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2193.082" r="3"></circle><title>/flare/vis/operator/layout/BundledEdgeRouter</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2202.412" r="3"></circle><title>/flare/vis/operator/layout/CircleLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2211.741" r="3"></circle><title>/flare/vis/operator/layout/CirclePackingLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2221.071" r="3"></circle><title>/flare/vis/operator/layout/DendrogramLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2230.4" r="3"></circle><title>/flare/vis/operator/layout/ForceDirectedLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2239.729" r="3"></circle><title>/flare/vis/operator/layout/IcicleTreeLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2249.059" r="3"></circle><title>/flare/vis/operator/layout/IndentedTreeLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2258.388" r="3"></circle><title>/flare/vis/operator/layout/Layout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2267.718" r="3"></circle><title>/flare/vis/operator/layout/NodeLinkTreeLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2277.047" r="3"></circle><title>/flare/vis/operator/layout/PieLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2286.376" r="3"></circle><title>/flare/vis/operator/layout/RadialTreeLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2295.706" r="3"></circle><title>/flare/vis/operator/layout/RandomLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2305.035" r="3"></circle><title>/flare/vis/operator/layout/StackedAreaLayout</title>
-    </g>
-    <g>
-      <circle fill="#bdbdbd" cx="519" cy="2314.365" r="3"></circle><title>/flare/vis/operator/layout/TreeMapLayout</title>
-    </g>
+    <circle fill="#636363" cx="30" cy="780.03" r="3"><title>/flare</title></circle>
+    <circle fill="#636363" cx="274.5" cy="70.641" r="3"><title>/flare/analytics</title></circle>
+    <circle fill="#636363" cx="274.5" cy="256.452" r="3"><title>/flare/animate</title></circle>
+    <circle fill="#636363" cx="274.5" cy="416.496" r="3"><title>/flare/data</title></circle>
+    <circle fill="#636363" cx="396.75" cy="481.135" r="3"><title>/flare/display</title></circle>
+    <circle fill="#636363" cx="396.75" cy="513.788" r="3"><title>/flare/flex</title></circle>
+    <circle fill="#636363" cx="396.75" cy="565.1" r="3"><title>/flare/physics</title></circle>
+    <circle fill="#636363" cx="274.5" cy="858.494" r="3"><title>/flare/query</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1246.147" r="3"><title>/flare/scale</title></circle>
+    <circle fill="#636363" cx="274.5" cy="1439.364" r="3"><title>/flare/util</title></circle>
+    <circle fill="#636363" cx="152.25" cy="1952.685" r="3"><title>/flare/vis</title></circle>
+    <circle fill="#636363" cx="396.75" cy="23.994" r="3"><title>/flare/analytics/cluster</title></circle>
+    <circle fill="#636363" cx="396.75" cy="75.306" r="3"><title>/flare/analytics/graph</title></circle>
+    <circle fill="#636363" cx="396.75" cy="112.624" r="3"><title>/flare/analytics/optimization</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="131.282" r="3"><title>/flare/animate/Easing</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="140.612" r="3"><title>/flare/animate/FunctionSequence</title></circle>
+    <circle fill="#636363" cx="396.75" cy="196.588" r="3"><title>/flare/animate/interpolate</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="252.565" r="3"><title>/flare/animate/ISchedulable</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="261.894" r="3"><title>/flare/animate/Parallel</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="271.224" r="3"><title>/flare/animate/Pause</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="280.553" r="3"><title>/flare/animate/Scheduler</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="289.882" r="3"><title>/flare/animate/Sequence</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="299.212" r="3"><title>/flare/animate/Transition</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="308.541" r="3"><title>/flare/animate/Transitioner</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="317.871" r="3"><title>/flare/animate/TransitionEvent</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="327.2" r="3"><title>/flare/animate/Tween</title></circle>
+    <circle fill="#636363" cx="396.75" cy="364.518" r="3"><title>/flare/data/converters</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="401.835" r="3"><title>/flare/data/DataField</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="411.165" r="3"><title>/flare/data/DataSchema</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="420.494" r="3"><title>/flare/data/DataSet</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="429.824" r="3"><title>/flare/data/DataSource</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="439.153" r="3"><title>/flare/data/DataTable</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="448.482" r="3"><title>/flare/data/DataUtil</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="467.141" r="3"><title>/flare/display/DirtySprite</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="476.471" r="3"><title>/flare/display/LineSprite</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="485.8" r="3"><title>/flare/display/RectSprite</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="495.129" r="3"><title>/flare/display/TextSprite</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="513.788" r="3"><title>/flare/flex/FlareVis</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="532.447" r="3"><title>/flare/physics/DragForce</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="541.776" r="3"><title>/flare/physics/GravityForce</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="551.106" r="3"><title>/flare/physics/IForce</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="560.435" r="3"><title>/flare/physics/NBodyForce</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="569.765" r="3"><title>/flare/physics/Particle</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="579.094" r="3"><title>/flare/physics/Simulation</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="588.424" r="3"><title>/flare/physics/Spring</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="597.753" r="3"><title>/flare/physics/SpringForce</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="616.412" r="3"><title>/flare/query/AggregateExpression</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="625.741" r="3"><title>/flare/query/And</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="635.071" r="3"><title>/flare/query/Arithmetic</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="644.4" r="3"><title>/flare/query/Average</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="653.729" r="3"><title>/flare/query/BinaryExpression</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="663.059" r="3"><title>/flare/query/Comparison</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="672.388" r="3"><title>/flare/query/CompositeExpression</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="681.718" r="3"><title>/flare/query/Count</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="691.047" r="3"><title>/flare/query/DateUtil</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="700.376" r="3"><title>/flare/query/Distinct</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="709.706" r="3"><title>/flare/query/Expression</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="719.035" r="3"><title>/flare/query/ExpressionIterator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="728.365" r="3"><title>/flare/query/Fn</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="737.694" r="3"><title>/flare/query/If</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="747.024" r="3"><title>/flare/query/IsA</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="756.353" r="3"><title>/flare/query/Literal</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="765.682" r="3"><title>/flare/query/Match</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="775.012" r="3"><title>/flare/query/Maximum</title></circle>
+    <circle fill="#636363" cx="396.75" cy="938.276" r="3"><title>/flare/query/methods</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1101.541" r="3"><title>/flare/query/Minimum</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1110.871" r="3"><title>/flare/query/Not</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1120.2" r="3"><title>/flare/query/Or</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1129.529" r="3"><title>/flare/query/Query</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1138.859" r="3"><title>/flare/query/Range</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1148.188" r="3"><title>/flare/query/StringUtil</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1157.518" r="3"><title>/flare/query/Sum</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1166.847" r="3"><title>/flare/query/Variable</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1176.176" r="3"><title>/flare/query/Variance</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1185.506" r="3"><title>/flare/query/Xor</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1204.165" r="3"><title>/flare/scale/IScaleMap</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1213.494" r="3"><title>/flare/scale/LinearScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1222.824" r="3"><title>/flare/scale/LogScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1232.153" r="3"><title>/flare/scale/OrdinalScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1241.482" r="3"><title>/flare/scale/QuantileScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1250.812" r="3"><title>/flare/scale/QuantitativeScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1260.141" r="3"><title>/flare/scale/RootScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1269.471" r="3"><title>/flare/scale/Scale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1278.8" r="3"><title>/flare/scale/ScaleType</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1288.129" r="3"><title>/flare/scale/TimeScale</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1306.788" r="3"><title>/flare/util/Arrays</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1316.118" r="3"><title>/flare/util/Colors</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1325.447" r="3"><title>/flare/util/Dates</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1334.776" r="3"><title>/flare/util/Displays</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1344.106" r="3"><title>/flare/util/Filter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1353.435" r="3"><title>/flare/util/Geometry</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1376.759" r="3"><title>/flare/util/heap</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1400.082" r="3"><title>/flare/util/IEvaluable</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1409.412" r="3"><title>/flare/util/IPredicate</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1418.741" r="3"><title>/flare/util/IValueProxy</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1446.729" r="3"><title>/flare/util/math</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1474.718" r="3"><title>/flare/util/Maths</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1484.047" r="3"><title>/flare/util/Orientation</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1516.7" r="3"><title>/flare/util/palette</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1549.353" r="3"><title>/flare/util/Property</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1558.682" r="3"><title>/flare/util/Shapes</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1568.012" r="3"><title>/flare/util/Sort</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1577.341" r="3"><title>/flare/util/Stats</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1586.671" r="3"><title>/flare/util/Strings</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1623.988" r="3"><title>/flare/vis/axis</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1707.953" r="3"><title>/flare/vis/controls</title></circle>
+    <circle fill="#636363" cx="274.5" cy="1828.717" r="3"><title>/flare/vis/data</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1927.194" r="3"><title>/flare/vis/events</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1969.176" r="3"><title>/flare/vis/legend</title></circle>
+    <circle fill="#636363" cx="274.5" cy="2222.767" r="3"><title>/flare/vis/operator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2389" r="3"><title>/flare/vis/Visualization</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="10" r="3"><title>/flare/analytics/cluster/AgglomerativeCluster</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="19.329" r="3"><title>/flare/analytics/cluster/CommunityStructure</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="28.659" r="3"><title>/flare/analytics/cluster/HierarchicalCluster</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="37.988" r="3"><title>/flare/analytics/cluster/MergeEdge</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="56.647" r="3"><title>/flare/analytics/graph/BetweennessCentrality</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="65.976" r="3"><title>/flare/analytics/graph/LinkDistance</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="75.306" r="3"><title>/flare/analytics/graph/MaxFlowMinCut</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="84.635" r="3"><title>/flare/analytics/graph/ShortestPaths</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="93.965" r="3"><title>/flare/analytics/graph/SpanningTree</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="112.624" r="3"><title>/flare/analytics/optimization/AspectRatioBanker</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="159.271" r="3"><title>/flare/animate/interpolate/ArrayInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="168.6" r="3"><title>/flare/animate/interpolate/ColorInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="177.929" r="3"><title>/flare/animate/interpolate/DateInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="187.259" r="3"><title>/flare/animate/interpolate/Interpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="196.588" r="3"><title>/flare/animate/interpolate/MatrixInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="205.918" r="3"><title>/flare/animate/interpolate/NumberInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="215.247" r="3"><title>/flare/animate/interpolate/ObjectInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="224.576" r="3"><title>/flare/animate/interpolate/PointInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="233.906" r="3"><title>/flare/animate/interpolate/RectangleInterpolator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="345.859" r="3"><title>/flare/data/converters/Converters</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="355.188" r="3"><title>/flare/data/converters/DelimitedTextConverter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="364.518" r="3"><title>/flare/data/converters/GraphMLConverter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="373.847" r="3"><title>/flare/data/converters/IDataConverter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="383.176" r="3"><title>/flare/data/converters/JSONConverter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="793.671" r="3"><title>/flare/query/methods/add</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="803" r="3"><title>/flare/query/methods/and</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="812.329" r="3"><title>/flare/query/methods/average</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="821.659" r="3"><title>/flare/query/methods/count</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="830.988" r="3"><title>/flare/query/methods/distinct</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="840.318" r="3"><title>/flare/query/methods/div</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="849.647" r="3"><title>/flare/query/methods/eq</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="858.976" r="3"><title>/flare/query/methods/fn</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="868.306" r="3"><title>/flare/query/methods/gt</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="877.635" r="3"><title>/flare/query/methods/gte</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="886.965" r="3"><title>/flare/query/methods/iff</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="896.294" r="3"><title>/flare/query/methods/isa</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="905.624" r="3"><title>/flare/query/methods/lt</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="914.953" r="3"><title>/flare/query/methods/lte</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="924.282" r="3"><title>/flare/query/methods/max</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="933.612" r="3"><title>/flare/query/methods/min</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="942.941" r="3"><title>/flare/query/methods/mod</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="952.271" r="3"><title>/flare/query/methods/mul</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="961.6" r="3"><title>/flare/query/methods/neq</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="970.929" r="3"><title>/flare/query/methods/not</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="980.259" r="3"><title>/flare/query/methods/or</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="989.588" r="3"><title>/flare/query/methods/orderby</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="998.918" r="3"><title>/flare/query/methods/range</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1008.247" r="3"><title>/flare/query/methods/select</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1017.576" r="3"><title>/flare/query/methods/stddev</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1026.906" r="3"><title>/flare/query/methods/sub</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1036.235" r="3"><title>/flare/query/methods/sum</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1045.565" r="3"><title>/flare/query/methods/update</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1054.894" r="3"><title>/flare/query/methods/variance</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1064.224" r="3"><title>/flare/query/methods/where</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1073.553" r="3"><title>/flare/query/methods/xor</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1082.882" r="3"><title>/flare/query/methods/_</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1372.094" r="3"><title>/flare/util/heap/FibonacciHeap</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1381.424" r="3"><title>/flare/util/heap/HeapNode</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1437.4" r="3"><title>/flare/util/math/DenseMatrix</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1446.729" r="3"><title>/flare/util/math/IMatrix</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1456.059" r="3"><title>/flare/util/math/SparseMatrix</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1502.706" r="3"><title>/flare/util/palette/ColorPalette</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1512.035" r="3"><title>/flare/util/palette/Palette</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1521.365" r="3"><title>/flare/util/palette/ShapePalette</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1530.694" r="3"><title>/flare/util/palette/SizePalette</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1605.329" r="3"><title>/flare/vis/axis/Axes</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1614.659" r="3"><title>/flare/vis/axis/Axis</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1623.988" r="3"><title>/flare/vis/axis/AxisGridLine</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1633.318" r="3"><title>/flare/vis/axis/AxisLabel</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1642.647" r="3"><title>/flare/vis/axis/CartesianAxes</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1661.306" r="3"><title>/flare/vis/controls/AnchorControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1670.635" r="3"><title>/flare/vis/controls/ClickControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1679.965" r="3"><title>/flare/vis/controls/Control</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1689.294" r="3"><title>/flare/vis/controls/ControlList</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1698.624" r="3"><title>/flare/vis/controls/DragControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1707.953" r="3"><title>/flare/vis/controls/ExpandControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1717.282" r="3"><title>/flare/vis/controls/HoverControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1726.612" r="3"><title>/flare/vis/controls/IControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1735.941" r="3"><title>/flare/vis/controls/PanZoomControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1745.271" r="3"><title>/flare/vis/controls/SelectionControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1754.6" r="3"><title>/flare/vis/controls/TooltipControl</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1773.259" r="3"><title>/flare/vis/data/Data</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1782.588" r="3"><title>/flare/vis/data/DataList</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1791.918" r="3"><title>/flare/vis/data/DataSprite</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1801.247" r="3"><title>/flare/vis/data/EdgeSprite</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1810.576" r="3"><title>/flare/vis/data/NodeSprite</title></circle>
+    <circle fill="#636363" cx="396.75" cy="1843.229" r="3"><title>/flare/vis/data/render</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1875.882" r="3"><title>/flare/vis/data/ScaleBinding</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1885.212" r="3"><title>/flare/vis/data/Tree</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1894.541" r="3"><title>/flare/vis/data/TreeBuilder</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1913.2" r="3"><title>/flare/vis/events/DataEvent</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1922.529" r="3"><title>/flare/vis/events/SelectionEvent</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1931.859" r="3"><title>/flare/vis/events/TooltipEvent</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1941.188" r="3"><title>/flare/vis/events/VisualizationEvent</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1959.847" r="3"><title>/flare/vis/legend/Legend</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1969.176" r="3"><title>/flare/vis/legend/LegendItem</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1978.506" r="3"><title>/flare/vis/legend/LegendRange</title></circle>
+    <circle fill="#636363" cx="396.75" cy="2006.494" r="3"><title>/flare/vis/operator/distortion</title></circle>
+    <circle fill="#636363" cx="396.75" cy="2053.141" r="3"><title>/flare/vis/operator/encoder</title></circle>
+    <circle fill="#636363" cx="396.75" cy="2099.788" r="3"><title>/flare/vis/operator/filter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2127.776" r="3"><title>/flare/vis/operator/IOperator</title></circle>
+    <circle fill="#636363" cx="396.75" cy="2155.765" r="3"><title>/flare/vis/operator/label</title></circle>
+    <circle fill="#636363" cx="396.75" cy="2249.059" r="3"><title>/flare/vis/operator/layout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2333.024" r="3"><title>/flare/vis/operator/Operator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2342.353" r="3"><title>/flare/vis/operator/OperatorList</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2351.682" r="3"><title>/flare/vis/operator/OperatorSequence</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2361.012" r="3"><title>/flare/vis/operator/OperatorSwitch</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2370.341" r="3"><title>/flare/vis/operator/SortOperator</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1829.235" r="3"><title>/flare/vis/data/render/ArrowType</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1838.565" r="3"><title>/flare/vis/data/render/EdgeRenderer</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1847.894" r="3"><title>/flare/vis/data/render/IRenderer</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1857.224" r="3"><title>/flare/vis/data/render/ShapeRenderer</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="1997.165" r="3"><title>/flare/vis/operator/distortion/BifocalDistortion</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2006.494" r="3"><title>/flare/vis/operator/distortion/Distortion</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2015.824" r="3"><title>/flare/vis/operator/distortion/FisheyeDistortion</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2034.482" r="3"><title>/flare/vis/operator/encoder/ColorEncoder</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2043.812" r="3"><title>/flare/vis/operator/encoder/Encoder</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2053.141" r="3"><title>/flare/vis/operator/encoder/PropertyEncoder</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2062.471" r="3"><title>/flare/vis/operator/encoder/ShapeEncoder</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2071.8" r="3"><title>/flare/vis/operator/encoder/SizeEncoder</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2090.459" r="3"><title>/flare/vis/operator/filter/FisheyeTreeFilter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2099.788" r="3"><title>/flare/vis/operator/filter/GraphDistanceFilter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2109.118" r="3"><title>/flare/vis/operator/filter/VisibilityFilter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2146.435" r="3"><title>/flare/vis/operator/label/Labeler</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2155.765" r="3"><title>/flare/vis/operator/label/RadialLabeler</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2165.094" r="3"><title>/flare/vis/operator/label/StackedAreaLabeler</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2183.753" r="3"><title>/flare/vis/operator/layout/AxisLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2193.082" r="3"><title>/flare/vis/operator/layout/BundledEdgeRouter</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2202.412" r="3"><title>/flare/vis/operator/layout/CircleLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2211.741" r="3"><title>/flare/vis/operator/layout/CirclePackingLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2221.071" r="3"><title>/flare/vis/operator/layout/DendrogramLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2230.4" r="3"><title>/flare/vis/operator/layout/ForceDirectedLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2239.729" r="3"><title>/flare/vis/operator/layout/IcicleTreeLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2249.059" r="3"><title>/flare/vis/operator/layout/IndentedTreeLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2258.388" r="3"><title>/flare/vis/operator/layout/Layout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2267.718" r="3"><title>/flare/vis/operator/layout/NodeLinkTreeLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2277.047" r="3"><title>/flare/vis/operator/layout/PieLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2286.376" r="3"><title>/flare/vis/operator/layout/RadialTreeLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2295.706" r="3"><title>/flare/vis/operator/layout/RandomLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2305.035" r="3"><title>/flare/vis/operator/layout/StackedAreaLayout</title></circle>
+    <circle fill="#bdbdbd" cx="519" cy="2314.365" r="3"><title>/flare/vis/operator/layout/TreeMapLayout</title></circle>
   </g>
   <g aria-label="text" stroke="var(--plot-background)" stroke-width="3" stroke-linejoin="round" paint-order="stroke" text-anchor="start" transform="translate(6.5,0.5)">
     <text transform="translate(519,131.282)" y="0.32em">Easing<title>/flare/animate/Easing</title></text>

@@ -183,18 +183,26 @@ export class Dot extends (Mark as unknown as new (...args: any[]) => RenderableM
     const indirect = indirectStyleProps(this);
     const direct = directStyleProps(this);
     const transform = transformProp(this, {x: X && scales.x, y: Y && scales.y});
-    const items = indices.map((i, k) => {
+    const items = indices.map((i) => {
       const channel = channelStyleProps(i, channels);
+      // The title channel is a CHILD of the dot, not a sibling: upstream
+      // appends it to the selected dot (style.js's applyTitle), so a titled
+      // dot is <circle><title/></circle> and never a <g> wrapper.
+      const title = withTitleChild(this, channels, i, null);
       let element: ReactNode;
       if (isCircle) {
-        element = h("circle", {
-          key: k,
-          ...direct,
-          ...channel,
-          cx: X ? X[i] : cx,
-          cy: Y ? Y[i] : cy,
-          r: R ? R[i] : r
-        });
+        element = h(
+          "circle",
+          {
+            key: i,
+            ...direct,
+            ...channel,
+            cx: X ? X[i] : cx,
+            cy: Y ? Y[i] : cy,
+            r: R ? R[i] : r
+          },
+          title
+        );
       } else {
         const tx = X ? X[i] : cx;
         const ty = Y ? Y[i] : cy;
@@ -204,16 +212,18 @@ export class Dot extends (Mark as unknown as new (...args: any[]) => RenderableM
         const sym = S ? S[i] : symbol;
         const sz = R ? R[i] * R[i] * Math.PI : size;
         sym.draw(p, sz);
-        element = h("path", {
-          key: k,
-          ...direct,
-          ...channel,
-          transform: t,
-          d: `${p}`
-        });
+        element = h(
+          "path",
+          {
+            key: i,
+            ...direct,
+            ...channel,
+            transform: t,
+            d: `${p}`
+          },
+          title
+        );
       }
-      const titled = withTitleChild(this, channels, i, null);
-      if (titled) element = h("g", {key: k}, element, titled);
       return withHrefWrap(channels, this.target, i, element);
     });
     return h("g", {...indirect, ...transform}, items);
