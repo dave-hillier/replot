@@ -159,10 +159,14 @@ export function computePlot(options: any = {}): any {
 
   // Initialize the context.
   const context = createContext(options);
-  // The figure/svg is produced by the imperative plot() entry (which renders
-  // the marks via React). computePlot only provides a holder that plot()
-  // mutates; the dispatchValue closure below reads through it so it tracks the
-  // latest figure.
+  // The element the pointer interaction reports its selection through: the
+  // <figure> when there is one, the <svg> otherwise, matching upstream. This is
+  // live plumbing for the React path, not a leftover from the imperative one:
+  // the React entry point writes its root here on every recompute and
+  // re-points it when the root changes (src/react/Replot.tsx), which is what
+  // gives the dispatchValue closure below a target to write to. plot() fills
+  // the same holder while it builds the figure, but renders statically, so
+  // nothing ever dispatches through it there; see the plot() JSDoc.
   const figureHolder: {current: any} = {current: null};
   context.figureHolder = figureHolder;
   context.className = className;
@@ -185,7 +189,11 @@ export function computePlot(options: any = {}): any {
     return {...state, channels: {...state.channels, ...facetState?.channels}};
   };
 
-  // Allows e.g. the pointer transform to support viewof.
+  // Allows e.g. the pointer transform to support viewof. Upstream’s pointer
+  // closure calls this (src/interactions/pointer.js); on a Replot plot the
+  // React entry point reaches it as well, through pointerStore’s value sink.
+  // plot() itself never does: a static render attaches no listener to report
+  // through in the first place.
   context.dispatchValue = (value) => {
     const figure = figureHolder.current;
     if (figure == null || figure.value === value) return;
@@ -276,6 +284,34 @@ export function computePlot(options: any = {}): any {
   };
 }
 
+/**
+ * Renders a complete plot as a detached SVG element, wrapping it in an HTML
+ * figure element when the plot has a title, subtitle, caption or legend. The
+ * returned element is decorated with `scale` and `legend` methods, for sharing
+ * scales and legends across plots.
+ *
+ * The render is synchronous and static, and that is by design rather than a
+ * gap waiting to be filled. `plot()` has no React root, so no reconciler can
+ * re-render a mark in response to a pointer event and no commit owns the
+ * lifetime a pointer listener would need. Upstream Observable Plot attaches
+ * live pointer listeners here; Replot deliberately does not, and the
+ * differences a user will notice are:
+ *
+ * - nothing listens for pointerenter, pointermove, pointerdown or
+ *   pointerleave on the returned element, so hovering the plot does nothing;
+ * - the pointer transform renders with no focused point, so the tip and
+ *   crosshair marks that use it are drawn empty: a mark with an inferred tip,
+ *   such as `Plot.lineY(data, {tip: true})`, renders an empty tip group rather
+ *   than a tooltip;
+ * - `.value` is never assigned and no bubbling `input` event is ever
+ *   dispatched, so the returned element does not work as a viewof, and reading
+ *   it to observe a selection yields undefined.
+ *
+ * For interaction, use the React entry point, `replot/react`: <Replot> mounts a
+ * real React root and drives the pointer interaction from it, reporting the
+ * selection through its `onValue` prop and, following upstream, through
+ * `.value` and a bubbling `input` event on the plot’s root element.
+ */
 export function plot(options: any = {}) {
   const computed: any = computePlot(options);
   const {className, scales, scaleDescriptors, context} = computed;
@@ -320,7 +356,10 @@ export function plot(options: any = {}) {
     if (subtitle != null) fig.append(createTitleElement(document, subtitle, "h3"));
     fig.append(...legends, svg);
     if (caption != null) fig.append(createFigcaption(document, caption));
-    if ("value" in svg) (fig.value = svg.value), delete svg.value;
+    // Upstream carries the pointer’s current selection from the svg onto the
+    // figure here, so that wrapping a plot does not lose a value it has already
+    // reported. Nothing on this path ever assigns one, so there is nothing to
+    // carry; see the plot() JSDoc.
     figureHolder.current = fig;
   }
 

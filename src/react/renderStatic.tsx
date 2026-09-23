@@ -6,8 +6,12 @@ import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 
 // Builds the <svg> React element for a computed plot without any hooks, so it
 // can be serialized via renderToStaticMarkup for the imperative plot() entry
-// point. Pointer-consumer marks (Tip, crosshair) render empty (no hover in a
-// static render), matching <MarkSlot>'s default.
+// point. There is no React root here, so no reconciler can re-render a mark
+// after a pointer event and no commit owns the lifetime a listener would need:
+// plot() is static-only by design (see its JSDoc in src/plot.ts), and this file
+// is where a pointer transform loses its interactivity. Pointer-consumer marks
+// (Tip, crosshair) therefore render empty, matching <MarkSlot>'s at-rest
+// default.
 export function buildStaticPlotSvg(computed: any, warnings: number, classNameProp?: string): ReactNode {
   const {className, ariaLabel, ariaDescription, dimensions} = computed;
   const {width, height} = dimensions;
