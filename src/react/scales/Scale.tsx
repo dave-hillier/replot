@@ -68,10 +68,11 @@ export interface ScaleFacetProps {
   label?: ScaleOptions["label"];
 }
 
-// Shared registration: stamps the props by value (function identities
-// excluded, like mark stamps) and registers them under the plot-level option
-// key. Registration is effect-based, NOT render-phase, for the reason spelled
-// out in useMark: StrictMode's simulated unmount runs the cleanup below with no
+// Shared registration: stamps the props by value — a function, interval, scale
+// or other value the stamp cannot read by identity, exactly as mark stamps do
+// (stampOptions) — and registers them under the plot-level option key.
+// Registration is effect-based, NOT render-phase, for the reason spelled out in
+// useMark: StrictMode's simulated unmount runs the cleanup below with no
 // re-render to follow it, so a render-phase registration is simply lost. The
 // depless effect re-registers every commit; a same-stamp re-registration only
 // swaps the stored config in place so closures always see the latest props.

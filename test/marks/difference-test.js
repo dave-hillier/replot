@@ -59,6 +59,14 @@ it("differenceY allocates a distinct clip id per facet", () => {
   assert.deepStrictEqual([...refs].sort(), ids.map((id) => `url(#${id})`).sort());
 });
 
+// The clips are allocated inside the render transform's `next`, so the ids must
+// hold still on both sides of the composition. It has to be ONE function, not a
+// fresh closure per render: a function prop is stamped by identity, so an inline
+// render would restamp the mark on any re-render of the harness — correctly, and
+// invisibly to this test's assertions about ids.
+const differenceRender = (index, scales, channels, dimensions, context, next) =>
+  next(index, scales, channels, dimensions, context);
+
 // The clip ids are allocated during renderJSX, so a re-render that reuses the
 // computed state (an unrelated state change above <Plot>, which does not
 // restamp the mark) must not allocate new ones: the clip-path refs would
@@ -88,10 +96,7 @@ it("differenceY keeps its clip-path ids across React re-renders", async () => {
           x: "x",
           y1: "y1",
           y2: "y2",
-          // The clips are allocated inside the render transform's `next`, so
-          // the ids must hold still on both sides of the composition.
-          render: (index, scales, channels, dimensions, context, next) =>
-            next(index, scales, channels, dimensions, context)
+          render: differenceRender
         })
       )
     );
