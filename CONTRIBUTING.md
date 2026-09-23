@@ -126,21 +126,41 @@ yarn parity --filter tip          # plots whose name contains "tip"
 yarn parity --show tipDotFacets   # unified diff of one plot
 ```
 
-The comparison canonicalises both sides (attribute order, generated ids and class names, numeric precision, whitespace), so what remains is a real structural or attribute difference. The per-plot line names what differs, for example `g +74` for extra wrapper groups or `image[href] −1, image[xlink:href] +1` for a renamed attribute. With `--allow <file> --fail` it exits non-zero when any plot not listed in the JSON array in that file differs, which lets CI hold the line on known divergences.
+The comparison canonicalises both sides (attribute order, generated ids and class names, numeric precision, whitespace), so what remains is a real structural or attribute difference. The per-plot line names what differs, for example `g +74` for extra wrapper groups or `image[href] −1, image[xlink:href] +1` for a renamed attribute. With `--allow <file> --fail` it exits non-zero when a plot’s divergence is not what that file records, which lets CI hold the line on known divergences.
 
 ### The parity allow list
 
-`parity-allow.json` is a JSON array naming every plot that currently differs from upstream. It is a ratchet, not a target: it records the parity debt as it stands today so that any *new* divergence is caught immediately.
+`parity-allow.json` records what every plot that differs from upstream is expected to differ by, keyed by plot name. It is a ratchet, not a target: it records the parity debt as it stands today so that a *new* or *changed* divergence is caught immediately.
+
+Each entry is the plot’s difference in the same form `yarn parity` prints. `differs` carries a machine-checked signature; `onlyUpstream` and `onlyReplot` carry the reason a plot exists on one side only. An optional `note` beside a signature records the cause in prose, and is never checked.
+
+```json
+{
+  "athletesSampleFacet": {"differs": "g +81"},
+  "differenceX": {"differs": "path[clip-path] 2 values, g[clip-path] 2 values"},
+  "rasterVaporP3": {"onlyUpstream": "node-canvas drops color(display-p3 …), so this baseline cannot be reproduced here"}
+}
+```
 
 ```bash
 yarn parity --allow parity-allow.json --fail
 ```
 
-That is the command CI runs. It exits non-zero as soon as a plot that is not named in the file differs, so a change that breaks parity on a previously-identical plot fails the build.
+That is the command CI runs. It exits non-zero when a differing plot has no entry, when a signature has changed, when an entry is stale (its plot is now identical), or when an entry names a plot that does not exist. A signature that changes means the two renderers now disagree about something else, so it fails the build rather than passing quietly. That closes the blind spot the name-only list had, where a listed plot could diverge further without anyone noticing.
 
-Entries should only ever be **removed**, as a change brings a plot back into line with upstream; remove them in the same commit that fixes the plot. Do not add an entry to make a build green — a new differing plot is a regression to fix, not debt to record. Note the one blind spot: a plot already on the list stays green even if its diff grows, so read the per-plot `+`/`−` counts in `yarn parity` output when working on a listed plot.
+When a change legitimately moves plots, refresh the signatures and review what you are accepting:
+
+```bash
+yarn parity --allow parity-allow.json --update
+```
+
+`--update` rewrites signatures in place, keeps existing notes, and drops entries for plots that no longer differ. It will not invent a reason for a plot that has newly gone missing on one side, so add those entries by hand first. Review the diff it writes and commit it with the change that caused it: a refreshed signature nobody can explain is how this list stops meaning anything.
+
+Do not add an entry to make a build green. A new differing plot, or a signature that grew, is a regression to fix, not debt to record.
 
 Run `yarn test:mocha` before `yarn parity`, so the comparison sees the snapshots the current tree actually produces (adopt any `*-changed` files first).
+
+CI runs the same command against a pinned upstream checkout, the `UPSTREAM_COMMIT` in `.github/workflows/test.yml`, fetched sparsely (upstream’s `test/output` only). Changing that pin changes the comparison, so refresh the allow list in the same commit.
 
 ## Documentation
 
