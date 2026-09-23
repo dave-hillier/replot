@@ -8,14 +8,14 @@
   },
   "license": "ISC",
   "type": "module",
-  "main": "src/index.js",
-  "module": "src/index.js",
-  "jsdelivr": "dist/plot.umd.min.js",
-  "unpkg": "dist/plot.umd.min.js",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "jsdelivr": "dist/replot.umd.min.js",
+  "unpkg": "dist/replot.umd.min.js",
   "exports": {
     ".": {
-      "umd": "./dist/plot.umd.min.js",
-      "default": "./src/index.js"
+      "umd": "./dist/replot.umd.min.js",
+      "default": "./src/index.ts"
     },
     "./react": {
       "types": "./src/react/index.d.ts",
@@ -35,8 +35,9 @@
     "src/**/*.tsx"
   ],
   "scripts": {
-    "test": "yarn test:mocha && yarn test:tsc && yarn test:lint && yarn test:prettier",
+    "test": "yarn test:mocha && yarn test:tsc && yarn test:lint && yarn test:prettier && yarn test:smoke",
     "test:coverage": "c8 yarn test:mocha",
+    "test:smoke": "node scripts/smoke-test.mjs",
     "test:mocha": "mkdir -p test/output && TZ=America/Los_Angeles tsx node_modules/.bin/mocha 'test/**/*-test.*' 'test/plot.*'",
     "test:lint": "eslint src test",
     "test:prettier": "prettier --check src test",
