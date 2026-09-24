@@ -7,6 +7,7 @@ import {radians} from "../math.js";
 import {constant, keyword} from "../options.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {maybeSameValue} from "./link.js";
 
 /** Options for the arrow mark. */
@@ -214,9 +215,9 @@ export class Arrow extends Mark {
       const d = buildPath(i);
       if (d == null) return null;
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, d}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }

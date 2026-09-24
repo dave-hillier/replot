@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import {Replot, AreaY, BarX, BarY} from "../src/react/index.js";
+import {Replot, AreaY, BarX, BarY} from "../src/react/api.js";
 import {StackX, StackX1, StackX2, StackY1, StackY2} from "../src/react/transforms/Stack.js";
 import {stackX, stackX1, stackX2, stackY1, stackY2} from "../src/transforms/stack.js";
 

@@ -19,7 +19,33 @@ export interface Dimensions {
 // Slim Plot context: just a registry. Marks are registered as opaque
 // factories that build imperative Mark instances; <Plot> calls the imperative
 // `plot()` to do all rendering.
+//
+// The value has two halves with different lifetimes:
+//
+//   - the registration API, whose identities are fixed for the life of the
+//     <Plot>. A mark or scale calls it from its own layout effect, so a
+//     registration is taken once the plot it belongs to has committed, and a
+//     registry change is a state change on <Plot> rather than a write during
+//     a render React may throw away (#148).
+//   - the resolved values from the last computePlot() pass, which change
+//     whenever the plot recomputes. <Plot> keeps its context value IDENTICAL
+//     across renders and publishes these through accessors over a ref, so a
+//     consumer re-renders when the plot shows it something new rather than
+//     every time the plot re-renders for any reason at all — which is also
+//     what stops StrictMode's simulated unmount from being survivable only by
+//     accident (#148). They are accessors rather than their own context
+//     because <Legend> reads them off this same value; a second context is
+//     the shape to move to if legends ever need to subscribe to them.
 export interface PlotContextValue {
+  // True when this plot is being rendered where no effect will ever run — a
+  // server render (renderToString/renderToStaticMarkup). Every registration
+  // below is normally taken from a layout effect, which a server render does
+  // not run, so on a server the components taking them hand them over while
+  // they render instead, and <Replot> computes the plot in a render of its
+  // own, after theirs (see useMark and ServerPlot for why that ordering is
+  // sound rather than lucky). Set by <Replot> from the environment; every
+  // browser render, including a hydrating one, leaves it false.
+  readonly serverRender?: boolean;
   // Per-mark event handlers ride alongside the factory; their identities are
   // excluded from the stamp (like all functions), so a handler-identity
   // change refreshes the registration without a rebuild.
@@ -45,12 +71,13 @@ export interface PlotContextValue {
   unregisterLegend?: (id: string) => void;
   // Resolved scale descriptors and render context from the parent Plot's
   // computePlot() pass. Populated after the first render; descendants like
-  // <Legend scale="color"> read named scales out of this map.
-  scaleDescriptors?: Record<string, any>;
-  context?: any;
+  // <Legend scale="color"> read named scales out of this map. Read them during
+  // render; they are not a subscription.
+  readonly scaleDescriptors?: Record<string, any>;
+  readonly context?: any;
   // Options passed to the parent <Plot> (used as defaults when resolving
   // scale-name legends, mirroring `exposeLegends(..., defaults)`).
-  plotOptions?: Record<string, any>;
+  readonly plotOptions?: Record<string, any>;
 }
 
 export const PlotContext = createContext<PlotContextValue | null>(null);

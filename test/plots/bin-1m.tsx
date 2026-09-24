@@ -1,4 +1,4 @@
-import {Replot, RectY, binX} from "../../src/react/index.js";
+import {Replot, RectY, binX} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 const dates = new Array(1e6);

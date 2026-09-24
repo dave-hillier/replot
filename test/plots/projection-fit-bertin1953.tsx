@@ -1,4 +1,4 @@
-import {Replot, Frame, Geo} from "../../src/react/index.js";
+import {Replot, Frame, Geo} from "../../src/react/api.js";
 import * as d3 from "d3";
 import {geoBertin1953} from "d3-geo-projection";
 import {merge} from "topojson-client";

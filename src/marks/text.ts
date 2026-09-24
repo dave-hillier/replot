@@ -4,6 +4,7 @@ import {nonempty} from "../defined.js";
 import {formatDefault} from "../format.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import type {Interval} from "../interval.js";
 import type {Data, FrameAnchor, MarkOptions} from "../mark.js";
 import {Mark} from "../mark.js";
@@ -312,7 +313,10 @@ export class Text extends Mark {
       const tx = X ? X[i] : cx;
       const ty = Y ? Y[i] : cy;
       const r = R ? R[i] : rotate;
-      const transformAttr = `translate(${tx},${ty})${r ? ` rotate(${r})` : ""}`;
+      // The rotate clause keys off the presence of the rotate channel rather
+      // than on its value (text.js:110-114 upstream): a zero angle is written,
+      // not skipped.
+      const transformAttr = `translate(${tx},${ty})${R || r ? ` rotate(${r})` : ""}`;
       const fontSizeAttr = FS ? FS[i] : undefined;
       const raw = T ? formatDefault(T[i]) ?? "" : "";
       const lines: string[] = T ? splitLines(raw).map(clipLine) : [];
@@ -346,10 +350,10 @@ export class Text extends Mark {
           children.push(h("title", {key: "overflow-title"}, T[i]));
         }
       }
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       if (titled) children.push(titled);
       const textEl = h("text", textProps, ...children);
-      return withHrefWrap(channels, this.target, i, textEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, textEl), i);
     });
     return h("g", {...indirect, ...indirectText, ...transform}, texts);
   }

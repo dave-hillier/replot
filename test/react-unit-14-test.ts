@@ -3,7 +3,7 @@ import assert from "assert";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {validateTip, validateCrosshair} from "../src/react/__validate.js";
+import {validateTip, validateCrosshair} from "./react-fixtures.js";
 
 describe("Unit 14: Tip, Crosshair façades", () => {
   jsdomit("renders Tip via the new useMark contract", async () => {

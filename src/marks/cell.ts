@@ -3,9 +3,9 @@ import type {ChannelValueSpec} from "../channel.js";
 import type {InsetOptions} from "../inset.js";
 import type {Data, MarkOptions, RenderableMark} from "../mark.js";
 import {identity, indexOf, maybeColorChannel, maybeTuple} from "../options.js";
-import {applyTransform} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {AbstractBar} from "./bar.js";
 import type {RectCornerOptions} from "./rect.js";
 import {roundedRectPath} from "./rect.js";
@@ -50,10 +50,6 @@ export class Cell extends (AbstractBar as {new (...args: any[]): RenderableMark}
       defaults
     );
   }
-  _transform(selection: any, mark: any) {
-    // apply dx, dy
-    selection.call(applyTransform, mark, {}, 0, 0);
-  }
   renderJSX(this: any, index: any, scales: any, channels: any, dimensions: any, _context: any): ReactNode {
     // A mark whose data is null has no index; render nothing rather than crash.
     if (index == null) index = [];
@@ -69,7 +65,7 @@ export class Cell extends (AbstractBar as {new (...args: any[]): RenderableMark}
     const transform = transformProp(this, {}, 0, 0);
     const rects = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const x = at(xOf, i);
       const y = at(yOf, i);
       const w = at(wOf, i);
@@ -91,7 +87,7 @@ export class Cell extends (AbstractBar as {new (...args: any[]): RenderableMark}
             },
             titled
           );
-      return withHrefWrap(channels, this.target, i, rect);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, rect), i);
     });
     return h("g", {...indirect, ...transform}, rects);
   }

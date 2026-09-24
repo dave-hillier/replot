@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 import {act} from "react";
 import * as d3 from "d3";
 import jsdomit from "./jsdom.js";
-import {Replot, Dot, Hexagon, dodgeX, dodgeY, hexbin} from "../src/react/index.js";
+import {Replot, Dot, Hexagon, dodgeX, dodgeY, hexbin} from "../src/react/api.js";
 import {DodgeX, DodgeY} from "../src/react/transforms/Dodge.js";
 import {Hexbin} from "../src/react/transforms/Hexbin.js";
 import {StackY} from "../src/react/transforms/Stack.js";

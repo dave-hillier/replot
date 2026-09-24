@@ -1,4 +1,4 @@
-import {Replot, Geo, Frame, Graticule, Sphere} from "../../src/react/index.js";
+import {Replot, Geo, Frame, Graticule, Sphere} from "../../src/react/api.js";
 
 const shape = {
   type: "LineString",

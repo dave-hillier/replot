@@ -1,4 +1,4 @@
-import {Replot, BarX, TickX, groupY} from "../../src/react/index.js";
+import {Replot, BarX, TickX, groupY} from "../../src/react/api.js";
 import * as d3 from "d3";
 import type * as PlotType from "@dave-hillier/replot";
 

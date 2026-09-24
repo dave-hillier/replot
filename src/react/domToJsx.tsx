@@ -45,16 +45,23 @@ function reactAttributeName(name: string): string {
 // React requires the style prop to be an object; other attributes pass
 // through verbatim (React renders unrecognized attributes as-is).
 function attributeValue(name: string, value: string): unknown {
-  if (name !== "style") return value;
-  const style: Record<string, string> = {};
-  for (const declaration of value.split(";")) {
+  return name === "style" ? parseStyleString(value) : value;
+}
+
+// Parses a CSS declaration list — the value of a style attribute, or the plot's
+// style option when it is given as a string — into the object React wants for
+// the style prop. Custom properties are kept verbatim, everything else is
+// camelCased, which is what React expects and what it serializes back.
+export function parseStyleString(style: string): Record<string, string> {
+  const parsed: Record<string, string> = {};
+  for (const declaration of style.split(";")) {
     const colon = declaration.indexOf(":");
     if (colon === -1) continue;
     const property = declaration.slice(0, colon).trim();
     if (!property) continue;
-    style[property.startsWith("--") ? property : camelCase(property)] = declaration.slice(colon + 1).trim();
+    parsed[property.startsWith("--") ? property : camelCase(property)] = declaration.slice(colon + 1).trim();
   }
-  return style;
+  return parsed;
 }
 
 function camelCase(property: string): string {

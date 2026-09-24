@@ -4,6 +4,7 @@ import {createContext} from "./context.js";
 import {createDimensions} from "./dimensions.js";
 import {createFacets, recreateFacets, facetExclude, facetGroups, facetTranslator, facetFilter} from "./facet.js";
 import {pointer, pointerX, pointerY} from "./interactions/pointer.js";
+import {buildAutoLegends, renderLegendElement} from "./react/legends/Legend.js";
 import {Mark} from "./mark.js";
 import {axisFx, axisFy, axisX, axisY, gridFx, gridFy, gridX, gridY} from "./marks/axis.js";
 import {frame} from "./marks/frame.js";
@@ -11,12 +12,15 @@ import {tip} from "./marks/tip.js";
 import {isColor, isIterable, isNone, isScaleOptions} from "./options.js";
 import {dataify, lengthof, map, yes, maybeIntervalTransform} from "./options.js";
 import {createProjection, getGeometryChannels, hasProjection, xyProjection} from "./projection.js";
-import {createScales, createScaleFunctions, autoScaleRange} from "./scales.js";
+import {createScales, createScaleFunctions, autoScaleRange, exposeScales} from "./scales.js";
 import {innerDimensions, outerDimensions} from "./scales.js";
 import {isPosition, registry as scaleRegistry} from "./scales/index.js";
 import {maybeClassName} from "./style.js";
 import {initializer} from "./transforms/basic.js";
-import {warn} from "./warnings.js";
+import {consumeWarnings, warn} from "./warnings.js";
+import {renderToStaticMarkup} from "react-dom/server";
+import {buildStaticPlotSvg} from "./react/renderStatic.js";
+import {withWarningIndicator} from "./react/warningIndicator.js";
 
 // Returns the pre-render state needed by both the imperative DOM build path
 // (used by `plot()` below) and the React JSX path (used by `<Plot>` in
@@ -156,10 +160,14 @@ export function computePlot(options: any = {}): any {
 
   // Initialize the context.
   const context = createContext(options);
-  // The figure/svg is produced by the imperative plot() entry (which renders
-  // the marks via React). computePlot only provides a holder that plot()
-  // mutates; the dispatchValue closure below reads through it so it tracks the
-  // latest figure.
+  // The element the pointer interaction reports its selection through: the
+  // <figure> when there is one, the <svg> otherwise, matching upstream. This is
+  // live plumbing for the React path, not a leftover from the imperative one:
+  // the React entry point writes its root here on every recompute and
+  // re-points it when the root changes (src/react/Replot.tsx), which is what
+  // gives the dispatchValue closure below a target to write to. plot() fills
+  // the same holder while it builds the figure, but renders statically, so
+  // nothing ever dispatches through it there; see the plot() JSDoc.
   const figureHolder: {current: any} = {current: null};
   context.figureHolder = figureHolder;
   context.className = className;
@@ -182,7 +190,11 @@ export function computePlot(options: any = {}): any {
     return {...state, channels: {...state.channels, ...facetState?.channels}};
   };
 
-  // Allows e.g. the pointer transform to support viewof.
+  // Allows e.g. the pointer transform to support viewof. Upstream’s pointer
+  // closure calls this (src/interactions/pointer.js); on a Replot plot the
+  // React entry point reaches it as well, through pointerStore’s value sink.
+  // plot() itself never does: a static render attaches no listener to report
+  // through in the first place.
   context.dispatchValue = (value) => {
     const figure = figureHolder.current;
     if (figure == null || figure.value === value) return;
@@ -273,6 +285,130 @@ export function computePlot(options: any = {}): any {
   };
 }
 
+/**
+ * Renders a complete plot as a detached SVG element, wrapping it in an HTML
+ * figure element when the plot has a title, subtitle, caption or legend. The
+ * returned element is decorated with `scale` and `legend` methods, for sharing
+ * scales and legends across plots.
+ *
+ * The render is synchronous and static, and that is by design rather than a
+ * gap waiting to be filled. `plot()` has no React root, so no reconciler can
+ * re-render a mark in response to a pointer event and no commit owns the
+ * lifetime a pointer listener would need. Upstream Observable Plot attaches
+ * live pointer listeners here; Replot deliberately does not, and the
+ * differences a user will notice are:
+ *
+ * - nothing listens for pointerenter, pointermove, pointerdown or
+ *   pointerleave on the returned element, so hovering the plot does nothing;
+ * - the pointer transform renders with no focused point, so the tip and
+ *   crosshair marks that use it are drawn empty: a mark with an inferred tip,
+ *   such as `Plot.lineY(data, {tip: true})`, renders an empty tip group rather
+ *   than a tooltip;
+ * - `.value` is never assigned and no bubbling `input` event is ever
+ *   dispatched, so the returned element does not work as a viewof, and reading
+ *   it to observe a selection yields undefined.
+ *
+ * For interaction, use the React entry point, `replot/react`: <Replot> mounts a
+ * real React root and drives the pointer interaction from it, reporting the
+ * selection through its `onValue` prop and, following upstream, through
+ * `.value` and a bubbling `input` event on the plot’s root element.
+ */
+export function plot(options: any = {}) {
+  const computed: any = computePlot(options);
+  const {className, scales, scaleDescriptors, context} = computed;
+  const {style, title, subtitle, caption} = options;
+  const document = context.document;
+  const figureHolder: {current: any} = context.figureHolder;
+
+  // Render the marks to a detached <svg> via React's renderJSX — no
+  // d3-selection. The same renderMarksWith/renderJSX code powers <Plot>, so
+  // the imperative and JSX outputs stay in lockstep.
+  //
+  // No ⚠️ indicator on it yet: this call is what RENDERS every mark, so a
+  // warning raised while a mark renders only reaches the global counter now,
+  // and the drain below has to come after it. Upstream drains at the very end
+  // of plot() for the same reason (plot.js:346).
+  const svgElement = buildStaticPlotSvg(computed, options.className);
+
+  // Auto-legends render via the React legend components (no d3-selection);
+  // serialize each to a DOM node in the target document, matching the former
+  // createLegends output. Built before the svg is serialized because building
+  // them can warn too, and the drain below counts everything this plot raised.
+  const legends = buildAutoLegends(scaleDescriptors, context, options).map((el) => {
+    const h = document.createElement("div");
+    h.innerHTML = renderToStaticMarkup(el);
+    return h.firstElementChild;
+  });
+
+  // Drain the global warning counter once, after the marks and the legends have
+  // rendered, so the indicator counts warnings raised while RENDERING and not
+  // only while computing — and so the warn() dedupe state (lastMessage) is
+  // reset before the next plot runs.
+  const warnings = consumeWarnings();
+
+  // Serialize to markup and reparse into the target document (which may be a
+  // custom jsdom doc). The indicator is appended last, as the svg's final
+  // child, where upstream puts it (plot.js:346).
+  const markup = renderToStaticMarkup(withWarningIndicator(svgElement, computed, warnings));
+  const holder = document.createElement("div");
+  holder.innerHTML = markup;
+  const svg: any = holder.firstElementChild;
+
+  // Apply the plot-level style option (string or object), mirroring
+  // applyInlineStyles on the former imperative path.
+  if (typeof style === "string") svg.setAttribute("style", style);
+  else if (style != null) Object.assign(svg.style, style);
+
+  figureHolder.current = svg;
+
+  const {figure: figured = title != null || subtitle != null || caption != null || legends.length > 0} = options;
+  if (figured) {
+    const fig: any = document.createElement("figure");
+    fig.className = `${className}-figure`;
+    fig.style.maxWidth = "initial"; // avoid Observable default style
+    if (title != null) fig.append(createTitleElement(document, title, "h2"));
+    if (subtitle != null) fig.append(createTitleElement(document, subtitle, "h3"));
+    fig.append(...legends, svg);
+    if (caption != null) fig.append(createFigcaption(document, caption));
+    // Upstream carries the pointer’s current selection from the svg onto the
+    // figure here, so that wrapping a plot does not lose a value it has already
+    // reported. Nothing on this path ever assigns one, so there is nothing to
+    // carry; see the plot() JSDoc.
+    figureHolder.current = fig;
+  }
+
+  figureHolder.current.scale = exposeScales(scales.scales, context);
+  // The .legend(key, options) method renders via the React legend components
+  // (no d3-selection); serialize to a DOM node in the target document.
+  figureHolder.current.legend = (key: string, legendOptions: any = {}) => {
+    if (key !== "color" && key !== "opacity" && key !== "symbol") throw new Error(`unknown legend type: ${key}`);
+    if (!(key in scaleDescriptors)) return;
+    const el = renderLegendElement(key, legendOptions, scaleDescriptors, context, options);
+    if (el == null) return;
+    // Render into the per-call document option if given (e.g. a separate jsdom
+    // window), else the plot's document.
+    const targetDoc = legendOptions?.document ?? document;
+    const h = targetDoc.createElement("div");
+    h.innerHTML = renderToStaticMarkup(el);
+    return h.firstElementChild;
+  };
+
+  return figureHolder.current;
+}
+
+function createTitleElement(document, contents, tag) {
+  if (contents.ownerDocument) return contents;
+  const e = document.createElement(tag);
+  e.append(contents);
+  return e;
+}
+
+function createFigcaption(document, caption) {
+  const e = document.createElement("figcaption");
+  e.append(caption);
+  return e;
+}
+
 function flatMarks(marks) {
   return marks
     .flat(Infinity)
@@ -293,7 +429,6 @@ class Render extends Mark {
     super();
     this.renderJSX = renderJSX;
   }
-  renderJSX() {}
 }
 
 // Note: mutates channel.value to apply the scale transform, if any.
@@ -438,6 +573,12 @@ function inferTips(marks) {
       const t = tip(mark.data, tipOptions);
       t.facet = mark.facet; // inherit facet settings
       t.facetAnchor = mark.facetAnchor; // inherit facet settings
+      // An inferred tip is created here, inside computePlot, so it has no
+      // registration of its own in the React tree. Recording the mark it was
+      // inferred from is what lets <Plot> give its slot a key that survives
+      // marks being added and removed around it; see markKeysOf in
+      // src/react/Replot.tsx. Inert on the imperative path.
+      t.tipFor = mark;
       tips.push(t);
     }
   }

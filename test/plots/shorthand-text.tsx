@@ -1,4 +1,4 @@
-import {Replot, Text} from "../../src/react/index.js";
+import {Replot, Text} from "../../src/react/api.js";
 
 export async function shorthandText() {
   const timeSeries = [

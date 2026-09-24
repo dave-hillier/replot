@@ -10,7 +10,7 @@ import {
   validateArea,
   validateAreaX,
   validateAreaY
-} from "../src/react/__validate.js";
+} from "./react-fixtures.js";
 
 async function mountAndQuery(node) {
   const container = (globalThis as any).document.createElement("div");

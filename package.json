@@ -18,8 +18,8 @@
       "default": "./dist/esm/index.js"
     },
     "./react": {
-      "types": "./dist/types/react/index.d.ts",
-      "default": "./dist/esm/react/index.js"
+      "types": "./dist/types/react/api.d.ts",
+      "default": "./dist/esm/react/api.js"
     },
     "./package.json": "./package.json"
   },
@@ -49,12 +49,14 @@
     "dist/types/**/*.d.ts"
   ],
   "scripts": {
-    "test": "yarn test:mocha && yarn test:tsc && yarn test:lint && yarn test:prettier && yarn test:package",
+    "test": "yarn test:mocha && yarn test:tsc && yarn test:lint && yarn test:prettier && yarn test:smoke",
     "test:package": "yarn bundle && yarn test:publint && yarn test:attw",
     "test:publint": "npx --yes publint@^0.3.14 --strict --pack npm",
     "test:attw": "npx --yes @arethetypeswrong/cli@^0.18.2 --pack --profile esm-only",
     "test:coverage": "c8 yarn test:mocha",
+    "test:smoke": "node scripts/smoke-test.mjs",
     "test:mocha": "mkdir -p test/output && TZ=America/Los_Angeles tsx node_modules/.bin/mocha 'test/**/*-test.*' 'test/plot.*'",
+    "test:units": "mkdir -p test/output && TZ=America/Los_Angeles tsx node_modules/.bin/mocha 'test/**/*-test.*'",
     "test:lint": "eslint src test",
     "test:prettier": "prettier --check src test",
     "test:tsc": "tsc",
@@ -65,7 +67,8 @@
     "dev": "vite",
     "docs:dev": "tsx docs/scripts/ensure-bundle.ts && tsx docs/scripts/build-api-data.ts && vite --config docs/vite.docs.config.ts",
     "docs:build": "yarn bundle && tsx docs/scripts/build-api-data.ts && vite build --config docs/vite.docs.config.ts",
-    "docs:preview": "vite preview --config docs/vite.docs.config.ts"
+    "docs:preview": "vite preview --config docs/vite.docs.config.ts",
+    "parity": "tsx scripts/parity.ts"
   },
   "sideEffects": [
     "./dist/esm/index.js"
@@ -78,10 +81,6 @@
     "@mdx-js/rollup": "^3.1.1",
     "@observablehq/runtime": "^6.0.0",
     "@observablehq/stdlib": "^5.8.8",
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-terser": "^0.4.0",
     "@shikijs/rehype": "^4.3.1",
     "@types/d3": "^7.4.0",
     "@types/mdx": "^2.0.13",
@@ -98,6 +97,7 @@
     "d3-geo-projection": "^4.0.0",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^15.15.0",
     "htl": "^0.3.0",
     "js-beautify": "1",
@@ -110,7 +110,6 @@
     "react-dom": "^19.2.4",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
-    "rollup": "^4.9.1",
     "shiki": "^4.3.1",
     "topojson-client": "^3.1.0",
     "ts-morph": "^25.0.1",
@@ -122,7 +121,7 @@
   "c8": {
     "all": true,
     "include": [
-      "src/**/*.js"
+      "src/**/*.{js,ts,tsx}"
     ],
     "reporter": [
       "text",
@@ -137,14 +136,6 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
   },
   "engines": {
     "node": ">=18"

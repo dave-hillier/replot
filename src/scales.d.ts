@@ -707,4 +707,4 @@ export function isThresholdScale(scale: any): boolean;
 export function isCollapsed(scale: any): boolean;
 
 /** Exposes the materialized scales as a *plot*.scale accessor function. */
-export function exposeScales(scales: any): (name: string) => Scale | undefined;
+export function exposeScales(scales: any, context?: any): (name: string) => Scale | undefined;

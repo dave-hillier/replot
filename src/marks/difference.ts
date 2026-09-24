@@ -10,7 +10,6 @@ import {identity, indexOf} from "../options.js";
 // @ts-expect-error - internal helpers not in .d.ts
 import {isNoneish, labelof, maybeColorChannel, maybeValue, valueof} from "../options.js";
 import {inferScaleOrder} from "../scales.js";
-import {getClipId} from "../style.js";
 import {area} from "./area.js";
 import {line} from "./line.js";
 
@@ -133,6 +132,7 @@ function differenceK(
     z = maybeColorChannel(stroke)[0],
     clip, // optional additional clip for area
     tip,
+    render, // composed onto the two areas only, as upstream does
     ...options
   }: any = {}
 ): CompoundMark {
@@ -143,39 +143,24 @@ function differenceK(
     else x1 = memo(0);
   }
   ({tip} = withTip({tip}, k === "y" ? "x" : "y"));
+  const shared = {x1, x2, y1, y2, z, clip, ...options};
   return marks(
     !isNoneish(positiveFill)
-      ? Object.assign(
-          area(data, {
-            x1,
-            x2,
-            y1,
-            y2,
-            z,
-            fill: positiveFill,
-            fillOpacity: positiveFillOpacity,
-            renderJSX: clipDifferenceJSX(k, true),
-            clip,
-            ...options
-          }),
-          {ariaLabel: "positive difference"}
+      ? clippedArea(
+          data,
+          {...shared, fill: positiveFill, fillOpacity: positiveFillOpacity},
+          clipDifferenceJSX(k, true),
+          "positive difference",
+          render
         )
       : null,
     !isNoneish(negativeFill)
-      ? Object.assign(
-          area(data, {
-            x1,
-            x2,
-            y1,
-            y2,
-            z,
-            fill: negativeFill,
-            fillOpacity: negativeFillOpacity,
-            renderJSX: clipDifferenceJSX(k, false),
-            clip,
-            ...options
-          }),
-          {ariaLabel: "negative difference"}
+      ? clippedArea(
+          data,
+          {...shared, fill: negativeFill, fillOpacity: negativeFillOpacity},
+          clipDifferenceJSX(k, false),
+          "negative difference",
+          render
         )
       : null,
     line(data, {
@@ -189,6 +174,26 @@ function differenceK(
       ...options
     })
   );
+}
+
+// One of the two clipped areas. A user *render* transform is composed outside
+// the clip, as upstream's composeRender(render, clipDifference(k, …))
+// (difference.js:38,60) does: the transform receives the clipped area as its
+// `next`, and whatever it returns is rendered in its place. The line is not
+// given the transform at all, which is why differenceK destructures it.
+function clippedArea(data: Data | undefined, options: any, clipJSX: any, ariaLabel: string, render: any): any {
+  const areaMark = Object.assign(area(data, {...options, renderJSX: clipJSX}), {ariaLabel});
+  if (render == null) return areaMark;
+  // The clip renderJSX is an own property of the area, and an own renderJSX
+  // tells the JSX paths that the mark renders itself, so the imperative bridge
+  // would be skipped (see hasRenderTransform). Inheriting the finished mark
+  // instead — renderJSX then resolves through the prototype — keeps the clip
+  // and still brings the own `render` into the JSX path. `this` stays the area,
+  // so the transform sees the mark's styles and aria-label, as upstream's
+  // composeRender (which preserves `this`) does.
+  const mark = Object.create(areaMark);
+  mark.render = render;
+  return mark;
 }
 
 function memoTuple(x: any, x1: any, x2: any) {
@@ -250,7 +255,7 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
     const out: ReactNode[] = [];
     const n = Math.min(clipChildren.length, gChildren.length);
     for (let i = 0; i < n; i++) {
-      const id = getClipId();
+      const id = clipIdOf(context);
       const clipChild = clipChildren[i] as ReactElement;
       const gChild = gChildren[i] as ReactElement;
       out.push(h("clipPath", {key: `cp-${i}`, id}, clipChild));
@@ -258,4 +263,20 @@ function clipDifferenceJSX(k: "x" | "y", positive: boolean) {
     }
     return cloneElement(gNode, gNode.props as any, ...out);
   };
+}
+
+// The id for one of this mark's own <clipPath> defs, taken from the clip
+// registry of the render that is building the <svg>. Each facet and each of
+// the two areas takes its own id, in render order, which is deterministic for
+// a given computed plot — so the ids neither collide with the frame clip's (a
+// difference plot always has one: the differenced line is clip: true) nor
+// change when React re-renders the marks without recomputing them. Both render
+// paths create the registry before rendering any mark and expose it on the
+// plot's context, which is what a renderJSX is given; assert rather than fall
+// back to style.js's module-global counter, which is the collision this
+// replaced.
+function clipIdOf(context: any): string {
+  const registry = context?.clipRegistry;
+  if (registry == null) throw new Error("difference: no clip registry on the plot context");
+  return registry.clipId();
 }

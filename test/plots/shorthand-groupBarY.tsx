@@ -1,4 +1,4 @@
-import {Replot, BarY, groupX} from "../../src/react/index.js";
+import {Replot, BarY, groupX} from "../../src/react/api.js";
 
 export async function shorthandGroupBarY() {
   const gene = "AAAAGAGTGAAGATGCTGGAGACGAGTGAAGCATTCACTTTAGGGAAAGCGAGGCAAGAGCGTTTCAGAAGACGAAACCTGGTAGGTGCACTCACCACAG";

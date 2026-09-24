@@ -8,6 +8,7 @@ import {maybeFrameAnchor, maybeNumberChannel, maybeTuple, keyword} from "../opti
 import {applyFrameAnchor} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /**
  * The built-in vector shape implementations; one of:
@@ -182,14 +183,19 @@ export class Vector extends Mark {
       const ty = Y ? Y[i] : cy;
       const ang = A ? A[i] : rotate;
       const len = L ? L[i] : length;
-      const shift = anchor === "start" ? 0 : anchor === "end" ? len : len / 2;
-      const t = `translate(${tx},${ty})${ang ? ` rotate(${ang})` : ""}${shift ? ` translate(0,${shift})` : ""}`;
+      // The rotate clause turns on the presence of the rotate channel rather
+      // than on its value, so a zero angle is written (vector.js:106-114
+      // upstream); likewise the anchor translate is written for every anchor
+      // but start, even when the length is zero.
+      const rotationAttr = A || ang ? ` rotate(${ang})` : "";
+      const anchorAttr = anchor === "start" ? "" : ` translate(0,${anchor === "end" ? len : len / 2})`;
+      const t = `translate(${tx},${ty})${rotationAttr}${anchorAttr}`;
       const p = path();
       shape.draw(p as unknown as CanvasPath, len, r);
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, transform: t, d: `${p}`}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }

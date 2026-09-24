@@ -65,8 +65,10 @@ Replot’s unit tests are written with [Mocha](https://mochajs.org).
 If you like, you can also run Mocha in watch mode for a specific file, so that unit tests re-run automatically when you make changes. For example:
 
 ```bash
-yarn run mocha --conditions=mocha --parallel --watch test/marks/bar-test.js
+TZ=America/Los_Angeles yarn tsx node_modules/.bin/mocha --watch test/marks/bar-test.js
 ```
+
+The tests import `replot`, which package.json maps to `src/index.js`, a file that exists only as the TypeScript source `src/index.ts`; tsx resolves that, which is why Mocha has to run through it here, as it does in `yarn test:mocha`.
 
 ### Snapshot tests
 
@@ -113,6 +115,52 @@ Running Replot’s snapshot tests will automatically generate any missing snapsh
 rm -rf test/output
 yarn test
 ```
+
+### Parity with Observable Plot
+
+The snapshots in `test/output` are Replot’s own, so a green run shows that Replot’s output has not changed, not that it matches Observable Plot. To check that, compare the snapshots against the ones committed in an Observable Plot checkout (expected as a sibling directory, `../observablehq-plot`, or pass `--upstream`):
+
+```bash
+yarn parity                       # every plot, summarised by cause
+yarn parity --filter tip          # plots whose name contains "tip"
+yarn parity --show tipDotFacets   # unified diff of one plot
+```
+
+The comparison canonicalises both sides (attribute order, generated ids and class names, numeric precision, whitespace), so what remains is a real structural or attribute difference. The per-plot line names what differs, for example `g +74` for extra wrapper groups or `image[href] −1, image[xlink:href] +1` for a renamed attribute. With `--allow <file> --fail` it exits non-zero when a plot’s divergence is not what that file records, which lets CI hold the line on known divergences.
+
+### The parity allow list
+
+`parity-allow.json` records what every plot that differs from upstream is expected to differ by, keyed by plot name. It is a ratchet, not a target: it records the parity debt as it stands today so that a *new* or *changed* divergence is caught immediately.
+
+Each entry is the plot’s difference in the same form `yarn parity` prints. `differs` carries a machine-checked signature; `onlyUpstream` and `onlyReplot` carry the reason a plot exists on one side only. An optional `note` beside a signature records the cause in prose, and is never checked.
+
+```json
+{
+  "athletesSampleFacet": {"differs": "g +81"},
+  "differenceX": {"differs": "path[clip-path] 2 values, g[clip-path] 2 values"},
+  "rasterVaporP3": {"onlyUpstream": "node-canvas drops color(display-p3 …), so this baseline cannot be reproduced here"}
+}
+```
+
+```bash
+yarn parity --allow parity-allow.json --fail
+```
+
+That is the command CI runs. It exits non-zero when a differing plot has no entry, when a signature has changed, when an entry is stale (its plot is now identical), or when an entry names a plot that does not exist. A signature that changes means the two renderers now disagree about something else, so it fails the build rather than passing quietly. That closes the blind spot the name-only list had, where a listed plot could diverge further without anyone noticing.
+
+When a change legitimately moves plots, refresh the signatures and review what you are accepting:
+
+```bash
+yarn parity --allow parity-allow.json --update
+```
+
+`--update` rewrites signatures in place, keeps existing notes, and drops entries for plots that no longer differ. It will not invent a reason for a plot that has newly gone missing on one side, so add those entries by hand first. Review the diff it writes and commit it with the change that caused it: a refreshed signature nobody can explain is how this list stops meaning anything.
+
+Do not add an entry to make a build green. A new differing plot, or a signature that grew, is a regression to fix, not debt to record.
+
+Run `yarn test:mocha` before `yarn parity`, so the comparison sees the snapshots the current tree actually produces (adopt any `*-changed` files first).
+
+CI runs the same command against a pinned upstream checkout, the `UPSTREAM_COMMIT` in `.github/workflows/test.yml`, fetched sparsely (upstream’s `test/output` only). Changing that pin changes the comparison, so refresh the allow list in the same commit.
 
 ## Documentation
 

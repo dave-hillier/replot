@@ -6,6 +6,7 @@ import {Mark} from "../mark.js";
 import {maybeFrameAnchor, maybeNumberChannel, maybeTuple, string} from "../options.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {applyFrameAnchor, impliedString} from "../style.js";
 import {withDefaultSort} from "./dot.js";
 
@@ -199,7 +200,10 @@ export class Image extends Mark {
         imageRendering: this.imageRendering
       };
       const rotation = A ? A[i] : rotate;
-      if (rotation) {
+      // Both attributes key off the presence of the rotate channel rather than
+      // on its value (image.js:99-100 upstream): a zero angle still rotates the
+      // image about its center.
+      if (A || rotation) {
         const ox = typeof xCenter === "function" ? xCenter(i) : xCenter;
         const oy = typeof yCenter === "function" ? yCenter(i) : yCenter;
         props.transform = `rotate(${rotation})`;
@@ -207,9 +211,9 @@ export class Image extends Mark {
       }
       const clip = R ? `circle(${R[i]}px)` : r !== undefined ? `circle(${r}px)` : null;
       if (clip != null) props.clipPath = clip;
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const imgEl = h("image", props, titled);
-      return withHrefWrap(channels, this.target, i, imgEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, imgEl), i);
     });
     return h("g", {...indirect, ...transform}, images);
   }

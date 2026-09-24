@@ -1,4 +1,4 @@
-import {Replot, Tip, RuleX} from "../../src/react/index.js";
+import {Replot, Tip, RuleX} from "../../src/react/api.js";
 
 function tip(
   data: any,

@@ -13,7 +13,7 @@
       white-space: pre;
     }
   </style>
-  <g aria-label="link" fill="none" stroke="#555" stroke-width="1.5" stroke-opacity="0.5" stroke-miterlimit="1" transform="translate(0.5,0.5)">
+  <g aria-label="link" fill="none" stroke="light-dark(#777, #aaa)" stroke-width="1.5" stroke-opacity="0.5" stroke-miterlimit="1" transform="translate(0.5,0.5)">
     <path d="M35,154.625C156,154.625,156,20,277,20"></path>
     <path d="M35,154.625C156,154.625,156,109.75,277,109.75"></path>
     <path d="M35,154.625C156,154.625,156,199.5,277,199.5"></path>

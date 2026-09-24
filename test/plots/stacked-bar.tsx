@@ -1,4 +1,4 @@
-import {Replot, BarX, stackX} from "../../src/react/index.js";
+import {Replot, BarX, stackX} from "../../src/react/api.js";
 
 export async function stackedBar() {
   return (

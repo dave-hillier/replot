@@ -1,4 +1,4 @@
-import {Replot, BarY} from "../../src/react/index.js";
+import {Replot, BarY} from "../../src/react/api.js";
 
 const requests = [
   [new Date("2002-01-01"), 9],

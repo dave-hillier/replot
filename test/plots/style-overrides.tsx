@@ -1,4 +1,4 @@
-import {Replot, Legend, Dot} from "../../src/react/index.js";
+import {Replot, Legend, Dot} from "../../src/react/api.js";
 
 export function styleOverrideLegendCategorical() {
   // This test verifies legend style overrides. The React version uses the

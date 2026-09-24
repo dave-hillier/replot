@@ -1,5 +1,6 @@
 import * as Plot from "@dave-hillier/replot";
 import assert from "assert";
+import it from "../jsdom.js";
 
 it("image(undefined, {src}) has the expected defaults", () => {
   const image = Plot.image(undefined, {src: "foo"});
@@ -73,4 +74,28 @@ it("image(data, {src}) allows src to be a channel", () => {
   const {src} = image.channels;
   assert.strictEqual(src.value, "foo");
   assert.strictEqual(src.scale, undefined);
+});
+
+// Upstream decides on the presence of the channel, not on the value: with a
+// rotate channel it always writes transform and transform-origin
+// (image.js:99-100), even for a zero angle. Replot tested the resolved value
+// for truthiness, so a zero-angle image silently dropped both attributes.
+it("image(data, {rotate}) emits rotate(0) for a zero rotate channel value", () => {
+  const svg = Plot.plot({
+    marks: [Plot.image([{x: 1, y: 1, angle: 0}], {x: "x", y: "y", rotate: "angle", src: "https://example.com/foo.png"})]
+  });
+  const image = svg.querySelector('[aria-label="image"] image');
+  assert.strictEqual(image.getAttribute("transform"), "rotate(0)");
+  assert.match(image.getAttribute("transform-origin"), /^\d+(\.\d+)?px \d+(\.\d+)?px$/);
+});
+
+// A constant rotate of zero is still skipped: it is not a channel, and upstream
+// only writes the constant when it is truthy.
+it("image(data, {rotate: 0}) omits the transform when there is no rotate channel", () => {
+  const svg = Plot.plot({
+    marks: [Plot.image([{x: 1, y: 1}], {x: "x", y: "y", rotate: 0, src: "https://example.com/foo.png"})]
+  });
+  const image = svg.querySelector('[aria-label="image"] image');
+  assert.strictEqual(image.getAttribute("transform"), null);
+  assert.strictEqual(image.getAttribute("transform-origin"), null);
 });

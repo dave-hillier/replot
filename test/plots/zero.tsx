@@ -1,4 +1,4 @@
-import {Replot, LineY} from "../../src/react/index.js";
+import {Replot, LineY} from "../../src/react/api.js";
 
 export async function zeroNegativeY() {
   return (

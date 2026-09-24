@@ -14,6 +14,7 @@ import {markers} from "../marker.js";
 import {coerceNumbers} from "../options.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /** Options for the link mark. */
 export interface LinkOptions extends MarkOptions, MarkerOptions, CurveAutoOptions {
@@ -142,9 +143,9 @@ export class Link extends Mark {
     const paths = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
       const markers = markerAttrs(i);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const pathEl = h("path", {key: k, ...direct, ...channel, ...markers, d: dOf(i)}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     const defs =
       markerDefs.size > 0

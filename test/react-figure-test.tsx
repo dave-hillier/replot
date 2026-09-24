@@ -4,7 +4,7 @@ import React from "react";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {Replot, Dot} from "../src/react/index.js";
+import {Replot, Dot} from "../src/react/api.js";
 
 const data = [
   {x: 1, y: 2},
@@ -23,6 +23,10 @@ async function mount(node) {
   await act(async () => {});
   return {
     container,
+    render: async (next) => {
+      await act(async () => root.render(next));
+      await act(async () => {});
+    },
     cleanup: async () => {
       await act(async () => {
         root.unmount();
@@ -95,6 +99,59 @@ describe("Plot figure-mode contract", () => {
   jsdomit('figure={false} aliases "never"', async () => {
     const {container, cleanup} = await mount(plotWith({title: "T", figure: false}));
     assert.strictEqual(container.querySelector("figure"), null, "figure={false} should suppress the <figure>");
+    await cleanup();
+  });
+});
+
+// The slots render as ordinary React children. They used to render a string as
+// a React child and then call replaceChildren in a layout effect, which
+// detached the text node React itself owned; anything React cannot render as a
+// child was stringified instead. A DOM node (an HTML title built imperatively)
+// is still supported: it is rendered from its markup, not transplanted.
+describe("Plot figure slots", () => {
+  jsdomit("renders a title given as JSX", async () => {
+    const {container, cleanup} = await mount(plotWith({title: <b>Bold</b>}));
+    const h2 = container.querySelector("figure h2");
+    assert.ok(h2, "expected an <h2> for the title");
+    assert.strictEqual(h2.textContent, "Bold", "expected the title element's text, not its stringification");
+    assert.strictEqual(h2.querySelector("b")?.textContent, "Bold", "expected the title element itself");
+    await cleanup();
+  });
+
+  jsdomit("updates a title when the prop changes", async () => {
+    const {container, render, cleanup} = await mount(plotWith({title: "One"}));
+    assert.strictEqual(container.querySelector("figure h2").textContent, "One");
+    await render(plotWith({title: "Two"}));
+    assert.strictEqual(container.querySelector("figure h2").textContent, "Two", "expected the new title");
+    await cleanup();
+  });
+
+  jsdomit("renders a DOM-node title from its markup without moving the node", async () => {
+    const document = (globalThis as any).document;
+    const holder = document.createElement("div");
+    const title = document.createElement("b");
+    title.textContent = "Node title";
+    holder.appendChild(title);
+    document.body.appendChild(holder);
+
+    const {container, cleanup} = await mount(plotWith({title}));
+    const h2 = container.querySelector("figure h2");
+    assert.strictEqual(h2.textContent, "Node title", "expected the node's text in the title slot");
+    assert.ok(h2.querySelector("b"), "expected the node's element in the title slot");
+    assert.strictEqual(holder.firstChild, title, "the caller's node must not be moved out of the document");
+    await cleanup();
+    holder.remove();
+  });
+
+  jsdomit("renders a DOM-node caption", async () => {
+    const document = (globalThis as any).document;
+    const caption = document.createElement("i");
+    caption.textContent = "Node caption";
+
+    const {container, cleanup} = await mount(plotWith({caption}));
+    const figcaption = container.querySelector("figure figcaption");
+    assert.strictEqual(figcaption.textContent, "Node caption");
+    assert.ok(figcaption.querySelector("i"), "expected the node's element in the caption slot");
     await cleanup();
   });
 });

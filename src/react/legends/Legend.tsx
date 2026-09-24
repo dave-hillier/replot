@@ -46,6 +46,10 @@ export function Legend(props: LegendProps) {
   const id = useId();
   const register = ctx?.registerLegend;
   const unregister = ctx?.unregisterLegend;
+  const serverRender = ctx?.serverRender;
+  const registration = () => {
+    if (register) register(id, stampOptions("legend", null, props as Record<string, unknown>), props);
+  };
   // Inside a <Plot>, register instead of rendering: the Plot renders the
   // visible <LegendDisplay> in its figure slot, so a Legend is promoted no
   // matter how it's composed (memo, wrapper components, fragments).
@@ -53,8 +57,14 @@ export function Legend(props: LegendProps) {
   // unmount runs the cleanup below without re-rendering, so a render-phase
   // registration would be lost; this depless effect re-registers every
   // commit, idempotently under the stable useId.
+  // A server render registers while it renders instead, as marks and scales do
+  // (useMark): no effect runs there, and an explicit legend that never
+  // registers is a legend the figure slot never shows.
+  if (serverRender) registration();
   useLayoutEffect(() => {
-    if (register) register(id, stampOptions("legend", null, props as Record<string, unknown>), props);
+    // Unconditional, and never run on a server render; see useMark.
+    if (serverRender) return;
+    registration();
   });
   useLayoutEffect(() => {
     if (!unregister) return;

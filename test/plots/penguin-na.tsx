@@ -1,4 +1,4 @@
-import {Replot, TickX, valueof} from "../../src/react/index.js";
+import {Replot, TickX, valueof} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 async function penguinNA(tickFormat: (x: number) => any = undefined) {

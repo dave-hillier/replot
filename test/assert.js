@@ -1,6 +1,6 @@
 import assert from "assert";
 
-function warns(run, expected = /warning/i) {
+export function warns(run, expected = /warning/i) {
   const actual = [];
   const warn = console.warn;
   let result;
@@ -15,7 +15,7 @@ function warns(run, expected = /warning/i) {
   return result;
 }
 
-async function warnsAsync(run, expected = /warning/i) {
+export async function warnsAsync(run, expected = /warning/i) {
   const actual = [];
   const warn = console.warn;
   let result;
@@ -30,7 +30,7 @@ async function warnsAsync(run, expected = /warning/i) {
   return result;
 }
 
-function doesNotWarn(run) {
+export function doesNotWarn(run) {
   const actual = [];
   const warn = console.warn;
   let result;
@@ -44,7 +44,7 @@ function doesNotWarn(run) {
   return result;
 }
 
-async function doesNotWarnAsync(run) {
+export async function doesNotWarnAsync(run) {
   const actual = [];
   const warn = console.warn;
   let result;
@@ -58,6 +58,12 @@ async function doesNotWarnAsync(run) {
   return result;
 }
 
+// The default export is the Node assert object with the warning-aware
+// helpers mixed in, which is how the JavaScript tests use it (`assert.warns`).
+// They are exported by name as well, because a TypeScript test cannot call an
+// assertion function through a property of a default-exported object
+// (TS2775: "Assertions require every name in the call target to be declared
+// with an explicit type annotation").
 export default {
   ...assert,
   warns,

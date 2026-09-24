@@ -1,8 +1,9 @@
 import {blur2, contours, geoPath, max, min, nice, range, ticks, thresholdSturges} from "d3";
-import {Fragment, createElement as h, type ReactNode} from "react";
+import {createElement as h, type ReactNode} from "react";
 import type {ChannelValue} from "../channel.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 // @ts-expect-error — runtime export missing from channel.d.ts
 import {createChannels} from "../channel.js";
 import type {RangeInterval} from "../interval.js";
@@ -142,11 +143,12 @@ export class Contour extends AbstractRaster {
     const children: ReactNode[] = [];
     for (const i of index) {
       const channel = channelStyleProps(i, channels);
-      let element: ReactNode = h("path", {key: i, ...direct, ...channel, d: path(G[i]) ?? undefined});
-      const titled = withTitleChild(channels, i, null);
-      if (titled) element = h(Fragment, {key: i}, element, titled);
-      element = withHrefWrap(channels, this.target, i, element);
-      children.push(element);
+      // The title channel is applied to each band’s own path rather than to the
+      // enclosing group (as upstream’s applyChannelStyles does), so that
+      // hovering a band shows that band’s value.
+      const titled = withTitleChild(this, channels, i, null);
+      const element: ReactNode = h("path", {key: i, ...direct, ...channel, d: path(G[i]) ?? undefined}, titled);
+      children.push(withDatumIndex(withHrefWrap(channels, this.target, i, element), i));
     }
     return h("g", {...indirect, ...transform}, ...children);
   }

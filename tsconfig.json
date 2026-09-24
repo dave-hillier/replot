@@ -9,7 +9,7 @@
     "jsx": "react-jsx",
     "paths": {
       "@dave-hillier/replot": ["./index.ts"],
-      "@dave-hillier/replot/react": ["./react/index.tsx"],
+      "@dave-hillier/replot/react": ["./react/api.tsx"],
       "react": ["../node_modules/@types/react"],
       "react/jsx-runtime": ["../node_modules/@types/react/jsx-runtime"],
       "react-dom": ["../node_modules/@types/react-dom"],

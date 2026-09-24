@@ -1,4 +1,4 @@
-import {Replot, TreeMark, Link, Dot, Text, treeLink, treeNode} from "../../src/react/index.js";
+import {Replot, TreeMark, Link, Dot, Text, treeLink, treeNode} from "../../src/react/api.js";
 
 export async function greekGodsDefaults() {
   const gods = `Chaos Gaia Mountains

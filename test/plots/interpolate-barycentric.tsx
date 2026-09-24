@@ -1,4 +1,4 @@
-import {Replot, Frame, Raster, DelaunayMesh, Dot} from "../../src/react/index.js";
+import {Replot, Frame, Raster, DelaunayMesh, Dot} from "../../src/react/api.js";
 
 export async function interpolateBarycentric4() {
   const I = [0, 1, 2, 3];

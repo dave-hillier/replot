@@ -13,558 +13,488 @@
       white-space: pre;
     }
   </style>
-  <g>
-    <g transform="translate(386,0)">
-      <g aria-label="fy-axis tick label" text-anchor="start" transform="translate(9.5,0.5)">
-        <text transform="translate(214,100)" y="0.32em">Adelie</text>
-      </g>
+  <g aria-label="fy-axis tick label" transform="translate(9.5,0.5)">
+    <g text-anchor="start" transform="translate(386,0)">
+      <text transform="translate(214,100)" y="0.32em">Adelie</text>
     </g>
-    <g transform="translate(386,155)">
-      <g aria-label="fy-axis tick label" text-anchor="start" transform="translate(9.5,0.5)">
-        <text transform="translate(214,100)" y="0.32em">Chinstrap</text>
-      </g>
+    <g text-anchor="start" transform="translate(386,155)">
+      <text transform="translate(214,100)" y="0.32em">Chinstrap</text>
     </g>
-    <g transform="translate(386,310)">
-      <g aria-label="fy-axis tick label" text-anchor="start" transform="translate(9.5,0.5)">
-        <text transform="translate(214,100)" y="0.32em">Gentoo</text>
-      </g>
+    <g text-anchor="start" transform="translate(386,310)">
+      <text transform="translate(214,100)" y="0.32em">Gentoo</text>
     </g>
   </g>
   <g aria-label="fy-axis label" transform="translate(37.5,0.5)">
     <text transform="translate(600,255) rotate(-90)">species</text>
   </g>
-  <g>
+  <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
     <g transform="translate(0,0)">
-      <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
-        <text transform="translate(127,30)">Biscoe</text>
-      </g>
+      <text transform="translate(127,30)">Biscoe</text>
     </g>
     <g transform="translate(193,0)">
-      <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
-        <text transform="translate(127,30)">Dream</text>
-      </g>
+      <text transform="translate(127,30)">Dream</text>
     </g>
     <g transform="translate(386,0)">
-      <g aria-label="fx-axis tick label" transform="translate(0.5,-8.5)">
-        <text transform="translate(127,30)">Torgersen</text>
-      </g>
+      <text transform="translate(127,30)">Torgersen</text>
     </g>
   </g>
   <g aria-label="fx-axis label" transform="translate(0.5,-26.5)">
     <text transform="translate(320,30)" y="0.71em">island</text>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="y-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0,0.5)">
-        <path transform="translate(40,155.236)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,129.782)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,104.327)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,78.873)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,53.418)" d="M0,0L-6,0"></path>
-      </g>
+  <g aria-label="y-axis tick" aria-hidden="true" transform="translate(0,0.5)">
+    <g fill="none" stroke="currentColor" transform="translate(0,0)">
+      <path transform="translate(40,155.236)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,129.782)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,104.327)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,78.873)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,53.418)" d="M0,0L-6,0"></path>
     </g>
-    <g transform="translate(0,310)">
-      <g aria-label="y-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0,0.5)">
-        <path transform="translate(40,155.236)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,129.782)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,104.327)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,78.873)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,53.418)" d="M0,0L-6,0"></path>
-      </g>
+    <g fill="none" stroke="currentColor" transform="translate(0,310)">
+      <path transform="translate(40,155.236)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,129.782)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,104.327)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,78.873)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,53.418)" d="M0,0L-6,0"></path>
     </g>
-    <g transform="translate(193,155)">
-      <g aria-label="y-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0,0.5)">
-        <path transform="translate(40,155.236)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,129.782)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,104.327)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,78.873)" d="M0,0L-6,0"></path>
-        <path transform="translate(40,53.418)" d="M0,0L-6,0"></path>
-      </g>
+    <g fill="none" stroke="currentColor" transform="translate(193,155)">
+      <path transform="translate(40,155.236)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,129.782)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,104.327)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,78.873)" d="M0,0L-6,0"></path>
+      <path transform="translate(40,53.418)" d="M0,0L-6,0"></path>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="y-axis tick label" text-anchor="end" font-variant="tabular-nums" transform="translate(-8.5,0.5)">
-        <text transform="translate(40,155.236)" y="0.32em">35</text>
-        <text transform="translate(40,129.782)" y="0.32em">40</text>
-        <text transform="translate(40,104.327)" y="0.32em">45</text>
-        <text transform="translate(40,78.873)" y="0.32em">50</text>
-        <text transform="translate(40,53.418)" y="0.32em">55</text>
-      </g>
+  <g aria-label="y-axis tick label" transform="translate(-8.5,0.5)">
+    <g text-anchor="end" font-variant="tabular-nums" transform="translate(0,0)">
+      <text transform="translate(40,155.236)" y="0.32em">35</text>
+      <text transform="translate(40,129.782)" y="0.32em">40</text>
+      <text transform="translate(40,104.327)" y="0.32em">45</text>
+      <text transform="translate(40,78.873)" y="0.32em">50</text>
+      <text transform="translate(40,53.418)" y="0.32em">55</text>
     </g>
-    <g transform="translate(0,310)">
-      <g aria-label="y-axis tick label" text-anchor="end" font-variant="tabular-nums" transform="translate(-8.5,0.5)">
-        <text transform="translate(40,155.236)" y="0.32em">35</text>
-        <text transform="translate(40,129.782)" y="0.32em">40</text>
-        <text transform="translate(40,104.327)" y="0.32em">45</text>
-        <text transform="translate(40,78.873)" y="0.32em">50</text>
-        <text transform="translate(40,53.418)" y="0.32em">55</text>
-      </g>
+    <g text-anchor="end" font-variant="tabular-nums" transform="translate(0,310)">
+      <text transform="translate(40,155.236)" y="0.32em">35</text>
+      <text transform="translate(40,129.782)" y="0.32em">40</text>
+      <text transform="translate(40,104.327)" y="0.32em">45</text>
+      <text transform="translate(40,78.873)" y="0.32em">50</text>
+      <text transform="translate(40,53.418)" y="0.32em">55</text>
     </g>
-    <g transform="translate(193,155)">
-      <g aria-label="y-axis tick label" text-anchor="end" font-variant="tabular-nums" transform="translate(-8.5,0.5)">
-        <text transform="translate(40,155.236)" y="0.32em">35</text>
-        <text transform="translate(40,129.782)" y="0.32em">40</text>
-        <text transform="translate(40,104.327)" y="0.32em">45</text>
-        <text transform="translate(40,78.873)" y="0.32em">50</text>
-        <text transform="translate(40,53.418)" y="0.32em">55</text>
-      </g>
+    <g text-anchor="end" font-variant="tabular-nums" transform="translate(193,155)">
+      <text transform="translate(40,155.236)" y="0.32em">35</text>
+      <text transform="translate(40,129.782)" y="0.32em">40</text>
+      <text transform="translate(40,104.327)" y="0.32em">45</text>
+      <text transform="translate(40,78.873)" y="0.32em">50</text>
+      <text transform="translate(40,53.418)" y="0.32em">55</text>
     </g>
   </g>
   <g aria-label="y-axis label" text-anchor="start" transform="translate(-36.5,-26.5)">
     <text transform="translate(40,30)" y="0.71em">↑ culmen_length_mm</text>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0.5,0)">
-        <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
-        <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
-      </g>
+  <g aria-label="x-axis tick" aria-hidden="true" transform="translate(0.5,0)">
+    <g fill="none" stroke="currentColor" transform="translate(0,0)">
+      <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
+      <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
     </g>
-    <g transform="translate(0,310)">
-      <g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0.5,0)">
-        <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
-        <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
-      </g>
+    <g fill="none" stroke="currentColor" transform="translate(0,310)">
+      <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
+      <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
     </g>
-    <g transform="translate(193,155)">
-      <g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0.5,0)">
-        <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
-        <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
-      </g>
+    <g fill="none" stroke="currentColor" transform="translate(193,155)">
+      <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
+      <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
     </g>
-    <g transform="translate(386,0)">
-      <g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor" transform="translate(0.5,0)">
-        <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
-        <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
-      </g>
+    <g fill="none" stroke="currentColor" transform="translate(386,0)">
+      <path transform="translate(102.833,170)" d="M0,0L0,6"></path>
+      <path transform="translate(199.5,170)" d="M0,0L0,6"></path>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0.5,9.5)">
-        <text transform="translate(102.833,170)" y="0.71em">4,000</text>
-        <text transform="translate(199.5,170)" y="0.71em">6,000</text>
-      </g>
+  <g aria-label="x-axis tick label" transform="translate(0.5,9.5)">
+    <g font-variant="tabular-nums" transform="translate(0,0)">
+      <text transform="translate(102.833,170)" y="0.71em">4,000</text>
+      <text transform="translate(199.5,170)" y="0.71em">6,000</text>
     </g>
-    <g transform="translate(0,310)">
-      <g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0.5,9.5)">
-        <text transform="translate(102.833,170)" y="0.71em">4,000</text>
-        <text transform="translate(199.5,170)" y="0.71em">6,000</text>
-      </g>
+    <g font-variant="tabular-nums" transform="translate(0,310)">
+      <text transform="translate(102.833,170)" y="0.71em">4,000</text>
+      <text transform="translate(199.5,170)" y="0.71em">6,000</text>
     </g>
-    <g transform="translate(193,155)">
-      <g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0.5,9.5)">
-        <text transform="translate(102.833,170)" y="0.71em">4,000</text>
-        <text transform="translate(199.5,170)" y="0.71em">6,000</text>
-      </g>
+    <g font-variant="tabular-nums" transform="translate(193,155)">
+      <text transform="translate(102.833,170)" y="0.71em">4,000</text>
+      <text transform="translate(199.5,170)" y="0.71em">6,000</text>
     </g>
-    <g transform="translate(386,0)">
-      <g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0.5,9.5)">
-        <text transform="translate(102.833,170)" y="0.71em">4,000</text>
-        <text transform="translate(199.5,170)" y="0.71em">6,000</text>
-      </g>
+    <g font-variant="tabular-nums" transform="translate(386,0)">
+      <text transform="translate(102.833,170)" y="0.71em">4,000</text>
+      <text transform="translate(199.5,170)" y="0.71em">6,000</text>
     </g>
   </g>
   <g aria-label="x-axis label" text-anchor="end" transform="translate(37.5,27.5)">
     <text transform="translate(600,480)">body_mass_g →</text>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <rect aria-label="frame" fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0.5,0.5)" x="40" y="30" width="174" height="140"></rect>
+  <g aria-label="frame" transform="translate(0.5,0.5)">
+    <rect fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0,0)" x="40" y="30" width="174" height="140"></rect>
+    <rect fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0,310)" x="40" y="30" width="174" height="140"></rect>
+    <rect fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(193,0)" x="40" y="30" width="174" height="140"></rect>
+    <rect fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(193,155)" x="40" y="30" width="174" height="140"></rect>
+    <rect fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(386,0)" x="40" y="30" width="174" height="140"></rect>
+  </g>
+  <g aria-label="dot" transform="translate(0.5,0.5)">
+    <g fill="none" stroke-width="1.5" transform="translate(0,0)">
+      <circle stroke="#4269d0" cx="73.833" cy="140.982" r="3"></circle>
+      <circle stroke="#efb118" cx="83.5" cy="141.491" r="3"></circle>
+      <circle stroke="#4269d0" cx="93.167" cy="150.655" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="138.945" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="135.891" r="3"></circle>
+      <circle stroke="#4269d0" cx="93.167" cy="153.709" r="3"></circle>
+      <circle stroke="#efb118" cx="81.083" cy="126.727" r="3"></circle>
+      <circle stroke="#4269d0" cx="64.167" cy="127.236" r="3"></circle>
+      <circle stroke="#4269d0" cx="61.75" cy="140.473" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="127.236" r="3"></circle>
+      <circle stroke="#4269d0" cx="78.667" cy="131.818" r="3"></circle>
+      <circle stroke="#efb118" cx="117.333" cy="129.273" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="155.236" r="3"></circle>
+      <circle stroke="#efb118" cx="105.25" cy="119.6" r="3"></circle>
+      <circle stroke="#4269d0" cx="49.667" cy="157.782" r="3"></circle>
+      <circle stroke="#efb118" cx="88.333" cy="122.655" r="3"></circle>
+      <circle stroke="#4269d0" cx="81.083" cy="134.873" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="126.727" r="3"></circle>
+      <circle stroke="#4269d0" cx="47.25" cy="147.6" r="3"></circle>
+      <circle stroke="#efb118" cx="90.75" cy="142" r="3"></circle>
+      <circle stroke="#4269d0" cx="61.75" cy="151.673" r="3"></circle>
+      <circle stroke="#efb118" cx="122.167" cy="123.164" r="3"></circle>
+      <circle stroke="#4269d0" cx="83.5" cy="142" r="3"></circle>
+      <circle stroke="#efb118" cx="105.25" cy="124.182" r="3"></circle>
+      <circle stroke="#4269d0" cx="47.25" cy="148.109" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="121.636" r="3"></circle>
+      <circle stroke="#4269d0" cx="71.417" cy="152.691" r="3"></circle>
+      <circle stroke="#efb118" cx="107.667" cy="124.182" r="3"></circle>
+      <circle stroke="#4269d0" cx="89.542" cy="155.236" r="3"></circle>
+      <circle stroke="#efb118" cx="137.875" cy="124.691" r="3"></circle>
+      <circle stroke="#4269d0" cx="58.125" cy="141.491" r="3"></circle>
+      <circle stroke="#efb118" cx="114.917" cy="140.982" r="3"></circle>
+      <circle stroke="#4269d0" cx="50.875" cy="140.473" r="3"></circle>
+      <circle stroke="#efb118" cx="81.083" cy="131.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="90.75" cy="136.909" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="138.945" r="3"></circle>
+      <circle stroke="#4269d0" cx="62.958" cy="139.455" r="3"></circle>
+      <circle stroke="#efb118" cx="140.292" cy="113.491" r="3"></circle>
+      <circle stroke="#4269d0" cx="94.375" cy="139.455" r="3"></circle>
+      <circle stroke="#efb118" cx="131.833" cy="101.273" r="3"></circle>
+      <circle stroke="#4269d0" cx="64.167" cy="131.309" r="3"></circle>
+      <circle stroke="#efb118" cx="116.125" cy="118.582" r="3"></circle>
+      <circle stroke="#4269d0" cx="98" cy="131.818" r="3"></circle>
+      <circle stroke="#efb118" cx="106.458" cy="116.036" r="3"></circle>
     </g>
-    <g transform="translate(0,310)">
-      <rect aria-label="frame" fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0.5,0.5)" x="40" y="30" width="174" height="140"></rect>
+    <g fill="none" stroke-width="1.5" transform="translate(0,310)">
+      <circle stroke="#4269d0" cx="127" cy="98.727" r="3"></circle>
+      <circle stroke="#efb118" cx="185" cy="78.873" r="3"></circle>
+      <circle stroke="#4269d0" cx="124.583" cy="85.491" r="3"></circle>
+      <circle stroke="#efb118" cx="185" cy="78.873" r="3"></circle>
+      <circle stroke="#efb118" cx="170.5" cy="91.091" r="3"></circle>
+      <circle stroke="#4269d0" cx="129.417" cy="96.691" r="3"></circle>
+      <circle stroke="#4269d0" cx="141.5" cy="102.291" r="3"></circle>
+      <circle stroke="#efb118" cx="160.833" cy="95.673" r="3"></circle>
+      <circle stroke="#4269d0" cx="122.167" cy="112.982" r="3"></circle>
+      <circle stroke="#efb118" cx="158.417" cy="95.164" r="3"></circle>
+      <circle stroke="#4269d0" cx="134.25" cy="125.2" r="3"></circle>
+      <circle stroke="#efb118" cx="177.75" cy="83.964" r="3"></circle>
+      <circle stroke="#4269d0" cx="134.25" cy="101.782" r="3"></circle>
+      <circle stroke="#efb118" cx="192.25" cy="87.018" r="3"></circle>
+      <circle stroke="#4269d0" cx="112.5" cy="100.255" r="3"></circle>
+      <circle stroke="#efb118" cx="192.25" cy="82.436" r="3"></circle>
+      <circle stroke="#4269d0" cx="110.083" cy="119.6" r="3"></circle>
+      <circle stroke="#efb118" cx="214" cy="82.945" r="3"></circle>
+      <circle stroke="#4269d0" cx="141.5" cy="98.218" r="3"></circle>
+      <circle stroke="#efb118" cx="168.083" cy="85.491" r="3"></circle>
+      <circle stroke="#efb118" cx="185" cy="77.855" r="3"></circle>
+      <circle stroke="#4269d0" cx="151.167" cy="103.818" r="3"></circle>
+      <circle stroke="#4269d0" cx="122.167" cy="96.691" r="3"></circle>
+      <circle stroke="#efb118" cx="153.583" cy="97.709" r="3"></circle>
+      <circle stroke="#4269d0" cx="151.167" cy="115.018" r="3"></circle>
+      <circle stroke="#efb118" cx="156" cy="98.727" r="3"></circle>
+      <circle stroke="#ff725c" cx="107.667" cy="106.873" r="3"></circle>
+      <circle stroke="#efb118" cx="182.583" cy="90.073" r="3"></circle>
+      <circle stroke="#4269d0" cx="131.833" cy="88.036" r="3"></circle>
+      <circle stroke="#efb118" cx="177.75" cy="78.873" r="3"></circle>
+      <circle stroke="#efb118" cx="163.25" cy="92.618" r="3"></circle>
+      <circle stroke="#4269d0" cx="136.667" cy="115.527" r="3"></circle>
+      <circle stroke="#4269d0" cx="153.583" cy="103.818" r="3"></circle>
+      <circle stroke="#efb118" cx="201.917" cy="30" r="3"></circle>
+      <circle stroke="#4269d0" cx="158.417" cy="83.455" r="3"></circle>
+      <circle stroke="#efb118" cx="170.5" cy="87.018" r="3"></circle>
+      <circle stroke="#4269d0" cx="148.75" cy="116.545" r="3"></circle>
+      <circle stroke="#efb118" cx="163.25" cy="107.382" r="3"></circle>
+      <circle stroke="#4269d0" cx="119.75" cy="109.418" r="3"></circle>
+      <circle stroke="#efb118" cx="168.083" cy="85.491" r="3"></circle>
+      <circle stroke="#4269d0" cx="100.417" cy="116.036" r="3"></circle>
+      <circle stroke="#efb118" cx="185" cy="80.909" r="3"></circle>
+      <circle stroke="#4269d0" cx="117.333" cy="102.8" r="3"></circle>
+      <circle stroke="#efb118" cx="139.083" cy="80.909" r="3"></circle>
+      <circle stroke="#efb118" cx="177.75" cy="76.327" r="3"></circle>
+      <circle stroke="#4269d0" cx="146.333" cy="111.455" r="3"></circle>
+      <circle stroke="#4269d0" cx="112.5" cy="101.782" r="3"></circle>
+      <circle stroke="#efb118" cx="170.5" cy="76.327" r="3"></circle>
+      <circle stroke="#4269d0" cx="156" cy="104.836" r="3"></circle>
+      <circle stroke="#efb118" cx="165.667" cy="103.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="143.917" cy="96.182" r="3"></circle>
+      <circle stroke="#efb118" cx="165.667" cy="86.509" r="3"></circle>
+      <circle stroke="#4269d0" cx="122.167" cy="103.818" r="3"></circle>
+      <circle stroke="#efb118" cx="151.167" cy="78.364" r="3"></circle>
+      <circle stroke="#4269d0" cx="146.333" cy="96.691" r="3"></circle>
+      <circle stroke="#efb118" cx="153.583" cy="104.327" r="3"></circle>
+      <circle stroke="#4269d0" cx="117.333" cy="110.436" r="3"></circle>
+      <circle stroke="#efb118" cx="151.167" cy="101.782" r="3"></circle>
+      <circle stroke="#4269d0" cx="124.583" cy="113.491" r="3"></circle>
+      <circle stroke="#efb118" cx="177.75" cy="76.836" r="3"></circle>
+      <circle stroke="#4269d0" cx="112.5" cy="102.8" r="3"></circle>
+      <circle stroke="#efb118" cx="165.667" cy="98.218" r="3"></circle>
+      <circle stroke="#4269d0" cx="122.167" cy="100.764" r="3"></circle>
+      <circle stroke="#efb118" cx="182.583" cy="56.982" r="3"></circle>
+      <circle stroke="#4269d0" cx="136.667" cy="100.255" r="3"></circle>
+      <circle stroke="#efb118" cx="185" cy="79.891" r="3"></circle>
+      <circle stroke="#ff725c" cx="134.25" cy="98.218" r="3"></circle>
+      <circle stroke="#efb118" cx="189.833" cy="81.418" r="3"></circle>
+      <circle stroke="#4269d0" cx="136.667" cy="111.964" r="3"></circle>
+      <circle stroke="#efb118" cx="177.75" cy="75.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="139.083" cy="90.582" r="3"></circle>
+      <circle stroke="#efb118" cx="151.167" cy="97.2" r="3"></circle>
+      <circle stroke="#efb118" cx="156" cy="88.036" r="3"></circle>
+      <circle stroke="#4269d0" cx="160.833" cy="96.691" r="3"></circle>
+      <circle stroke="#4269d0" cx="136.667" cy="97.2" r="3"></circle>
+      <circle stroke="#efb118" cx="189.833" cy="86" r="3"></circle>
+      <circle stroke="#4269d0" cx="131.833" cy="91.6" r="3"></circle>
+      <circle stroke="#efb118" cx="199.5" cy="73.273" r="3"></circle>
+      <circle stroke="#4269d0" cx="139.083" cy="103.309" r="3"></circle>
+      <circle stroke="#efb118" cx="197.083" cy="103.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="133.042" cy="83.455" r="3"></circle>
+      <circle stroke="#efb118" cx="172.917" cy="66.145" r="3"></circle>
+      <circle stroke="#4269d0" cx="137.875" cy="92.109" r="3"></circle>
+      <circle stroke="#efb118" cx="168.083" cy="78.873" r="3"></circle>
+      <circle stroke="#4269d0" cx="139.083" cy="104.836" r="3"></circle>
+      <circle stroke="#efb118" cx="180.167" cy="74.8" r="3"></circle>
+      <circle stroke="#4269d0" cx="131.833" cy="112.473" r="3"></circle>
+      <circle stroke="#efb118" cx="165.667" cy="72.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="145.125" cy="91.6" r="3"></circle>
+      <circle stroke="#efb118" cx="177.75" cy="68.182" r="3"></circle>
+      <circle stroke="#4269d0" cx="148.75" cy="91.6" r="3"></circle>
+      <circle stroke="#efb118" cx="170.5" cy="67.673" r="3"></circle>
+      <circle stroke="#4269d0" cx="139.083" cy="101.782" r="3"></circle>
+      <circle stroke="#efb118" cx="182.583" cy="81.418" r="3"></circle>
+      <circle stroke="#4269d0" cx="143.917" cy="106.873" r="3"></circle>
+      <circle stroke="#efb118" cx="160.833" cy="74.8" r="3"></circle>
+      <circle stroke="#efb118" cx="147.542" cy="81.927" r="3"></circle>
+      <circle stroke="#4269d0" cx="145.125" cy="94.655" r="3"></circle>
+      <circle stroke="#4269d0" cx="133.042" cy="87.018" r="3"></circle>
+      <circle stroke="#efb118" cx="163.25" cy="73.273" r="3"></circle>
+      <circle stroke="#4269d0" cx="143.917" cy="86.509" r="3"></circle>
+      <circle stroke="#efb118" cx="180.167" cy="48.836" r="3"></circle>
+      <circle stroke="#4269d0" cx="149.958" cy="93.127" r="3"></circle>
+      <circle stroke="#efb118" cx="175.333" cy="83.455" r="3"></circle>
+      <circle stroke="#ff725c" cx="137.875" cy="92.618" r="3"></circle>
+      <circle stroke="#efb118" cx="175.333" cy="95.164" r="3"></circle>
+      <circle stroke="#4269d0" cx="136.667" cy="121.127" r="3"></circle>
+      <circle stroke="#efb118" cx="175.333" cy="61.564" r="3"></circle>
+      <circle stroke="#4269d0" cx="130.625" cy="112.982" r="3"></circle>
+      <circle stroke="#efb118" cx="175.333" cy="88.545" r="3"></circle>
+      <circle stroke="#4269d0" cx="151.167" cy="76.327" r="3"></circle>
+      <circle stroke="#efb118" cx="197.083" cy="79.891" r="3"></circle>
+      <circle stroke="#4269d0" cx="134.25" cy="111.964" r="3"></circle>
+      <circle stroke="#efb118" cx="175.333" cy="71.236" r="3"></circle>
+      <circle stroke="#4269d0" cx="120.958" cy="98.218" r="3"></circle>
+      <circle stroke="#efb118" cx="192.25" cy="52.909" r="3"></circle>
+      <circle stroke="#ff725c" cx="145.125" cy="106.873" r="3"></circle>
+      <circle stroke="#efb118" cx="199.5" cy="84.982" r="3"></circle>
+      <circle stroke="#4269d0" cx="147.542" cy="93.127" r="3"></circle>
+      <circle stroke="#4269d0" cx="143.917" cy="95.164" r="3"></circle>
+      <circle stroke="#efb118" cx="187.417" cy="76.836" r="3"></circle>
+      <circle stroke="#4269d0" cx="160.833" cy="103.309" r="3"></circle>
+      <circle stroke="#efb118" cx="170.5" cy="79.382" r="3"></circle>
     </g>
-    <g transform="translate(193,0)">
-      <rect aria-label="frame" fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0.5,0.5)" x="40" y="30" width="174" height="140"></rect>
+    <g fill="none" stroke-width="1.5" transform="translate(193,0)">
+      <circle stroke="#4269d0" cx="66.583" cy="132.327" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="144.036" r="3"></circle>
+      <circle stroke="#4269d0" cx="69" cy="132.327" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="125.2" r="3"></circle>
+      <circle stroke="#4269d0" cx="70.208" cy="148.109" r="3"></circle>
+      <circle stroke="#efb118" cx="110.083" cy="133.855" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="135.891" r="3"></circle>
+      <circle stroke="#4269d0" cx="81.083" cy="118.582" r="3"></circle>
+      <circle stroke="#4269d0" cx="69" cy="142" r="3"></circle>
+      <circle stroke="#efb118" cx="134.25" cy="130.8" r="3"></circle>
+      <circle stroke="#4269d0" cx="61.75" cy="147.6" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="125.709" r="3"></circle>
+      <circle stroke="#4269d0" cx="59.333" cy="150.145" r="3"></circle>
+      <circle stroke="#efb118" cx="122.167" cy="108.909" r="3"></circle>
+      <circle stroke="#4269d0" cx="54.5" cy="145.055" r="3"></circle>
+      <circle stroke="#efb118" cx="131.833" cy="131.818" r="3"></circle>
+      <circle stroke="#efb118" cx="75.042" cy="124.182" r="3"></circle>
+      <circle stroke="#ff725c" cx="53.292" cy="142.509" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="150.145" r="3"></circle>
+      <circle stroke="#efb118" cx="110.083" cy="118.073" r="3"></circle>
+      <circle stroke="#4269d0" cx="71.417" cy="143.527" r="3"></circle>
+      <circle stroke="#efb118" cx="81.083" cy="123.164" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="148.618" r="3"></circle>
+      <circle stroke="#4269d0" cx="78.667" cy="145.564" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="138.436" r="3"></circle>
+      <circle stroke="#4269d0" cx="83.5" cy="135.382" r="3"></circle>
+      <circle stroke="#4269d0" cx="81.083" cy="151.673" r="3"></circle>
+      <circle stroke="#efb118" cx="117.333" cy="124.182" r="3"></circle>
+      <circle stroke="#4269d0" cx="73.833" cy="160.327" r="3"></circle>
+      <circle stroke="#efb118" cx="124.583" cy="131.818" r="3"></circle>
+      <circle stroke="#4269d0" cx="69" cy="149.127" r="3"></circle>
+      <circle stroke="#efb118" cx="117.333" cy="125.709" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="139.455" r="3"></circle>
+      <circle stroke="#efb118" cx="119.75" cy="128.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="49.667" cy="164.909" r="3"></circle>
+      <circle stroke="#efb118" cx="107.667" cy="113.491" r="3"></circle>
+      <circle stroke="#4269d0" cx="78.667" cy="146.073" r="3"></circle>
+      <circle stroke="#efb118" cx="125.792" cy="142.509" r="3"></circle>
+      <circle stroke="#4269d0" cx="75.042" cy="139.455" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="124.182" r="3"></circle>
+      <circle stroke="#4269d0" cx="62.958" cy="152.182" r="3"></circle>
+      <circle stroke="#efb118" cx="101.625" cy="128.764" r="3"></circle>
+      <circle stroke="#4269d0" cx="73.833" cy="145.055" r="3"></circle>
+      <circle stroke="#efb118" cx="114.917" cy="131.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="73.833" cy="128.764" r="3"></circle>
+      <circle stroke="#efb118" cx="77.458" cy="126.727" r="3"></circle>
+      <circle stroke="#4269d0" cx="56.917" cy="170" r="3"></circle>
+      <circle stroke="#efb118" cx="89.542" cy="126.218" r="3"></circle>
+      <circle stroke="#4269d0" cx="54.5" cy="143.527" r="3"></circle>
+      <circle stroke="#efb118" cx="85.917" cy="134.873" r="3"></circle>
+      <circle stroke="#efb118" cx="114.917" cy="133.855" r="3"></circle>
+      <circle stroke="#4269d0" cx="77.458" cy="147.091" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="150.145" r="3"></circle>
+      <circle stroke="#efb118" cx="90.75" cy="140.982" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="150.145" r="3"></circle>
+      <circle stroke="#efb118" cx="102.833" cy="122.145" r="3"></circle>
     </g>
-    <g transform="translate(193,155)">
-      <rect aria-label="frame" fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0.5,0.5)" x="40" y="30" width="174" height="140"></rect>
+    <g fill="none" stroke-width="1.5" transform="translate(193,155)">
+      <circle stroke="#4269d0" cx="78.667" cy="96.691" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="78.873" r="3"></circle>
+      <circle stroke="#efb118" cx="85.917" cy="72.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="79.875" cy="102.291" r="3"></circle>
+      <circle stroke="#efb118" cx="89.542" cy="65.127" r="3"></circle>
+      <circle stroke="#4269d0" cx="100.417" cy="103.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="66.583" cy="98.727" r="3"></circle>
+      <circle stroke="#efb118" cx="90.75" cy="72.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="110.083" cy="99.236" r="3"></circle>
+      <circle stroke="#efb118" cx="88.333" cy="72.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="93.167" cy="96.182" r="3"></circle>
+      <circle stroke="#efb118" cx="91.958" cy="70.218" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="94.145" r="3"></circle>
+      <circle stroke="#efb118" cx="105.25" cy="68.691" r="3"></circle>
+      <circle stroke="#4269d0" cx="82.292" cy="99.745" r="3"></circle>
+      <circle stroke="#efb118" cx="105.25" cy="76.327" r="3"></circle>
+      <circle stroke="#efb118" cx="69" cy="77.345" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="38.145" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="97.2" r="3"></circle>
+      <circle stroke="#efb118" cx="122.167" cy="82.945" r="3"></circle>
+      <circle stroke="#4269d0" cx="83.5" cy="117.564" r="3"></circle>
+      <circle stroke="#efb118" cx="73.833" cy="86.509" r="3"></circle>
+      <circle stroke="#4269d0" cx="49.667" cy="113.491" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="75.818" r="3"></circle>
+      <circle stroke="#4269d0" cx="69" cy="95.673" r="3"></circle>
+      <circle stroke="#efb118" cx="110.083" cy="68.691" r="3"></circle>
+      <circle stroke="#4269d0" cx="73.833" cy="76.327" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="81.418" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="97.2" r="3"></circle>
+      <circle stroke="#efb118" cx="129.417" cy="64.618" r="3"></circle>
+      <circle stroke="#4269d0" cx="64.167" cy="125.2" r="3"></circle>
+      <circle stroke="#efb118" cx="117.333" cy="57.491" r="3"></circle>
+      <circle stroke="#4269d0" cx="71.417" cy="117.055" r="3"></circle>
+      <circle stroke="#efb118" cx="107.667" cy="73.782" r="3"></circle>
+      <circle stroke="#efb118" cx="83.5" cy="80.4" r="3"></circle>
+      <circle stroke="#4269d0" cx="98" cy="91.6" r="3"></circle>
+      <circle stroke="#4269d0" cx="95.583" cy="91.091" r="3"></circle>
+      <circle stroke="#efb118" cx="141.5" cy="68.691" r="3"></circle>
+      <circle stroke="#4269d0" cx="40" cy="94.655" r="3"></circle>
+      <circle stroke="#efb118" cx="127" cy="61.055" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="83.964" r="3"></circle>
+      <circle stroke="#4269d0" cx="85.917" cy="98.218" r="3"></circle>
+      <circle stroke="#efb118" cx="81.083" cy="74.291" r="3"></circle>
+      <circle stroke="#4269d0" cx="78.667" cy="101.782" r="3"></circle>
+      <circle stroke="#4269d0" cx="87.125" cy="74.291" r="3"></circle>
+      <circle stroke="#efb118" cx="124.583" cy="74.8" r="3"></circle>
+      <circle stroke="#4269d0" cx="73.833" cy="78.364" r="3"></circle>
+      <circle stroke="#efb118" cx="117.333" cy="83.964" r="3"></circle>
+      <circle stroke="#efb118" cx="66.583" cy="71.236" r="3"></circle>
+      <circle stroke="#4269d0" cx="87.125" cy="79.891" r="3"></circle>
+      <circle stroke="#4269d0" cx="70.208" cy="88.545" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="71.745" r="3"></circle>
+      <circle stroke="#4269d0" cx="83.5" cy="100.764" r="3"></circle>
+      <circle stroke="#efb118" cx="105.25" cy="75.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="71.417" cy="117.055" r="3"></circle>
+      <circle stroke="#efb118" cx="76.25" cy="67.673" r="3"></circle>
+      <circle stroke="#4269d0" cx="66.583" cy="103.309" r="3"></circle>
+      <circle stroke="#efb118" cx="105.25" cy="82.436" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="77.855" r="3"></circle>
+      <circle stroke="#4269d0" cx="79.875" cy="101.273" r="3"></circle>
+      <circle stroke="#efb118" cx="100.417" cy="69.2" r="3"></circle>
+      <circle stroke="#4269d0" cx="85.917" cy="95.164" r="3"></circle>
+      <circle stroke="#4269d0" cx="85.917" cy="100.764" r="3"></circle>
+      <circle stroke="#efb118" cx="102.833" cy="49.345" r="3"></circle>
+      <circle stroke="#4269d0" cx="73.833" cy="111.964" r="3"></circle>
+      <circle stroke="#efb118" cx="91.958" cy="80.909" r="3"></circle>
+      <circle stroke="#efb118" cx="107.667" cy="74.8" r="3"></circle>
+      <circle stroke="#4269d0" cx="91.958" cy="77.855" r="3"></circle>
     </g>
-    <g transform="translate(386,0)">
-      <rect aria-label="frame" fill="none" stroke="currentColor" stroke-opacity="0.1" transform="translate(0.5,0.5)" x="40" y="30" width="174" height="140"></rect>
+    <g fill="none" stroke-width="1.5" transform="translate(386,0)">
+      <circle stroke="#efb118" cx="90.75" cy="134.364" r="3"></circle>
+      <circle stroke="#4269d0" cx="93.167" cy="132.327" r="3"></circle>
+      <circle stroke="#4269d0" cx="66.583" cy="128.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="146.582" r="3"></circle>
+      <circle stroke="#efb118" cx="85.917" cy="133.345" r="3"></circle>
+      <circle stroke="#4269d0" cx="84.708" cy="135.382" r="3"></circle>
+      <circle stroke="#efb118" cx="135.458" cy="133.855" r="3"></circle>
+      <circle stroke="#ff725c" cx="77.458" cy="159.818" r="3"></circle>
+      <circle stroke="#ff725c" cx="114.917" cy="119.6" r="3"></circle>
+      <circle stroke="#ff725c" cx="69" cy="140.982" r="3"></circle>
+      <circle stroke="#ff725c" cx="88.333" cy="140.982" r="3"></circle>
+      <circle stroke="#4269d0" cx="64.167" cy="124.182" r="3"></circle>
+      <circle stroke="#efb118" cx="93.167" cy="136.909" r="3"></circle>
+      <circle stroke="#efb118" cx="122.167" cy="157.273" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="147.091" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="136.4" r="3"></circle>
+      <circle stroke="#efb118" cx="127" cy="117.055" r="3"></circle>
+      <circle stroke="#4269d0" cx="70.208" cy="158.291" r="3"></circle>
+      <circle stroke="#efb118" cx="112.5" cy="99.236" r="3"></circle>
+      <circle stroke="#4269d0" cx="56.917" cy="150.655" r="3"></circle>
+      <circle stroke="#efb118" cx="124.583" cy="120.618" r="3"></circle>
+      <circle stroke="#4269d0" cx="83.5" cy="162.873" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="131.309" r="3"></circle>
+      <circle stroke="#4269d0" cx="81.083" cy="131.818" r="3"></circle>
+      <circle stroke="#efb118" cx="110.083" cy="100.255" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="152.691" r="3"></circle>
+      <circle stroke="#efb118" cx="114.917" cy="115.527" r="3"></circle>
+      <circle stroke="#4269d0" cx="88.333" cy="125.2" r="3"></circle>
+      <circle stroke="#efb118" cx="98" cy="144.036" r="3"></circle>
+      <circle stroke="#4269d0" cx="81.083" cy="149.127" r="3"></circle>
+      <circle stroke="#efb118" cx="102.833" cy="119.091" r="3"></circle>
+      <circle stroke="#4269d0" cx="64.167" cy="157.273" r="3"></circle>
+      <circle stroke="#efb118" cx="136.667" cy="115.018" r="3"></circle>
+      <circle stroke="#4269d0" cx="93.167" cy="146.582" r="3"></circle>
+      <circle stroke="#efb118" cx="112.5" cy="154.727" r="3"></circle>
+      <circle stroke="#4269d0" cx="49.667" cy="136.909" r="3"></circle>
+      <circle stroke="#efb118" cx="91.958" cy="143.527" r="3"></circle>
+      <circle stroke="#4269d0" cx="71.417" cy="151.673" r="3"></circle>
+      <circle stroke="#efb118" cx="70.208" cy="124.182" r="3"></circle>
+      <circle stroke="#4269d0" cx="61.75" cy="149.127" r="3"></circle>
+      <circle stroke="#efb118" cx="78.667" cy="141.491" r="3"></circle>
+      <circle stroke="#4269d0" cx="76.25" cy="128.764" r="3"></circle>
+      <circle stroke="#efb118" cx="96.792" cy="122.655" r="3"></circle>
+      <circle stroke="#4269d0" cx="56.917" cy="154.218" r="3"></circle>
+      <circle stroke="#efb118" cx="102.833" cy="126.727" r="3"></circle>
+      <circle stroke="#4269d0" cx="67.792" cy="135.891" r="3"></circle>
+      <circle stroke="#efb118" cx="117.333" cy="122.145" r="3"></circle>
+      <circle stroke="#4269d0" cx="56.917" cy="134.873" r="3"></circle>
+      <circle stroke="#efb118" cx="102.833" cy="108.909" r="3"></circle>
+      <circle stroke="#4269d0" cx="70.208" cy="137.418" r="3"></circle>
+      <circle stroke="#efb118" cx="78.667" cy="114" r="3"></circle>
     </g>
   </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="dot" fill="none" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <circle stroke="#4269d0" cx="73.833" cy="140.982" r="3"></circle>
-        <circle stroke="#efb118" cx="83.5" cy="141.491" r="3"></circle>
-        <circle stroke="#4269d0" cx="93.167" cy="150.655" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="138.945" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="135.891" r="3"></circle>
-        <circle stroke="#4269d0" cx="93.167" cy="153.709" r="3"></circle>
-        <circle stroke="#efb118" cx="81.083" cy="126.727" r="3"></circle>
-        <circle stroke="#4269d0" cx="64.167" cy="127.236" r="3"></circle>
-        <circle stroke="#4269d0" cx="61.75" cy="140.473" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="127.236" r="3"></circle>
-        <circle stroke="#4269d0" cx="78.667" cy="131.818" r="3"></circle>
-        <circle stroke="#efb118" cx="117.333" cy="129.273" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="155.236" r="3"></circle>
-        <circle stroke="#efb118" cx="105.25" cy="119.6" r="3"></circle>
-        <circle stroke="#4269d0" cx="49.667" cy="157.782" r="3"></circle>
-        <circle stroke="#efb118" cx="88.333" cy="122.655" r="3"></circle>
-        <circle stroke="#4269d0" cx="81.083" cy="134.873" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="126.727" r="3"></circle>
-        <circle stroke="#4269d0" cx="47.25" cy="147.6" r="3"></circle>
-        <circle stroke="#efb118" cx="90.75" cy="142" r="3"></circle>
-        <circle stroke="#4269d0" cx="61.75" cy="151.673" r="3"></circle>
-        <circle stroke="#efb118" cx="122.167" cy="123.164" r="3"></circle>
-        <circle stroke="#4269d0" cx="83.5" cy="142" r="3"></circle>
-        <circle stroke="#efb118" cx="105.25" cy="124.182" r="3"></circle>
-        <circle stroke="#4269d0" cx="47.25" cy="148.109" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="121.636" r="3"></circle>
-        <circle stroke="#4269d0" cx="71.417" cy="152.691" r="3"></circle>
-        <circle stroke="#efb118" cx="107.667" cy="124.182" r="3"></circle>
-        <circle stroke="#4269d0" cx="89.542" cy="155.236" r="3"></circle>
-        <circle stroke="#efb118" cx="137.875" cy="124.691" r="3"></circle>
-        <circle stroke="#4269d0" cx="58.125" cy="141.491" r="3"></circle>
-        <circle stroke="#efb118" cx="114.917" cy="140.982" r="3"></circle>
-        <circle stroke="#4269d0" cx="50.875" cy="140.473" r="3"></circle>
-        <circle stroke="#efb118" cx="81.083" cy="131.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="90.75" cy="136.909" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="138.945" r="3"></circle>
-        <circle stroke="#4269d0" cx="62.958" cy="139.455" r="3"></circle>
-        <circle stroke="#efb118" cx="140.292" cy="113.491" r="3"></circle>
-        <circle stroke="#4269d0" cx="94.375" cy="139.455" r="3"></circle>
-        <circle stroke="#efb118" cx="131.833" cy="101.273" r="3"></circle>
-        <circle stroke="#4269d0" cx="64.167" cy="131.309" r="3"></circle>
-        <circle stroke="#efb118" cx="116.125" cy="118.582" r="3"></circle>
-        <circle stroke="#4269d0" cx="98" cy="131.818" r="3"></circle>
-        <circle stroke="#efb118" cx="106.458" cy="116.036" r="3"></circle>
-      </g>
-    </g>
-    <g transform="translate(0,310)">
-      <g aria-label="dot" fill="none" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <circle stroke="#4269d0" cx="127" cy="98.727" r="3"></circle>
-        <circle stroke="#efb118" cx="185" cy="78.873" r="3"></circle>
-        <circle stroke="#4269d0" cx="124.583" cy="85.491" r="3"></circle>
-        <circle stroke="#efb118" cx="185" cy="78.873" r="3"></circle>
-        <circle stroke="#efb118" cx="170.5" cy="91.091" r="3"></circle>
-        <circle stroke="#4269d0" cx="129.417" cy="96.691" r="3"></circle>
-        <circle stroke="#4269d0" cx="141.5" cy="102.291" r="3"></circle>
-        <circle stroke="#efb118" cx="160.833" cy="95.673" r="3"></circle>
-        <circle stroke="#4269d0" cx="122.167" cy="112.982" r="3"></circle>
-        <circle stroke="#efb118" cx="158.417" cy="95.164" r="3"></circle>
-        <circle stroke="#4269d0" cx="134.25" cy="125.2" r="3"></circle>
-        <circle stroke="#efb118" cx="177.75" cy="83.964" r="3"></circle>
-        <circle stroke="#4269d0" cx="134.25" cy="101.782" r="3"></circle>
-        <circle stroke="#efb118" cx="192.25" cy="87.018" r="3"></circle>
-        <circle stroke="#4269d0" cx="112.5" cy="100.255" r="3"></circle>
-        <circle stroke="#efb118" cx="192.25" cy="82.436" r="3"></circle>
-        <circle stroke="#4269d0" cx="110.083" cy="119.6" r="3"></circle>
-        <circle stroke="#efb118" cx="214" cy="82.945" r="3"></circle>
-        <circle stroke="#4269d0" cx="141.5" cy="98.218" r="3"></circle>
-        <circle stroke="#efb118" cx="168.083" cy="85.491" r="3"></circle>
-        <circle stroke="#efb118" cx="185" cy="77.855" r="3"></circle>
-        <circle stroke="#4269d0" cx="151.167" cy="103.818" r="3"></circle>
-        <circle stroke="#4269d0" cx="122.167" cy="96.691" r="3"></circle>
-        <circle stroke="#efb118" cx="153.583" cy="97.709" r="3"></circle>
-        <circle stroke="#4269d0" cx="151.167" cy="115.018" r="3"></circle>
-        <circle stroke="#efb118" cx="156" cy="98.727" r="3"></circle>
-        <circle stroke="#ff725c" cx="107.667" cy="106.873" r="3"></circle>
-        <circle stroke="#efb118" cx="182.583" cy="90.073" r="3"></circle>
-        <circle stroke="#4269d0" cx="131.833" cy="88.036" r="3"></circle>
-        <circle stroke="#efb118" cx="177.75" cy="78.873" r="3"></circle>
-        <circle stroke="#efb118" cx="163.25" cy="92.618" r="3"></circle>
-        <circle stroke="#4269d0" cx="136.667" cy="115.527" r="3"></circle>
-        <circle stroke="#4269d0" cx="153.583" cy="103.818" r="3"></circle>
-        <circle stroke="#efb118" cx="201.917" cy="30" r="3"></circle>
-        <circle stroke="#4269d0" cx="158.417" cy="83.455" r="3"></circle>
-        <circle stroke="#efb118" cx="170.5" cy="87.018" r="3"></circle>
-        <circle stroke="#4269d0" cx="148.75" cy="116.545" r="3"></circle>
-        <circle stroke="#efb118" cx="163.25" cy="107.382" r="3"></circle>
-        <circle stroke="#4269d0" cx="119.75" cy="109.418" r="3"></circle>
-        <circle stroke="#efb118" cx="168.083" cy="85.491" r="3"></circle>
-        <circle stroke="#4269d0" cx="100.417" cy="116.036" r="3"></circle>
-        <circle stroke="#efb118" cx="185" cy="80.909" r="3"></circle>
-        <circle stroke="#4269d0" cx="117.333" cy="102.8" r="3"></circle>
-        <circle stroke="#efb118" cx="139.083" cy="80.909" r="3"></circle>
-        <circle stroke="#efb118" cx="177.75" cy="76.327" r="3"></circle>
-        <circle stroke="#4269d0" cx="146.333" cy="111.455" r="3"></circle>
-        <circle stroke="#4269d0" cx="112.5" cy="101.782" r="3"></circle>
-        <circle stroke="#efb118" cx="170.5" cy="76.327" r="3"></circle>
-        <circle stroke="#4269d0" cx="156" cy="104.836" r="3"></circle>
-        <circle stroke="#efb118" cx="165.667" cy="103.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="143.917" cy="96.182" r="3"></circle>
-        <circle stroke="#efb118" cx="165.667" cy="86.509" r="3"></circle>
-        <circle stroke="#4269d0" cx="122.167" cy="103.818" r="3"></circle>
-        <circle stroke="#efb118" cx="151.167" cy="78.364" r="3"></circle>
-        <circle stroke="#4269d0" cx="146.333" cy="96.691" r="3"></circle>
-        <circle stroke="#efb118" cx="153.583" cy="104.327" r="3"></circle>
-        <circle stroke="#4269d0" cx="117.333" cy="110.436" r="3"></circle>
-        <circle stroke="#efb118" cx="151.167" cy="101.782" r="3"></circle>
-        <circle stroke="#4269d0" cx="124.583" cy="113.491" r="3"></circle>
-        <circle stroke="#efb118" cx="177.75" cy="76.836" r="3"></circle>
-        <circle stroke="#4269d0" cx="112.5" cy="102.8" r="3"></circle>
-        <circle stroke="#efb118" cx="165.667" cy="98.218" r="3"></circle>
-        <circle stroke="#4269d0" cx="122.167" cy="100.764" r="3"></circle>
-        <circle stroke="#efb118" cx="182.583" cy="56.982" r="3"></circle>
-        <circle stroke="#4269d0" cx="136.667" cy="100.255" r="3"></circle>
-        <circle stroke="#efb118" cx="185" cy="79.891" r="3"></circle>
-        <circle stroke="#ff725c" cx="134.25" cy="98.218" r="3"></circle>
-        <circle stroke="#efb118" cx="189.833" cy="81.418" r="3"></circle>
-        <circle stroke="#4269d0" cx="136.667" cy="111.964" r="3"></circle>
-        <circle stroke="#efb118" cx="177.75" cy="75.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="139.083" cy="90.582" r="3"></circle>
-        <circle stroke="#efb118" cx="151.167" cy="97.2" r="3"></circle>
-        <circle stroke="#efb118" cx="156" cy="88.036" r="3"></circle>
-        <circle stroke="#4269d0" cx="160.833" cy="96.691" r="3"></circle>
-        <circle stroke="#4269d0" cx="136.667" cy="97.2" r="3"></circle>
-        <circle stroke="#efb118" cx="189.833" cy="86" r="3"></circle>
-        <circle stroke="#4269d0" cx="131.833" cy="91.6" r="3"></circle>
-        <circle stroke="#efb118" cx="199.5" cy="73.273" r="3"></circle>
-        <circle stroke="#4269d0" cx="139.083" cy="103.309" r="3"></circle>
-        <circle stroke="#efb118" cx="197.083" cy="103.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="133.042" cy="83.455" r="3"></circle>
-        <circle stroke="#efb118" cx="172.917" cy="66.145" r="3"></circle>
-        <circle stroke="#4269d0" cx="137.875" cy="92.109" r="3"></circle>
-        <circle stroke="#efb118" cx="168.083" cy="78.873" r="3"></circle>
-        <circle stroke="#4269d0" cx="139.083" cy="104.836" r="3"></circle>
-        <circle stroke="#efb118" cx="180.167" cy="74.8" r="3"></circle>
-        <circle stroke="#4269d0" cx="131.833" cy="112.473" r="3"></circle>
-        <circle stroke="#efb118" cx="165.667" cy="72.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="145.125" cy="91.6" r="3"></circle>
-        <circle stroke="#efb118" cx="177.75" cy="68.182" r="3"></circle>
-        <circle stroke="#4269d0" cx="148.75" cy="91.6" r="3"></circle>
-        <circle stroke="#efb118" cx="170.5" cy="67.673" r="3"></circle>
-        <circle stroke="#4269d0" cx="139.083" cy="101.782" r="3"></circle>
-        <circle stroke="#efb118" cx="182.583" cy="81.418" r="3"></circle>
-        <circle stroke="#4269d0" cx="143.917" cy="106.873" r="3"></circle>
-        <circle stroke="#efb118" cx="160.833" cy="74.8" r="3"></circle>
-        <circle stroke="#efb118" cx="147.542" cy="81.927" r="3"></circle>
-        <circle stroke="#4269d0" cx="145.125" cy="94.655" r="3"></circle>
-        <circle stroke="#4269d0" cx="133.042" cy="87.018" r="3"></circle>
-        <circle stroke="#efb118" cx="163.25" cy="73.273" r="3"></circle>
-        <circle stroke="#4269d0" cx="143.917" cy="86.509" r="3"></circle>
-        <circle stroke="#efb118" cx="180.167" cy="48.836" r="3"></circle>
-        <circle stroke="#4269d0" cx="149.958" cy="93.127" r="3"></circle>
-        <circle stroke="#efb118" cx="175.333" cy="83.455" r="3"></circle>
-        <circle stroke="#ff725c" cx="137.875" cy="92.618" r="3"></circle>
-        <circle stroke="#efb118" cx="175.333" cy="95.164" r="3"></circle>
-        <circle stroke="#4269d0" cx="136.667" cy="121.127" r="3"></circle>
-        <circle stroke="#efb118" cx="175.333" cy="61.564" r="3"></circle>
-        <circle stroke="#4269d0" cx="130.625" cy="112.982" r="3"></circle>
-        <circle stroke="#efb118" cx="175.333" cy="88.545" r="3"></circle>
-        <circle stroke="#4269d0" cx="151.167" cy="76.327" r="3"></circle>
-        <circle stroke="#efb118" cx="197.083" cy="79.891" r="3"></circle>
-        <circle stroke="#4269d0" cx="134.25" cy="111.964" r="3"></circle>
-        <circle stroke="#efb118" cx="175.333" cy="71.236" r="3"></circle>
-        <circle stroke="#4269d0" cx="120.958" cy="98.218" r="3"></circle>
-        <circle stroke="#efb118" cx="192.25" cy="52.909" r="3"></circle>
-        <circle stroke="#ff725c" cx="145.125" cy="106.873" r="3"></circle>
-        <circle stroke="#efb118" cx="199.5" cy="84.982" r="3"></circle>
-        <circle stroke="#4269d0" cx="147.542" cy="93.127" r="3"></circle>
-        <circle stroke="#4269d0" cx="143.917" cy="95.164" r="3"></circle>
-        <circle stroke="#efb118" cx="187.417" cy="76.836" r="3"></circle>
-        <circle stroke="#4269d0" cx="160.833" cy="103.309" r="3"></circle>
-        <circle stroke="#efb118" cx="170.5" cy="79.382" r="3"></circle>
-      </g>
-    </g>
-    <g transform="translate(193,0)">
-      <g aria-label="dot" fill="none" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <circle stroke="#4269d0" cx="66.583" cy="132.327" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="144.036" r="3"></circle>
-        <circle stroke="#4269d0" cx="69" cy="132.327" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="125.2" r="3"></circle>
-        <circle stroke="#4269d0" cx="70.208" cy="148.109" r="3"></circle>
-        <circle stroke="#efb118" cx="110.083" cy="133.855" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="135.891" r="3"></circle>
-        <circle stroke="#4269d0" cx="81.083" cy="118.582" r="3"></circle>
-        <circle stroke="#4269d0" cx="69" cy="142" r="3"></circle>
-        <circle stroke="#efb118" cx="134.25" cy="130.8" r="3"></circle>
-        <circle stroke="#4269d0" cx="61.75" cy="147.6" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="125.709" r="3"></circle>
-        <circle stroke="#4269d0" cx="59.333" cy="150.145" r="3"></circle>
-        <circle stroke="#efb118" cx="122.167" cy="108.909" r="3"></circle>
-        <circle stroke="#4269d0" cx="54.5" cy="145.055" r="3"></circle>
-        <circle stroke="#efb118" cx="131.833" cy="131.818" r="3"></circle>
-        <circle stroke="#efb118" cx="75.042" cy="124.182" r="3"></circle>
-        <circle stroke="#ff725c" cx="53.292" cy="142.509" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="150.145" r="3"></circle>
-        <circle stroke="#efb118" cx="110.083" cy="118.073" r="3"></circle>
-        <circle stroke="#4269d0" cx="71.417" cy="143.527" r="3"></circle>
-        <circle stroke="#efb118" cx="81.083" cy="123.164" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="148.618" r="3"></circle>
-        <circle stroke="#4269d0" cx="78.667" cy="145.564" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="138.436" r="3"></circle>
-        <circle stroke="#4269d0" cx="83.5" cy="135.382" r="3"></circle>
-        <circle stroke="#4269d0" cx="81.083" cy="151.673" r="3"></circle>
-        <circle stroke="#efb118" cx="117.333" cy="124.182" r="3"></circle>
-        <circle stroke="#4269d0" cx="73.833" cy="160.327" r="3"></circle>
-        <circle stroke="#efb118" cx="124.583" cy="131.818" r="3"></circle>
-        <circle stroke="#4269d0" cx="69" cy="149.127" r="3"></circle>
-        <circle stroke="#efb118" cx="117.333" cy="125.709" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="139.455" r="3"></circle>
-        <circle stroke="#efb118" cx="119.75" cy="128.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="49.667" cy="164.909" r="3"></circle>
-        <circle stroke="#efb118" cx="107.667" cy="113.491" r="3"></circle>
-        <circle stroke="#4269d0" cx="78.667" cy="146.073" r="3"></circle>
-        <circle stroke="#efb118" cx="125.792" cy="142.509" r="3"></circle>
-        <circle stroke="#4269d0" cx="75.042" cy="139.455" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="124.182" r="3"></circle>
-        <circle stroke="#4269d0" cx="62.958" cy="152.182" r="3"></circle>
-        <circle stroke="#efb118" cx="101.625" cy="128.764" r="3"></circle>
-        <circle stroke="#4269d0" cx="73.833" cy="145.055" r="3"></circle>
-        <circle stroke="#efb118" cx="114.917" cy="131.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="73.833" cy="128.764" r="3"></circle>
-        <circle stroke="#efb118" cx="77.458" cy="126.727" r="3"></circle>
-        <circle stroke="#4269d0" cx="56.917" cy="170" r="3"></circle>
-        <circle stroke="#efb118" cx="89.542" cy="126.218" r="3"></circle>
-        <circle stroke="#4269d0" cx="54.5" cy="143.527" r="3"></circle>
-        <circle stroke="#efb118" cx="85.917" cy="134.873" r="3"></circle>
-        <circle stroke="#efb118" cx="114.917" cy="133.855" r="3"></circle>
-        <circle stroke="#4269d0" cx="77.458" cy="147.091" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="150.145" r="3"></circle>
-        <circle stroke="#efb118" cx="90.75" cy="140.982" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="150.145" r="3"></circle>
-        <circle stroke="#efb118" cx="102.833" cy="122.145" r="3"></circle>
-      </g>
-    </g>
-    <g transform="translate(193,155)">
-      <g aria-label="dot" fill="none" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <circle stroke="#4269d0" cx="78.667" cy="96.691" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="78.873" r="3"></circle>
-        <circle stroke="#efb118" cx="85.917" cy="72.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="79.875" cy="102.291" r="3"></circle>
-        <circle stroke="#efb118" cx="89.542" cy="65.127" r="3"></circle>
-        <circle stroke="#4269d0" cx="100.417" cy="103.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="66.583" cy="98.727" r="3"></circle>
-        <circle stroke="#efb118" cx="90.75" cy="72.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="110.083" cy="99.236" r="3"></circle>
-        <circle stroke="#efb118" cx="88.333" cy="72.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="93.167" cy="96.182" r="3"></circle>
-        <circle stroke="#efb118" cx="91.958" cy="70.218" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="94.145" r="3"></circle>
-        <circle stroke="#efb118" cx="105.25" cy="68.691" r="3"></circle>
-        <circle stroke="#4269d0" cx="82.292" cy="99.745" r="3"></circle>
-        <circle stroke="#efb118" cx="105.25" cy="76.327" r="3"></circle>
-        <circle stroke="#efb118" cx="69" cy="77.345" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="38.145" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="97.2" r="3"></circle>
-        <circle stroke="#efb118" cx="122.167" cy="82.945" r="3"></circle>
-        <circle stroke="#4269d0" cx="83.5" cy="117.564" r="3"></circle>
-        <circle stroke="#efb118" cx="73.833" cy="86.509" r="3"></circle>
-        <circle stroke="#4269d0" cx="49.667" cy="113.491" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="75.818" r="3"></circle>
-        <circle stroke="#4269d0" cx="69" cy="95.673" r="3"></circle>
-        <circle stroke="#efb118" cx="110.083" cy="68.691" r="3"></circle>
-        <circle stroke="#4269d0" cx="73.833" cy="76.327" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="81.418" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="97.2" r="3"></circle>
-        <circle stroke="#efb118" cx="129.417" cy="64.618" r="3"></circle>
-        <circle stroke="#4269d0" cx="64.167" cy="125.2" r="3"></circle>
-        <circle stroke="#efb118" cx="117.333" cy="57.491" r="3"></circle>
-        <circle stroke="#4269d0" cx="71.417" cy="117.055" r="3"></circle>
-        <circle stroke="#efb118" cx="107.667" cy="73.782" r="3"></circle>
-        <circle stroke="#efb118" cx="83.5" cy="80.4" r="3"></circle>
-        <circle stroke="#4269d0" cx="98" cy="91.6" r="3"></circle>
-        <circle stroke="#4269d0" cx="95.583" cy="91.091" r="3"></circle>
-        <circle stroke="#efb118" cx="141.5" cy="68.691" r="3"></circle>
-        <circle stroke="#4269d0" cx="40" cy="94.655" r="3"></circle>
-        <circle stroke="#efb118" cx="127" cy="61.055" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="83.964" r="3"></circle>
-        <circle stroke="#4269d0" cx="85.917" cy="98.218" r="3"></circle>
-        <circle stroke="#efb118" cx="81.083" cy="74.291" r="3"></circle>
-        <circle stroke="#4269d0" cx="78.667" cy="101.782" r="3"></circle>
-        <circle stroke="#4269d0" cx="87.125" cy="74.291" r="3"></circle>
-        <circle stroke="#efb118" cx="124.583" cy="74.8" r="3"></circle>
-        <circle stroke="#4269d0" cx="73.833" cy="78.364" r="3"></circle>
-        <circle stroke="#efb118" cx="117.333" cy="83.964" r="3"></circle>
-        <circle stroke="#efb118" cx="66.583" cy="71.236" r="3"></circle>
-        <circle stroke="#4269d0" cx="87.125" cy="79.891" r="3"></circle>
-        <circle stroke="#4269d0" cx="70.208" cy="88.545" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="71.745" r="3"></circle>
-        <circle stroke="#4269d0" cx="83.5" cy="100.764" r="3"></circle>
-        <circle stroke="#efb118" cx="105.25" cy="75.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="71.417" cy="117.055" r="3"></circle>
-        <circle stroke="#efb118" cx="76.25" cy="67.673" r="3"></circle>
-        <circle stroke="#4269d0" cx="66.583" cy="103.309" r="3"></circle>
-        <circle stroke="#efb118" cx="105.25" cy="82.436" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="77.855" r="3"></circle>
-        <circle stroke="#4269d0" cx="79.875" cy="101.273" r="3"></circle>
-        <circle stroke="#efb118" cx="100.417" cy="69.2" r="3"></circle>
-        <circle stroke="#4269d0" cx="85.917" cy="95.164" r="3"></circle>
-        <circle stroke="#4269d0" cx="85.917" cy="100.764" r="3"></circle>
-        <circle stroke="#efb118" cx="102.833" cy="49.345" r="3"></circle>
-        <circle stroke="#4269d0" cx="73.833" cy="111.964" r="3"></circle>
-        <circle stroke="#efb118" cx="91.958" cy="80.909" r="3"></circle>
-        <circle stroke="#efb118" cx="107.667" cy="74.8" r="3"></circle>
-        <circle stroke="#4269d0" cx="91.958" cy="77.855" r="3"></circle>
-      </g>
-    </g>
-    <g transform="translate(386,0)">
-      <g aria-label="dot" fill="none" stroke-width="1.5" transform="translate(0.5,0.5)">
-        <circle stroke="#efb118" cx="90.75" cy="134.364" r="3"></circle>
-        <circle stroke="#4269d0" cx="93.167" cy="132.327" r="3"></circle>
-        <circle stroke="#4269d0" cx="66.583" cy="128.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="146.582" r="3"></circle>
-        <circle stroke="#efb118" cx="85.917" cy="133.345" r="3"></circle>
-        <circle stroke="#4269d0" cx="84.708" cy="135.382" r="3"></circle>
-        <circle stroke="#efb118" cx="135.458" cy="133.855" r="3"></circle>
-        <circle stroke="#ff725c" cx="77.458" cy="159.818" r="3"></circle>
-        <circle stroke="#ff725c" cx="114.917" cy="119.6" r="3"></circle>
-        <circle stroke="#ff725c" cx="69" cy="140.982" r="3"></circle>
-        <circle stroke="#ff725c" cx="88.333" cy="140.982" r="3"></circle>
-        <circle stroke="#4269d0" cx="64.167" cy="124.182" r="3"></circle>
-        <circle stroke="#efb118" cx="93.167" cy="136.909" r="3"></circle>
-        <circle stroke="#efb118" cx="122.167" cy="157.273" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="147.091" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="136.4" r="3"></circle>
-        <circle stroke="#efb118" cx="127" cy="117.055" r="3"></circle>
-        <circle stroke="#4269d0" cx="70.208" cy="158.291" r="3"></circle>
-        <circle stroke="#efb118" cx="112.5" cy="99.236" r="3"></circle>
-        <circle stroke="#4269d0" cx="56.917" cy="150.655" r="3"></circle>
-        <circle stroke="#efb118" cx="124.583" cy="120.618" r="3"></circle>
-        <circle stroke="#4269d0" cx="83.5" cy="162.873" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="131.309" r="3"></circle>
-        <circle stroke="#4269d0" cx="81.083" cy="131.818" r="3"></circle>
-        <circle stroke="#efb118" cx="110.083" cy="100.255" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="152.691" r="3"></circle>
-        <circle stroke="#efb118" cx="114.917" cy="115.527" r="3"></circle>
-        <circle stroke="#4269d0" cx="88.333" cy="125.2" r="3"></circle>
-        <circle stroke="#efb118" cx="98" cy="144.036" r="3"></circle>
-        <circle stroke="#4269d0" cx="81.083" cy="149.127" r="3"></circle>
-        <circle stroke="#efb118" cx="102.833" cy="119.091" r="3"></circle>
-        <circle stroke="#4269d0" cx="64.167" cy="157.273" r="3"></circle>
-        <circle stroke="#efb118" cx="136.667" cy="115.018" r="3"></circle>
-        <circle stroke="#4269d0" cx="93.167" cy="146.582" r="3"></circle>
-        <circle stroke="#efb118" cx="112.5" cy="154.727" r="3"></circle>
-        <circle stroke="#4269d0" cx="49.667" cy="136.909" r="3"></circle>
-        <circle stroke="#efb118" cx="91.958" cy="143.527" r="3"></circle>
-        <circle stroke="#4269d0" cx="71.417" cy="151.673" r="3"></circle>
-        <circle stroke="#efb118" cx="70.208" cy="124.182" r="3"></circle>
-        <circle stroke="#4269d0" cx="61.75" cy="149.127" r="3"></circle>
-        <circle stroke="#efb118" cx="78.667" cy="141.491" r="3"></circle>
-        <circle stroke="#4269d0" cx="76.25" cy="128.764" r="3"></circle>
-        <circle stroke="#efb118" cx="96.792" cy="122.655" r="3"></circle>
-        <circle stroke="#4269d0" cx="56.917" cy="154.218" r="3"></circle>
-        <circle stroke="#efb118" cx="102.833" cy="126.727" r="3"></circle>
-        <circle stroke="#4269d0" cx="67.792" cy="135.891" r="3"></circle>
-        <circle stroke="#efb118" cx="117.333" cy="122.145" r="3"></circle>
-        <circle stroke="#4269d0" cx="56.917" cy="134.873" r="3"></circle>
-        <circle stroke="#efb118" cx="102.833" cy="108.909" r="3"></circle>
-        <circle stroke="#4269d0" cx="70.208" cy="137.418" r="3"></circle>
-        <circle stroke="#efb118" cx="78.667" cy="114" r="3"></circle>
-      </g>
-    </g>
-  </g>
-  <g>
-    <g transform="translate(0,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(0,310)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(193,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(193,155)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
-    <g transform="translate(386,0)">
-      <g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0.5,0.5)" pointer-events="none"></g>
-    </g>
+  <g aria-label="tip" transform="translate(0.5,0.5)">
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(0,310)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(193,0)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(193,155)" pointer-events="none"></g>
+    <g fill="var(--plot-background)" stroke="currentColor" text-anchor="start" transform="translate(386,0)" pointer-events="none"></g>
   </g>
 </svg>

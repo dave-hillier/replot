@@ -1,4 +1,4 @@
-import {Replot, TickX} from "../../src/react/index.js";
+import {Replot, TickX} from "../../src/react/api.js";
 
 export async function shorthandTickX() {
   const numbers = [

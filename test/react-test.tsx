@@ -1,7 +1,5 @@
 // @ts-nocheck — React component tests; modules lack type declarations
 import assert from "assert";
-import {findNearest} from "../src/react/interactions/usePointer.js";
-import {formatTip} from "../src/react/interactions/Tip.js";
 import {
   indirectStyleProps,
   directStyleProps,
@@ -13,77 +11,6 @@ import {
   transformProp
 } from "../src/react/styles.js";
 import {withTitleChild, withHrefWrap} from "../src/react/styles-jsx.js";
-
-// --- Utility function tests ---
-
-describe("findNearest", () => {
-  it("returns null for an empty index", () => {
-    assert.strictEqual(findNearest([], {x: [], y: []}, 50, 50), null);
-  });
-
-  it("finds nearest point in xy mode", () => {
-    const index = [0, 1, 2];
-    const values = {x: [10, 50, 90], y: [10, 50, 90]};
-    assert.strictEqual(findNearest(index, values, 48, 52, "xy"), 1);
-  });
-
-  it("finds nearest point in x mode", () => {
-    const index = [0, 1, 2];
-    const values = {x: [10, 50, 90], y: [10, 50, 90]};
-    // In x mode, only x distance matters; closest x to 12 is 10 (index 0)
-    assert.strictEqual(findNearest(index, values, 12, 999, "x"), 0);
-  });
-
-  it("finds nearest point in y mode", () => {
-    const index = [0, 1, 2];
-    const values = {x: [10, 50, 90], y: [10, 50, 90]};
-    // In y mode, only y distance matters; closest y to 88 is 90 (index 2)
-    assert.strictEqual(findNearest(index, values, 0, 88, "y"), 2);
-  });
-
-  it("skips null values", () => {
-    const index = [0, 1, 2];
-    const values = {x: [null, 50, null], y: [null, 50, null]};
-    assert.strictEqual(findNearest(index, values, 0, 0, "xy"), 1);
-  });
-
-  it("handles single-element index", () => {
-    const index = [0];
-    const values = {x: [100], y: [200]};
-    assert.strictEqual(findNearest(index, values, 0, 0, "xy"), 0);
-  });
-});
-
-describe("formatTip", () => {
-  it("returns empty array for null datum", () => {
-    assert.deepStrictEqual(formatTip(null), []);
-  });
-
-  it("returns empty array for undefined datum", () => {
-    assert.deepStrictEqual(formatTip(undefined), []);
-  });
-
-  it("formats a scalar datum", () => {
-    const lines = formatTip(42);
-    assert.strictEqual(lines.length, 1);
-    assert.ok(lines[0].includes("42"));
-  });
-
-  it("formats an object datum with all keys", () => {
-    const lines = formatTip({a: 1, b: "hello", c: null});
-    // c is null so should be excluded
-    assert.strictEqual(lines.length, 2);
-    assert.ok(lines[0].includes("a"));
-    assert.ok(lines[1].includes("hello"));
-  });
-
-  it("formats an object datum with specified channels", () => {
-    const lines = formatTip({a: 1, b: 2, c: 3}, ["a", "c"]);
-    assert.strictEqual(lines.length, 2);
-    assert.ok(lines[0].includes("a"));
-    assert.ok(lines[1].includes("c"));
-  });
-});
 
 // --- Style utility function tests ---
 
@@ -297,7 +224,7 @@ import {
   validateWaffleY,
   validateLegendSwatches,
   validateLegendRamp
-} from "../src/react/__validate.js";
+} from "./react-fixtures.js";
 
 async function renderAndQuery(element: any) {
   const container = (globalThis as any).document.createElement("div");
@@ -966,15 +893,20 @@ describe("transformProp", () => {
 
 describe("withTitleChild", () => {
   it("returns the original children when there is no title channel", () => {
-    assert.strictEqual(withTitleChild({}, 0, null), null);
+    assert.strictEqual(withTitleChild({}, {}, 0, null), null);
   });
   it("emits a <title> child when the title channel has a non-empty value", () => {
-    const html = renderToStaticMarkup(<g>{withTitleChild({title: ["hello"]}, 0, null)}</g>);
+    const html = renderToStaticMarkup(<g>{withTitleChild({}, {title: ["hello"]}, 0, null)}</g>);
     assert.ok(html.includes("<title>hello</title>"), `got ${html}`);
   });
   it("skips empty title values", () => {
-    assert.strictEqual(withTitleChild({title: [""]}, 0, null), null);
-    assert.strictEqual(withTitleChild({title: [null]}, 0, null), null);
+    assert.strictEqual(withTitleChild({}, {title: [""]}, 0, null), null);
+    assert.strictEqual(withTitleChild({}, {title: [null]}, 0, null), null);
+  });
+  it("omits the title when the mark has a tip, as the imperative applyChannelStyles does", () => {
+    assert.strictEqual(withTitleChild({tip: true}, {title: ["hello"]}, 0, null), null);
+    assert.strictEqual(withTitleChild({tip: "x"}, {title: ["hello"]}, 0, null), null);
+    assert.strictEqual(withTitleChild({tip: {anchor: "top"}}, {title: ["hello"]}, 0, null), null);
   });
 });
 

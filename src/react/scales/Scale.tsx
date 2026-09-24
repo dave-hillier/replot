@@ -16,12 +16,12 @@ import type {ProjectionOptions} from "../../projection.js";
 //   </Plot>
 //
 // Each component renders null and registers its props with the enclosing
-// <Plot> via PlotContext (like marks via useMark): registration happens
-// during render, stamped by prop values so a change recomputes the plot, and
-// removal is unmount-driven. <Plot> merges the registrations into the
-// options passed to computePlot; an explicit object-form prop on <Plot>
-// itself (e.g. y={{…}}) wins over the component on any conflicting key. The
-// object-literal form remains supported.
+// <Plot> via PlotContext (like marks via useMark): registration is a layout
+// effect, depless so it re-registers every commit, stamped by prop values so a
+// change recomputes the plot, and removal is unmount-driven. <Plot> merges the
+// registrations into the options passed to computePlot; an explicit
+// object-form prop on <Plot> itself (e.g. y={{…}}) wins over the component on
+// any conflicting key. The object-literal form remains supported.
 
 export type ScaleXProps = ScaleOptions;
 export type ScaleYProps = ScaleOptions;
@@ -68,17 +68,33 @@ export interface ScaleFacetProps {
   label?: ScaleOptions["label"];
 }
 
-// Shared registration: stamps the props by value (function identities
-// excluded, like mark stamps) and registers them under the plot-level option
-// key. Same-stamp re-registration refreshes the stored config in place so
-// closures always see the latest props.
+// Shared registration: stamps the props by value — a function, interval, scale
+// or other value the stamp cannot read by identity, exactly as mark stamps do
+// (stampOptions) — and registers them under the plot-level option key.
+// Registration is effect-based, NOT render-phase, for the reason spelled out in
+// useMark: StrictMode's simulated unmount runs the cleanup below with no
+// re-render to follow it, so a render-phase registration is simply lost. The
+// depless effect re-registers every commit; a same-stamp re-registration only
+// swaps the stored config in place so closures always see the latest props.
+// A server render inverts that (nothing commits, so nothing can be lost) and
+// registers while it renders — the same exception useMark takes, for the same
+// reason: without it a server-rendered plot has no scale components in it.
 function useScaleOption(scaleName: string, config: Record<string, any>): void {
   const id = useId();
-  const {registerScale, unregisterScale} = usePlotContext();
-  const stamp = stampOptions(`scale:${scaleName}`, null, config);
-  registerScale?.(id, stamp, scaleName, config);
-  // Registration happens during render (above) so <Plot> sees the scale
-  // before its compute effect; removal is unmount-driven, mirroring useMark.
+  const {registerScale, unregisterScale, serverRender} = usePlotContext();
+  const stamp = () => stampOptions(`scale:${scaleName}`, null, config);
+  // A server render registers while it renders, for the reasons spelled out in
+  // useMark: no effect runs there, so the effect below would never take the
+  // registration and the scale option would be missing from the plot. The
+  // order the registration lands in is tree order, which is what the compute
+  // pass in <Replot> reads it in.
+  if (serverRender) registerScale?.(id, stamp(), scaleName, config);
+  useLayoutEffect(() => {
+    // Unconditional (hooks are), and never run on a server render; see useMark.
+    if (serverRender) return;
+    registerScale?.(id, stamp(), scaleName, config);
+  });
+  // Removal is unmount-driven, mirroring useMark.
   useLayoutEffect(() => (unregisterScale ? () => unregisterScale(id) : undefined), [unregisterScale, id]);
 }
 

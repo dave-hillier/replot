@@ -5,7 +5,6 @@ import type {Data, MarkOptions} from "../mark.js";
 import {Mark} from "../mark.js";
 import {hasXY, identity, indexOf} from "../options.js";
 import {isCollapsed} from "../scales.js";
-import {applyTransform} from "../style.js";
 import {maybeIdentityX, maybeIdentityY} from "../transforms/identity.js";
 import {maybeIntervalX, maybeIntervalY} from "../transforms/interval.js";
 import type {StackOptions} from "../transforms/stack.js";
@@ -15,6 +14,7 @@ import {rectInsets, rectRadii, roundedRectPath} from "./rect.js";
 import {createElement as h, type ReactNode} from "react";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 
 /** Options for the barX and barY marks. */
 interface BarOptions extends MarkOptions, InsetOptions, RectCornerOptions, StackOptions {
@@ -166,7 +166,7 @@ export class AbstractBar extends Mark {
     const at = (v: any, i: number) => (typeof v === "function" ? v(i) : v);
     const rects = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const xi = at(x, i);
       const yi = at(y, i);
       const wi = at(w, i);
@@ -188,7 +188,7 @@ export class AbstractBar extends Mark {
             },
             titled
           );
-      return withHrefWrap(channels, this.target, i, rectEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, rectEl), i);
     });
     return h("g", {...indirect, ...transform}, rects);
   }
@@ -210,9 +210,6 @@ export class AbstractBar extends Mark {
     const bandwidth = Y && y ? y.bandwidth() : height - marginTop - marginBottom;
     return Math.max(0, bandwidth - insetTop - insetBottom);
   }
-  _transform(_selection: any, _mark: any, _scales: any): void {
-    // overridden in subclasses
-  }
   _transformScales(_scales: any): any {
     return {};
   }
@@ -232,9 +229,6 @@ export class BarX extends AbstractBar {
       options,
       defaults
     );
-  }
-  _transform(selection: any, mark: any, {x}: any) {
-    selection.call(applyTransform, mark, {x}, 0, 0);
   }
   _transformScales({x}: any): any {
     return {x};
@@ -265,9 +259,6 @@ export class BarY extends AbstractBar {
       options,
       defaults
     );
-  }
-  _transform(selection: any, mark: any, {y}: any) {
-    selection.call(applyTransform, mark, {y}, 0, 0);
   }
   _transformScales({y}: any): any {
     return {y};

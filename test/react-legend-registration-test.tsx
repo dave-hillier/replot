@@ -4,7 +4,7 @@ import React from "react";
 import jsdomit from "./jsdom.js";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
-import {Replot, Dot, Legend} from "../src/react/index.js";
+import {Replot, Dot, Legend} from "../src/react/api.js";
 
 const data = [
   {x: 1, y: 2, c: "a"},

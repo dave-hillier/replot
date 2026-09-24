@@ -1,4 +1,4 @@
-import {Replot, AreaY, LineY, RuleY, AxisY, normalizeY, valueof} from "../../src/react/index.js";
+import {Replot, AreaY, LineY, RuleY, AxisY, normalizeY, valueof} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 export async function aaplCloseVaryingColor() {
@@ -16,8 +16,7 @@ export async function aaplClose() {
   const aapl = await d3.csv<any>("data/aapl.csv", d3.autoType);
   return (
     <Replot y={{grid: true}}>
-      <AreaY data={aapl} x="Date" y="Close" fillOpacity={0.1} />
-      <LineY data={aapl} x="Date" y="Close" />
+      <AreaY data={aapl} x="Date" y="Close" line />
       <RuleY data={[0]} />
     </Replot>
   );

@@ -1,6 +1,5 @@
-import {group, namespaces} from "d3";
-import {defined, nonempty} from "./defined.js";
-import {formatDefault} from "./format.js";
+import {group} from "d3";
+import {defined} from "./defined.js";
 import {isNone, isNoneish, isRound, maybeColorChannel, maybeNumberChannel} from "./options.js";
 import {keyof, number, string} from "./options.js";
 import {warn} from "./warnings.js";
@@ -159,83 +158,15 @@ export function styles(
   };
 }
 
-// Applies the specified titles via selection.call.
-export function applyTitle(selection, L) {
-  if (L)
-    selection
-      .filter((i) => nonempty(L[i]))
-      .append("title")
-      .call(applyText, L);
-}
-
-// Like applyTitle, but for grouped data (lines, areas).
-export function applyTitleGroup(selection, L) {
-  if (L)
-    selection
-      .filter(([i]) => nonempty(L[i]))
-      .append("title")
-      .call(applyTextGroup, L);
-}
-
-export function applyText(selection, T) {
-  if (T) selection.text((i) => formatDefault(T[i]));
-}
-
-export function applyTextGroup(selection, T) {
-  if (T) selection.text(([i]) => formatDefault(T[i]));
-}
-
-export function applyChannelStyles(
-  selection,
-  {target, tip},
-  {
-    ariaLabel: AL,
-    title: T,
-    fill: F,
-    fillOpacity: FO,
-    stroke: S,
-    strokeOpacity: SO,
-    strokeWidth: SW,
-    opacity: O,
-    href: H
-  }
-) {
-  if (AL) applyAttr(selection, "aria-label", (i) => AL[i]);
-  if (F) applyAttr(selection, "fill", (i) => F[i]);
-  if (FO) applyAttr(selection, "fill-opacity", (i) => FO[i]);
-  if (S) applyAttr(selection, "stroke", (i) => S[i]);
-  if (SO) applyAttr(selection, "stroke-opacity", (i) => SO[i]);
-  if (SW) applyAttr(selection, "stroke-width", (i) => SW[i]);
-  if (O) applyAttr(selection, "opacity", (i) => O[i]);
-  if (H) applyHref(selection, (i) => H[i], target);
-  if (!tip) applyTitle(selection, T);
-}
-
-export function applyGroupedChannelStyles(
-  selection,
-  {target, tip},
-  {
-    ariaLabel: AL,
-    title: T,
-    fill: F,
-    fillOpacity: FO,
-    stroke: S,
-    strokeOpacity: SO,
-    strokeWidth: SW,
-    opacity: O,
-    href: H
-  }
-) {
-  if (AL) applyAttr(selection, "aria-label", ([i]) => AL[i]);
-  if (F) applyAttr(selection, "fill", ([i]) => F[i]);
-  if (FO) applyAttr(selection, "fill-opacity", ([i]) => FO[i]);
-  if (S) applyAttr(selection, "stroke", ([i]) => S[i]);
-  if (SO) applyAttr(selection, "stroke-opacity", ([i]) => SO[i]);
-  if (SW) applyAttr(selection, "stroke-width", ([i]) => SW[i]);
-  if (O) applyAttr(selection, "opacity", ([i]) => O[i]);
-  if (H) applyHref(selection, ([i]) => H[i], target);
-  if (!tip) applyTitleGroup(selection, T);
-}
+// The d3-selection helpers that applied the per-datum channel styles — the
+// title, the aria-label, the fill/stroke family, and the href channel that
+// rewrote each element into a link — are gone, along with applyTitle,
+// applyTitleGroup, applyText, applyTextGroup and applyHref, which only they
+// called. They were unreachable: the React render paths emit channels as
+// attributes on the JSX element (src/react/styles.ts / styles-jsx.tsx), so
+// nothing has selected an element here since d3-selection left the renderer.
+// The d3 selection calls that are still live are the ones the JSX paths call
+// for their markup's sake (styles, groupIndex, the implied* coercions).
 
 function groupAesthetics(
   {
@@ -313,19 +244,6 @@ export function* groupIndex(I, position, mark, channels) {
 export function applyDirectStyles(selection, mark) {
   applyStyle(selection, "mix-blend-mode", mark.mixBlendMode);
   applyAttr(selection, "opacity", mark.opacity);
-}
-
-function applyHref(selection, href, target) {
-  selection.each(function (i) {
-    const h = href(i);
-    if (h != null) {
-      const a = this.ownerDocument.createElementNS(namespaces.svg, "a");
-      a.setAttribute("fill", "inherit");
-      a.setAttributeNS(namespaces.xlink, "href", h);
-      if (target != null) a.setAttribute("target", target);
-      this.parentNode.insertBefore(a, this).appendChild(this);
-    }
-  });
 }
 
 export function applyAttr(selection, name, value) {

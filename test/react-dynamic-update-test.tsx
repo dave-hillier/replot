@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import {Replot, Dot, BarY, stampOptions} from "../src/react/index.js";
+import {Replot, Dot, BarY, stampOptions} from "../src/react/api.js";
 
 const dataA = [
   {x: 1, y: 2},
@@ -151,10 +151,18 @@ describe("stampOptions with object-valued options", () => {
     assert.strictEqual(a, b);
   });
 
-  it("excludes function identity inside objects", () => {
+  // A nested function is stamped by identity like a top-level one: `sort={{value:
+  // fn}}` and `tip: {format: {x: fn}}` are the same class of value as a channel
+  // accessor, and a change of either has to recompute the plot (#146).
+  it("includes function identity inside objects", () => {
+    const f = () => "a";
+    assert.strictEqual(
+      stampOptions("dot", null, {tip: {format: {x: f}}}),
+      stampOptions("dot", null, {tip: {format: {x: f}}})
+    );
     const a = stampOptions("dot", null, {tip: {format: {x: () => "a"}}});
     const b = stampOptions("dot", null, {tip: {format: {x: () => "b"}}});
-    assert.strictEqual(a, b);
+    assert.notStrictEqual(a, b);
   });
 
   it("falls back to shape only past the depth cap", () => {
@@ -170,15 +178,79 @@ describe("stampOptions with object-valued options", () => {
     assert.strictEqual(a, b);
   });
 
-  it("stamps class instances by shape only", () => {
+  // A class instance — a d3 scale, a d3 interval, a scale-like object — has no
+  // content the stamp can read, so it is stamped by identity instead of by shape
+  // (#149): swapping one for another has to recompute the plot.
+  it("stamps class instances by identity", () => {
     class Interval {
       step: number;
       constructor(step) {
         this.step = step;
       }
     }
-    const a = stampOptions("dot", null, {interval: new Interval(1)});
-    const b = stampOptions("dot", null, {interval: new Interval(2)});
-    assert.strictEqual(a, b);
+    const one = new Interval(1);
+    assert.strictEqual(stampOptions("dot", null, {interval: one}), stampOptions("dot", null, {interval: one}));
+    assert.notStrictEqual(
+      stampOptions("dot", null, {interval: one}),
+      stampOptions("dot", null, {interval: new Interval(1)})
+    );
+  });
+});
+
+// #150: the plot's options key is what decides whether a recompute is needed,
+// and it is built by serializing the options. A value JSON cannot serialize (a
+// BigInt, a cycle) used to fall back to Math.random(), which gave a new key on
+// every render: the compute effect re-ran, called setMode, re-rendered, and
+// looped until React gave up with "Maximum update depth exceeded". A plot must
+// settle instead.
+describe("plot options that JSON.stringify refuses", () => {
+  // The cyclic value sits on a prop <Replot> does not interpret, so it reaches
+  // the options key (which covers every prop) but not computePlot's scales.
+  function cyc() {
+    const o: any = {a: 1};
+    o.self = o;
+    return o;
+  }
+
+  jsdomit("settles with a cyclic value in the plot props", async () => {
+    const {container, cleanup} = await mount(
+      <Replot width={200} height={200} meta={cyc()}>
+        <Dot data={dataA} x="x" y="y" />
+      </Replot>
+    );
+    assert.strictEqual(container.querySelectorAll("circle").length, 3);
+    await cleanup();
+  });
+
+  jsdomit("settles with a BigInt in the plot props", async () => {
+    const {container, cleanup} = await mount(
+      <Replot width={200} height={200} meta={{count: 3n}}>
+        <Dot data={dataA} x="x" y="y" />
+      </Replot>
+    );
+    assert.strictEqual(container.querySelectorAll("circle").length, 3);
+    await cleanup();
+  });
+
+  jsdomit("still recomputes when a stable option changes beside an unserializable one", async () => {
+    // The fallback key has to be sensitive to the rest of the options, or the
+    // loop would be fixed by freezing the plot instead of keying it.
+    const cyclic = cyc();
+    let setType;
+    function Harness() {
+      const [type, set] = useState("linear");
+      setType = set;
+      return (
+        <Replot width={200} height={200} meta={cyclic} x={{type}}>
+          <Dot data={dataA} x="x" y="y" />
+        </Replot>
+      );
+    }
+    const {container, cleanup} = await mount(<Harness />);
+    const before = svgMarkup(container);
+    await act(async () => setType("log"));
+    await act(async () => {});
+    assert.notStrictEqual(svgMarkup(container), before, "expected the recompute after the scale type change");
+    await cleanup();
   });
 });

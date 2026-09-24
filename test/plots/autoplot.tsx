@@ -1,4 +1,4 @@
-import {Replot, Auto, valueof} from "../../src/react/index.js";
+import {Replot, Auto, valueof} from "../../src/react/api.js";
 import * as d3 from "d3";
 
 // Tanner's bug https://github.com/observablehq/plot/issues/1365

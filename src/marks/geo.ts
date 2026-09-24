@@ -8,6 +8,7 @@ import {identity, maybeNumberChannel} from "../options.js";
 import {createElement as h, type ReactNode} from "react";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {centroid} from "../transforms/centroid.js";
 import {withDefaultSort} from "./dot.js";
 
@@ -88,10 +89,10 @@ export class Geo extends Mark {
     const transform = transformProp(this, scales);
     const paths = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const d = (R ? path.pointRadius(R[i])(G[i]) : path(G[i])) ?? undefined;
       const pathEl = h("path", {key: k, ...direct, ...channel, d}, titled);
-      return withHrefWrap(channels, this.target, i, pathEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, pathEl), i);
     });
     return h("g", {...indirect, ...transform}, paths);
   }
@@ -113,7 +114,7 @@ export class Geo extends Mark {
  * data is *data*.geometries; if *data* is some other GeoJSON object, then the
  * mark’s data is the single-element array [*data*].
  */
-export function geo(data?: Data | GeoPermissibleObjects, options: any = {}): Geo {
+export function geo(data?: Data | GeoPermissibleObjects, options: GeoOptions = {}): Geo {
   if (options.tip && options.x === undefined && options.y === undefined) options = centroid(options);
   else if (options.geometry === undefined) options = {...options, geometry: identity};
   return new Geo(data, options);

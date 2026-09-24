@@ -1,4 +1,4 @@
-import {Replot, RectY, binX} from "../../src/react/index.js";
+import {Replot, RectY, binX} from "../../src/react/api.js";
 import * as Arrow from "apache-arrow";
 import * as d3 from "d3";
 

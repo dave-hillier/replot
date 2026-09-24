@@ -1,6 +1,7 @@
 import * as Plot from "@dave-hillier/replot";
 import {clipEnd, clipMiddle, clipStart, defaultWidth, readCharacter} from "../../src/marks/text.js";
 import assert from "assert";
+import it from "../jsdom.js";
 
 it("text() has the expected defaults", () => {
   const text = Plot.text();
@@ -223,6 +224,27 @@ it("clipStart does not consider trailing whitespace as consuming width", () => {
 it("clipStart returns the ellipsis, if any, if the available width is zero", () => {
   assert.strictEqual(clipStart("The quick brown fox", 0, defaultWidth, "…"), "…");
   assert.strictEqual(clipStart("The quick brown fox", 0, defaultWidth, ""), "");
+});
+
+// Upstream writes the rotate clause whenever the rotate channel exists
+// (text.js:110-114), so a zero angle is kept; replot tested the resolved value
+// for truthiness and dropped the clause, losing the (identity) rotation.
+it("text(data, {rotate}) emits rotate(0) for a zero rotate channel value", () => {
+  const svg = Plot.plot({
+    marks: [Plot.text([{x: 1, y: 1, angle: 0, t: "hi"}], {x: "x", y: "y", rotate: "angle", text: "t"})]
+  });
+  const text = svg.querySelector('[aria-label="text"] text');
+  assert.match(text.getAttribute("transform"), /^translate\([\d.]+,[\d.]+\) rotate\(0\)$/);
+});
+
+// As with vector and image, a constant rotate of zero is not a channel and
+// upstream only writes the constant when it is truthy, so it is still skipped.
+it("text(data, {rotate: 0}) omits rotate when there is no rotate channel", () => {
+  const svg = Plot.plot({
+    marks: [Plot.text([{x: 1, y: 1, t: "hi"}], {x: "x", y: "y", rotate: 0, text: "t"})]
+  });
+  const text = svg.querySelector('[aria-label="text"] text');
+  assert.doesNotMatch(text.getAttribute("transform"), /rotate/);
 });
 
 function textWidthTest(a, b, width, widthof) {

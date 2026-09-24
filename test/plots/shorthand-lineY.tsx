@@ -1,4 +1,4 @@
-import {Replot, LineY, windowY} from "../../src/react/index.js";
+import {Replot, LineY, windowY} from "../../src/react/api.js";
 
 export async function shorthandLineY() {
   const numbers = [

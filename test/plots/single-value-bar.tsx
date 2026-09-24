@@ -1,4 +1,4 @@
-import {Replot, BarY, RuleX} from "../../src/react/index.js";
+import {Replot, BarY, RuleX} from "../../src/react/api.js";
 
 export async function singleValueBar() {
   return (

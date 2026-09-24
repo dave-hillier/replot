@@ -10,6 +10,7 @@ import {isCollapsed} from "../scales.js";
 import {offset} from "../style.js";
 import {channelStyleProps, directStyleProps, indirectStyleProps, transformProp} from "../react/styles.js";
 import {withHrefWrap, withTitleChild} from "../react/styles-jsx.js";
+import {withDatumIndex} from "../react/perDatum.js";
 import {maybeIntervalX, maybeIntervalY} from "../transforms/interval.js";
 import {createElement as h, Fragment, type ReactNode} from "react";
 import {markerToJSX} from "../react/Markers.js";
@@ -168,7 +169,7 @@ export class RuleX extends Mark {
     };
     const lines = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const color = S ? S[i] : this.stroke;
       const markerAttrs = markerAttrsFor(color);
       const lineEl = h(
@@ -176,7 +177,7 @@ export class RuleX extends Mark {
         {key: k, ...direct, ...channel, ...markerAttrs, x1: x1Of(i), x2: x2Of(i), y1: y1Of(i), y2: y2Of(i)},
         titled
       );
-      return withHrefWrap(channels, this.target, i, lineEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, lineEl), i);
     });
     const defs =
       markerDefs.size > 0
@@ -250,7 +251,7 @@ export class RuleY extends Mark {
     };
     const lines = (index as number[]).map((i, k) => {
       const channel = channelStyleProps(i, channels);
-      const titled = withTitleChild(channels, i, null);
+      const titled = withTitleChild(this, channels, i, null);
       const color = S ? S[i] : this.stroke;
       const markerAttrs = markerAttrsFor(color);
       const lineEl = h(
@@ -258,7 +259,7 @@ export class RuleY extends Mark {
         {key: k, ...direct, ...channel, ...markerAttrs, x1: x1Of(i), x2: x2Of(i), y1: yOf(i), y2: yOf(i)},
         titled
       );
-      return withHrefWrap(channels, this.target, i, lineEl);
+      return withDatumIndex(withHrefWrap(channels, this.target, i, lineEl), i);
     });
     const defs =
       markerDefs.size > 0

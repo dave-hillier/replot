@@ -1,4 +1,4 @@
-import {legend} from "../../src/react/index.js";
+import {legend} from "../../src/react/api.js";
 import {plot as imperativePlot, dotX as imperativeDotX} from "@dave-hillier/replot";
 
 export function symbolLegendBasic() {

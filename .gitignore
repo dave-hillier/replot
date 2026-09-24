@@ -1,8 +1,9 @@
 .DS_Store
+.claude/settings.local.json
+.claude/worktrees/
+.playwright-cli/
 coverage/
 dist/
-docs/.vitepress/cache
-docs/.vitepress/dist
 node_modules/
 test/output/*-changed.svg
 test/output/*-changed.html
