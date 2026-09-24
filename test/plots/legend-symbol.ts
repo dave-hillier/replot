@@ -1,5 +1,5 @@
 import {legend} from "../../src/react/api.js";
-import {plot as imperativePlot, dotX as imperativeDotX} from "replot";
+import {plot as imperativePlot, dotX as imperativeDotX} from "@dave-hillier/replot";
 
 export function symbolLegendBasic() {
   return legend({symbol: {domain: "ABCDEF"}});

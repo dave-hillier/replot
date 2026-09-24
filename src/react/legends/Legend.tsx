@@ -1,6 +1,6 @@
 import React, {useContext, useId, useLayoutEffect} from "react";
 import {rgb} from "d3";
-import {type LegendScales} from "../../legends.js";
+import {type LegendOptions, type LegendScales} from "../../legends.js";
 // These helpers live in the JS sources but aren't part of the public .d.ts.
 import {createContext} from "../../context.js";
 import {inherit, isScaleOptions} from "../../options.js";
@@ -17,10 +17,29 @@ import {ColorSwatches, Swatches, SymbolSwatches} from "./Swatches.js";
 //     scale key is present (color, opacity, or symbol).
 //   - Plot-scoped: nest inside a <Plot> and use `scale="<name>"` to resolve
 //     a named scale from the parent's computed scaleDescriptors.
-// `scale` is the second form's prop and not a scale of its own, so it is
-// declared here rather than in LegendScales (which upstream's imperative
-// legend() takes, and which has no plot to resolve a name against).
-export type LegendProps = LegendScales & {scale?: string};
+// The two forms are mutually exclusive, so this is a union rather than an
+// intersection: mixing them (e.g. `scale="color"` *and* `color={{…}}`) has no
+// coherent meaning — the plot-scoped branch would win when the named scale
+// exists and the standalone spec would be silently ignored, and vice versa.
+// The plot-scoped form still accepts every non-scale legend option
+// (`legend="ramp"`, `label`, `columns`, and the plain-colour `color`/`fill`/
+// `stroke` hints that LegendOptions declares as strings) — only the scale
+// *specs* are excluded, which is exactly what LegendOptions gives us since it
+// omits `symbol` and types `color`/`opacity` as a plain colour/number.
+export type LegendProps =
+  | (LegendScales & {
+      // The standalone form: no plot-scoped scale name. Spelled `undefined`
+      // rather than `never` deliberately — `never` defeats contextual typing
+      // of the sibling scale-spec object literals in JSX, widening
+      // `type: "ordinal"` to `string`.
+      scale?: undefined;
+    })
+  | (LegendOptions & {
+      // Name of a scale on the parent <Plot> to render a legend for; only the
+      // legend-capable scales are resolvable (renderPlotScopedLegend below
+      // ignores any other name, matching exposeLegends).
+      scale: "color" | "opacity" | "symbol";
+    });
 
 export function Legend(props: LegendProps) {
   const ctx = useContext(PlotContext);
@@ -28,7 +47,9 @@ export function Legend(props: LegendProps) {
   const register = ctx?.registerLegend;
   const unregister = ctx?.unregisterLegend;
   const serverRender = ctx?.serverRender;
-  const registration = () => register?.(id, stampOptions("legend", null, props as Record<string, unknown>), props);
+  const registration = () => {
+    if (register) register(id, stampOptions("legend", null, props as Record<string, unknown>), props);
+  };
   // Inside a <Plot>, register instead of rendering: the Plot renders the
   // visible <LegendDisplay> in its figure slot, so a Legend is promoted no
   // matter how it's composed (memo, wrapper components, fragments).
@@ -58,24 +79,38 @@ export function Legend(props: LegendProps) {
 // not register, or the figure slot would recurse.
 export function LegendDisplay(props: LegendProps) {
   const ctx = useContext(PlotContext);
+  const jsx = resolveLegendElement(props, ctx);
+  // Nothing renderable (e.g. `scale="opacity"` on a plot with no opacity
+  // scale): render nothing rather than an empty wrapper, matching the
+  // imperative plot.legend(), which returns undefined for such scales.
+  if (jsx === null) return null;
+  return <div className="plot-legend">{jsx}</div>;
+}
 
+// Pure dispatch shared by <LegendDisplay> and <Replot> (which needs to know,
+// before rendering, whether a registered <Legend> produces anything — an
+// unrenderable legend must not force figure mode). Returns null when the props
+// describe no drawable legend.
+export function resolveLegendElement(props: LegendProps, ctx: PlotContextValue | null): React.ReactElement | null {
   // If we're inside a Plot and the legend refers to a named scale, resolve
   // that scale from the parent's computed scaleDescriptors and route through
   // the JSX legend components — mirroring `exposeLegends`.
-  const scaleName = (props as any)?.scale;
-  const plotScaleElement =
-    typeof scaleName === "string" && ctx?.scaleDescriptors && ctx.scaleDescriptors[scaleName]
-      ? renderPlotScopedLegend(scaleName, props, ctx)
-      : null;
+  const scaleName = props?.scale;
+  if (typeof scaleName === "string") {
+    // The plot-scoped form is not combinable with the standalone one (see
+    // LegendProps): `scale` names a scale on the parent <Plot>, and the
+    // standalone fallback below must never see that string, or it would
+    // override the normalized scale descriptor passed to <Swatches>/<Ramp>.
+    // The types reject the mix; guard at runtime for untyped JS callers.
+    return ctx?.scaleDescriptors?.[scaleName] ? renderPlotScopedLegend(scaleName, props, ctx!) : null;
+  }
 
   // JSX paths cover every shape: swatches first (ordinal/threshold color,
   // symbol, ordinal/threshold opacity), then ramp (continuous or banded
-  // color/opacity). Plot-scoped legends take precedence.
-  const swatchesElement = plotScaleElement === null && isSwatchesLegend(props) ? <Swatches {...props} /> : null;
-  const rampElement = plotScaleElement === null && swatchesElement === null ? rampJSX(props as any) : null;
-  const jsx = plotScaleElement ?? swatchesElement ?? rampElement;
-
-  return <div className="plot-legend">{jsx}</div>;
+  // color/opacity).
+  const standalone = props as LegendScales;
+  if (isSwatchesLegend(standalone)) return <Swatches {...standalone} />;
+  return rampJSX(standalone as any);
 }
 
 // Standalone legend (Plot.legend(options)): dispatches the same swatches/ramp

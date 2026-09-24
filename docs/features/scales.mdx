@@ -1,4 +1,4 @@
-import {BarY, BinX, Cell, CellX, Dot, Frame, LineY, RectY, Replot, RuleX, RuleY, TickX, WindowY, identity, scale} from "replot/react";
+import {BarY, BinX, Cell, CellX, Dot, Frame, LineY, RectY, Replot, RuleX, RuleY, TickX, WindowY, identity, scale} from "@dave-hillier/replot/react";
 import * as d3 from "d3";
 import {useState} from "react";
 import gistemp from "../data/gistemp.ts";
@@ -838,7 +838,7 @@ If the input channel is *data*, then the reducer is passed groups of the mark’
 Note: when the value of the sort option is a string or a function, it is interpreted as a mark [sort transform](../transforms/sort.md). To use both sort options and a mark sort transform, use [Replot.sort](../transforms/sort.md#sort).
 
 ## scale(*options*) <VersionBadge version="0.4.0" /> {/* {#scale} */}
-You can also create a standalone scale with the **scale**(*options*) function, available as the `scale` export of `replot/react`. The *options* object must define at least one scale; see [Scale options](#scale-options) for how to define a scale. For example, here is a categorical color scale with the *Tableau10* color scheme and a domain of fruits:
+You can also create a standalone scale with the **scale**(*options*) function, available as the `scale` export of `@dave-hillier/replot/react`. The *options* object must define at least one scale; see [Scale options](#scale-options) for how to define a scale. For example, here is a categorical color scale with the *Tableau10* color scheme and a domain of fruits:
 
 ```js
 const color = scale({color: {scheme: "Tableau10", domain: ["apple", "orange", "pear"]}});

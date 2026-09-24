@@ -1,5 +1,5 @@
 import {Replot, AxisFx, Frame, Dot} from "../../src/react/api.js";
-import * as Plot_ from "replot";
+import * as Plot_ from "@dave-hillier/replot";
 import * as d3 from "d3";
 
 export async function nestedFacets() {

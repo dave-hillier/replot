@@ -1,4 +1,4 @@
-import {BinX, Cell, Group, GroupY, Line, NormalizeY, Replot, RectY, RuleX, RuleY, TickX, identity, valueof, column, indexOf, scale} from "replot/react";
+import {BinX, Cell, Group, GroupY, Line, NormalizeY, Replot, RectY, RuleX, RuleY, TickX, identity, valueof, column, indexOf, scale} from "@dave-hillier/replot/react";
 import * as d3 from "d3";
 import penguins from "../data/penguins.ts";
 import {useOlympians} from "../data/olympians.ts";
@@ -55,7 +55,7 @@ But Replot’s transforms are often more convenient, especially in conjunction w
 
 In React, each transform is a wrapper component: the transform’s options become props on the wrapper (above, `y="count"`), while the mark’s input channels and styles stay as props on the mark inside (`x="weight"` and `fill="sex"`). Wrapping a mark applies the transform to that mark; wrapping several marks applies the transform to each independently.
 
-Each wrapper corresponds to an underlying transform *function* that typically takes two *options* objects as arguments: the first object contains the *transform* options (above, `{y: "count"}`), while the second object contains *mark* options to be “passed through” to the mark (`{x: "weight", fill: "sex"}`). The transform returns a new options object representing the *transformed* mark options to be passed to a mark. This functional form remains fully supported in React — the transform functions are exported from `replot/react`, and you can spread their result onto a mark instead of nesting:
+Each wrapper corresponds to an underlying transform *function* that typically takes two *options* objects as arguments: the first object contains the *transform* options (above, `{y: "count"}`), while the second object contains *mark* options to be “passed through” to the mark (`{x: "weight", fill: "sex"}`). The transform returns a new options object representing the *transformed* mark options to be passed to a mark. This functional form remains fully supported in React — the transform functions are exported from `@dave-hillier/replot/react`, and you can spread their result onto a mark instead of nesting:
 
 ```jsx
 <Replot color={{legend: true}}>

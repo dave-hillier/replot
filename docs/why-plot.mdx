@@ -1,4 +1,4 @@
-import {AreaY, BarX, BoxX, Dot, Frame, GroupY, LineY, Replot, RuleX, RuleY} from "replot/react";
+import {AreaY, BarX, BoxX, Dot, Frame, GroupY, LineY, Replot, RuleX, RuleY} from "@dave-hillier/replot/react";
 import * as d3 from "d3";
 import aapl from "./data/aapl.ts";
 import penguins from "./data/penguins.ts";
@@ -66,7 +66,7 @@ Replot’s transforms can do powerful things, including [normalizing series](./t
 Simple components gain power through composition, such as layering multiple [marks](./features/marks.md) into a single plot. In React, this composability is especially natural — each mark is a JSX component that you nest inside `<Replot>`:
 
 ```jsx
-import {Replot, RuleY, AreaY, LineY} from "replot/react";
+import {Replot, RuleY, AreaY, LineY} from "@dave-hillier/replot/react";
 
 <Replot>
   <RuleY data={[0]} />

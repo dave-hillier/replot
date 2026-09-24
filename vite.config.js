@@ -6,7 +6,7 @@ export default defineConfig({
   publicDir: path.resolve("./test"),
   resolve: {
     alias: {
-      "replot": path.resolve("./src/index.ts")
+      "@dave-hillier/replot": path.resolve("./src/index.ts")
     }
   },
   server: {

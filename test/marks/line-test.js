@@ -1,4 +1,4 @@
-import * as Plot from "replot";
+import * as Plot from "@dave-hillier/replot";
 import {curveStep} from "d3";
 import {curveAuto} from "../../src/curve.js";
 import assert from "assert";

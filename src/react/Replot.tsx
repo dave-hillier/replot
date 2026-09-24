@@ -23,7 +23,7 @@ import {markEventNames, useMark, type MarkEventHandlers, type MarkFactory} from 
 import {PointerRoot, PointerContext} from "./interactions/PointerContext.js";
 import {computeAnchors, pointerKOf} from "./interactions/pointerHitTest.js";
 import {createPointerStore, type PointerStore} from "./interactions/pointerStore.js";
-import {buildAutoLegends, LegendDisplay} from "./legends/Legend.js";
+import {buildAutoLegends, LegendDisplay, resolveLegendElement} from "./legends/Legend.js";
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode, parseStyleString} from "./domToJsx.js";
 import {datumIndexOf} from "./perDatum.js";
@@ -749,9 +749,13 @@ export function Replot({
     // still surfaces the legend. Any registered legend forces figure mode.
     // Registry order tracks the children's render order via the layout-effect
     // reconciliation above, so keyed reorders update the visible order.
-    const explicitLegends: ReactElement[] = [...legendsRef.current.entries()].map(([id, r]) => (
-      <LegendDisplay key={id} {...r.props} />
-    ));
+    // A registered legend that resolves to nothing (e.g. scale="opacity" on a
+    // plot with no opacity scale) is dropped here rather than rendered as an
+    // empty wrapper, so it also does not force figure mode, matching the
+    // imperative plot.legend(), which returns undefined for such scales.
+    const explicitLegends: ReactElement[] = [...legendsRef.current.entries()]
+      .filter(([, r]) => resolveLegendElement(r.props as any, ctx) !== null)
+      .map(([id, r]) => <LegendDisplay key={id} {...r.props} />);
 
     // "always"/true forces a figure; "never"/false suppresses it; "auto" (or
     // undefined) infers it from whether there's anything to wrap.

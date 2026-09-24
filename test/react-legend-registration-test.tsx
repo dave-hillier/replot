@@ -62,7 +62,7 @@ function assertVisibleLegend(container, count = 1) {
 
 describe("Plot legend registration", () => {
   jsdomit("promotes a direct <Legend> child into the figure", async () => {
-    const {container, cleanup} = await mount(plotWith(<Legend {...({scale: "color"} as any)} />));
+    const {container, cleanup} = await mount(plotWith(<Legend scale="color" />));
     const [legend] = assertVisibleLegend(container);
     assert.ok(legend.querySelector('[class*="swatches"]'), "expected swatches content");
     await cleanup();
@@ -70,7 +70,7 @@ describe("Plot legend registration", () => {
 
   jsdomit("promotes a <Legend> wrapped in a user component", async () => {
     function MyLegend() {
-      return <Legend {...({scale: "color"} as any)} />;
+      return <Legend scale="color" />;
     }
     const {container, cleanup} = await mount(plotWith(<MyLegend />));
     assertVisibleLegend(container);
@@ -79,7 +79,7 @@ describe("Plot legend registration", () => {
 
   jsdomit("promotes a memo-wrapped <Legend>", async () => {
     const MemoLegend = React.memo(Legend);
-    const {container, cleanup} = await mount(plotWith(<MemoLegend {...({scale: "color"} as any)} />));
+    const {container, cleanup} = await mount(plotWith(<MemoLegend scale="color" />));
     assertVisibleLegend(container);
     await cleanup();
   });
@@ -88,7 +88,7 @@ describe("Plot legend registration", () => {
     const {container, cleanup} = await mount(
       plotWith(
         <>
-          <Legend {...({scale: "color"} as any)} />
+          <Legend scale="color" />
         </>
       )
     );
@@ -98,10 +98,7 @@ describe("Plot legend registration", () => {
 
   jsdomit("preserves legend order", async () => {
     const {container, cleanup} = await mount(
-      plotWith([
-        <Legend key="swatches" {...({scale: "color"} as any)} />,
-        <Legend key="ramp" {...({scale: "color", legend: "ramp"} as any)} />
-      ])
+      plotWith([<Legend key="swatches" scale="color" />, <Legend key="ramp" scale="color" legend="ramp" />])
     );
     const legends = assertVisibleLegend(container, 2);
     assert.ok(legends[0].querySelector('[class*="swatches"]'), "expected the swatches legend first");
@@ -113,9 +110,9 @@ describe("Plot legend registration", () => {
     const legends = (order) =>
       order.map((kind) =>
         kind === "swatches" ? (
-          <Legend key="swatches" {...({scale: "color"} as any)} />
+          <Legend key="swatches" scale="color" />
         ) : (
-          <Legend key="ramp" {...({scale: "color", legend: "ramp"} as any)} />
+          <Legend key="ramp" scale="color" legend="ramp" />
         )
       );
     const {container, rerender, cleanup} = await mount(plotWith(legends(["swatches", "ramp"])));
@@ -133,7 +130,7 @@ describe("Plot legend registration", () => {
     function Toggle() {
       const [visible, setVisible] = React.useState(false);
       show = () => setVisible(true);
-      return visible ? <Legend {...({scale: "color"} as any)} /> : null;
+      return visible ? <Legend scale="color" /> : null;
     }
     // The wrapper re-renders on its own state change without <Replot> itself
     // re-rendering; registration alone must surface the legend.
@@ -145,20 +142,54 @@ describe("Plot legend registration", () => {
   });
 
   jsdomit("registers once under StrictMode double rendering", async () => {
-    const {container, cleanup} = await mount(
-      <React.StrictMode>{plotWith(<Legend {...({scale: "color"} as any)} />)}</React.StrictMode>
-    );
+    const {container, cleanup} = await mount(<React.StrictMode>{plotWith(<Legend scale="color" />)}</React.StrictMode>);
     assertVisibleLegend(container);
     await cleanup();
   });
 
   jsdomit("removes the legend (and figure) when the <Legend> unmounts", async () => {
-    const {container, rerender, cleanup} = await mount(plotWith(<Legend {...({scale: "color"} as any)} />));
+    const {container, rerender, cleanup} = await mount(plotWith(<Legend scale="color" />));
     assertVisibleLegend(container);
     await rerender(plotWith(null));
     assert.strictEqual(container.querySelector(".plot-legend"), null, "expected the legend to be removed");
     assert.strictEqual(container.querySelector("figure"), null, "expected figure mode to end with the legend");
     assert.ok(container.querySelector("svg"), "expected the bare <svg> to remain");
+    await cleanup();
+  });
+
+  // A named scale the plot doesn't have has nothing to draw. The imperative
+  // plot.legend("opacity") returns undefined for that; the React legend must
+  // likewise render nothing — not an empty wrapper — and must not force the
+  // plot into figure mode.
+  jsdomit("renders nothing for a named scale the plot doesn't have", async () => {
+    const {container, cleanup} = await mount(plotWith(<Legend scale="opacity" />));
+    assert.strictEqual(container.querySelector(".plot-legend"), null, "expected no legend wrapper");
+    assert.strictEqual(container.querySelector("figure"), null, "expected no figure mode");
+    assert.ok(container.querySelector("svg"), "expected the bare <svg>");
+    await cleanup();
+  });
+
+  // Regression: `scale` and a standalone scale spec used to be freely
+  // combinable (a plain intersection), and the raw `scale` string leaked
+  // through the standalone fallback into <ColorSwatches>, overriding the
+  // normalized descriptor and throwing "swatches legend requires ordinal or
+  // threshold color scale (not undefined)". The types now reject the
+  // combination (see react-legend-d-test.tsx); untyped JS callers must at
+  // least not crash.
+  jsdomit("does not throw when `scale` is combined with a scale spec (standalone)", async () => {
+    const {container, cleanup} = await mount(
+      <Legend {...({scale: "color", color: {type: "ordinal", domain: ["a", "b"]}} as any)} />
+    );
+    assert.strictEqual(container.querySelector(".plot-legend"), null, "expected nothing rendered");
+    await cleanup();
+  });
+
+  jsdomit("does not throw when `scale` names an absent scale but a spec is given", async () => {
+    const {container, cleanup} = await mount(
+      plotWith(<Legend {...({scale: "opacity", color: {type: "ordinal", domain: ["a", "b"]}} as any)} />)
+    );
+    assert.strictEqual(container.querySelector(".plot-legend"), null, "expected nothing rendered");
+    assert.strictEqual(container.querySelector("figure"), null, "expected no figure mode");
     await cleanup();
   });
 });

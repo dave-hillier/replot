@@ -1,4 +1,4 @@
-import * as Plot from "replot";
+import * as Plot from "@dave-hillier/replot";
 import assert from "assert";
 
 it("formatNumber(locale) does the right thing", () => {

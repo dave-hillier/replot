@@ -1,4 +1,4 @@
-import * as Plot from "replot";
+import * as Plot from "@dave-hillier/replot";
 import assert from "assert";
 import * as d3 from "d3";
 

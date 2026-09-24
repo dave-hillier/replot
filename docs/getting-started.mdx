@@ -4,25 +4,25 @@ Replot is a React component library: charts are built with declarative JSX via t
 
 ## Installing from npm
 
-If you’re developing a web application using Node, you can install Replot via yarn, npm, pnpm, or your preferred package manager.
+If you’re developing a web application using Node, you can install Replot via yarn, npm, pnpm, or your preferred package manager. Replot is published under the scoped name `@dave-hillier/replot`, because the bare name `replot` belongs to an unrelated package on npm. While the API is still settling, releases are prereleases published under the `next` dist-tag, so add `@next` to the install commands below until 0.1.0 is out.
 
 
 ```bash [yarn]
-yarn add replot
+yarn add @dave-hillier/replot
 ```
 
 ```bash [npm]
-npm install replot
+npm install @dave-hillier/replot
 ```
 
 ```bash [pnpm]
-pnpm add replot
+pnpm add @dave-hillier/replot
 ```
 
-You can then import Replot's components from `replot/react`:
+You can then import Replot's components from `@dave-hillier/replot/react`:
 
 ```js
-import {Replot, Dot, Line, BarY, AxisX, AxisY} from "replot/react";
+import {Replot, Dot, Line, BarY, AxisX, AxisY} from "@dave-hillier/replot/react";
 ```
 
 Replot includes TypeScript declarations with extensive documentation. We highly recommend using an editor with enhanced code completion such as Visual Studio Code or Observable.
@@ -34,14 +34,14 @@ Replot includes TypeScript declarations with extensive documentation. We highly 
 
 ## Replot in React {/* {#plot-in-react} */}
 
-Replot provides a first-class React component API via `replot/react`. Instead of imperatively building SVG with D3 selections, you define charts declaratively with JSX that integrates natively with React's rendering model, state management, and component lifecycle.
+Replot provides a first-class React component API via `@dave-hillier/replot/react`. Instead of imperatively building SVG with D3 selections, you define charts declaratively with JSX that integrates natively with React's rendering model, state management, and component lifecycle.
 
 ### Basic usage
 
 Import the `Replot` root component and mark components, then compose them as JSX:
 
 ```jsx [App.jsx]
-import {Replot, Dot, AxisX, AxisY} from "replot/react";
+import {Replot, Dot, AxisX, AxisY} from "@dave-hillier/replot/react";
 import penguins from "./penguins.json";
 
 export default function App() {
@@ -64,7 +64,7 @@ The `<Replot>` component handles scale inference, axis generation, and layout au
 Transforms such as binning, grouping, and stacking are available as wrapper components: nest a mark inside the wrapper, with the transform options as props on the wrapper and the input channels on the mark.
 
 ```jsx [Histogram.jsx]
-import {Replot, BarY, RuleY, BinX} from "replot/react";
+import {Replot, BarY, RuleY, BinX} from "@dave-hillier/replot/react";
 
 export default function Histogram({data}) {
   return (
@@ -84,7 +84,7 @@ Transforms are also available as pure functions (`binX`, `groupX`, `stackY`, …
 Configure scales by passing options directly to `<Replot>`:
 
 ```jsx [TemperatureChart.jsx]
-import {Replot, Dot, RuleY} from "replot/react";
+import {Replot, Dot, RuleY} from "@dave-hillier/replot/react";
 
 export default function TemperatureChart({data}) {
   return (
@@ -100,7 +100,7 @@ export default function TemperatureChart({data}) {
 Use the `fx` or `fy` props on mark components to create small multiples:
 
 ```jsx [FacetedChart.jsx]
-import {Replot, Dot} from "replot/react";
+import {Replot, Dot} from "@dave-hillier/replot/react";
 
 export default function FacetedChart({data}) {
   return (
@@ -115,7 +115,7 @@ export default function FacetedChart({data}) {
 Add interactive tooltips with the `tip` prop on any mark, or use the `<Tip>` component for more control:
 
 ```jsx [InteractiveChart.jsx]
-import {Replot, Dot} from "replot/react";
+import {Replot, Dot} from "@dave-hillier/replot/react";
 
 export default function InteractiveChart({data}) {
   return (
@@ -130,7 +130,7 @@ export default function InteractiveChart({data}) {
 Use the `<Legend>` component to add a legend for any scale:
 
 ```jsx [LegendChart.jsx]
-import {Replot, Dot, Legend} from "replot/react";
+import {Replot, Dot, Legend} from "@dave-hillier/replot/react";
 
 export default function LegendChart({data}) {
   return (
@@ -145,7 +145,7 @@ export default function LegendChart({data}) {
 Use the `title`, `subtitle`, and `caption` props on `<Replot>` to wrap the chart in a `<figure>` element:
 
 ```jsx [FigureChart.jsx]
-import {Replot, Line} from "replot/react";
+import {Replot, Line} from "@dave-hillier/replot/react";
 
 export default function FigureChart({data}) {
   return (
@@ -160,7 +160,7 @@ export default function FigureChart({data}) {
 Combine React's `useState` and `useEffect` with Replot components:
 
 ```jsx [AsyncChart.jsx]
-import {Replot, Dot, RuleY} from "replot/react";
+import {Replot, Dot, RuleY} from "@dave-hillier/replot/react";
 import * as d3 from "d3";
 import {useEffect, useState} from "react";
 

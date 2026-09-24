@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import {Replot, CellX, legend} from "../../src/react/api.js";
-import {plot as imperativePlot, dot as imperativeDot} from "replot";
+import {plot as imperativePlot, dot as imperativeDot} from "@dave-hillier/replot";
 
 export function colorLegendCategorical() {
   return legend({color: {domain: "ABCDEFGHIJ"}});

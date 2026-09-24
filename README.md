@@ -35,7 +35,7 @@ there is only one reconciler.
 Use declarative JSX components to build charts natively in React applications:
 
 ```jsx
-import {Replot, Dot, Line, AxisX, AxisY} from "replot/react";
+import {Replot, Dot, Line, AxisX, AxisY} from "@dave-hillier/replot/react";
 
 function Chart({data}) {
   return (
@@ -87,7 +87,7 @@ components.
 
 | Imperative API (Observable Plot) | React Component API (Replot) |
 |---|---|
-| `import * as Replot from "replot"` | `import {Replot, Dot} from "replot/react"` |
+| `import * as Replot from "@dave-hillier/replot"` | `import {Replot, Dot} from "@dave-hillier/replot/react"` |
 | `Replot.plot({ marks: [Replot.dot(data, {x, y})] })` | `<Replot><Dot data={data} x="x" y="y" /></Replot>` |
 | Returns a detached SVG element | Renders directly into the React tree |
 | Manual DOM insertion required | No refs or effects needed |
@@ -99,7 +99,7 @@ The core computation — D3 scales, shape generators, geo projections, data tran
 **Scatterplot with color encoding:**
 
 ```jsx
-import {Replot, Dot} from "replot/react";
+import {Replot, Dot} from "@dave-hillier/replot/react";
 
 function Scatterplot({data}) {
   return (
@@ -113,7 +113,7 @@ function Scatterplot({data}) {
 **Histogram with binning:**
 
 ```jsx
-import {Replot, BarY, BinX, RuleY} from "replot/react";
+import {Replot, BarY, BinX, RuleY} from "@dave-hillier/replot/react";
 
 function Histogram({data}) {
   return (
@@ -130,7 +130,7 @@ function Histogram({data}) {
 **Line chart with grid and custom scales:**
 
 ```jsx
-import {Replot, Line} from "replot/react";
+import {Replot, Line} from "@dave-hillier/replot/react";
 
 function LineChart({data}) {
   return (
@@ -144,7 +144,7 @@ function LineChart({data}) {
 **Faceted dot plot (small multiples):**
 
 ```jsx
-import {Replot, Dot} from "replot/react";
+import {Replot, Dot} from "@dave-hillier/replot/react";
 
 function FacetedPlot({data}) {
   return (
@@ -158,7 +158,7 @@ function FacetedPlot({data}) {
 **Stacked area chart:**
 
 ```jsx
-import {Replot, AreaY, StackY} from "replot/react";
+import {Replot, AreaY, StackY} from "@dave-hillier/replot/react";
 
 function StackedArea({data}) {
   return (
@@ -174,7 +174,7 @@ function StackedArea({data}) {
 **Interactive chart with tooltips:**
 
 ```jsx
-import {Replot, Dot} from "replot/react";
+import {Replot, Dot} from "@dave-hillier/replot/react";
 
 function InteractiveChart({data}) {
   return (
@@ -190,19 +190,24 @@ function InteractiveChart({data}) {
 ## Getting started
 
 ```bash
-npm install replot
+npm install @dave-hillier/replot
 ```
+
+Replot is published as a scoped package because the bare name `replot` is taken
+on npm by an unrelated project. While the API is still settling, releases are
+prereleases published under the `next` dist-tag, so install
+`@dave-hillier/replot@next` until 0.1.0 is out.
 
 Then import the React API:
 
 ```js
-import {Replot, Dot, Line, BarY, AxisX, AxisY} from "replot/react";
+import {Replot, Dot, Line, BarY, AxisX, AxisY} from "@dave-hillier/replot/react";
 ```
 
 Or the imperative API:
 
 ```js
-import * as Replot from "replot";
+import * as Replot from "@dave-hillier/replot";
 ```
 
 The imperative API renders statically. `Replot.plot` returns a detached SVG

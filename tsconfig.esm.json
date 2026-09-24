@@ -1,0 +1,17 @@
+{
+  // JavaScript build. Consumers resolve the runtime conditions in package.json
+  // to dist/esm rather than to src, so the package ships transpiled ESM and no
+  // bundler is asked to process a dependency's raw .ts/.tsx (see issue #140).
+  //
+  // tsc rather than a bundler: the sources already import each other with .js
+  // specifiers, so a structure-preserving emit resolves correctly as-is, and
+  // every dependency stays external without an allowlist to maintain.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": false,
+    "outDir": "dist/esm",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"]
+}

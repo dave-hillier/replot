@@ -75,7 +75,7 @@ The tests import `replot`, which package.json maps to `src/index.js`, a file tha
 Snapshot tests live in `test/plots` and are registered in [`test/plots/index.ts`](./test/plots/index.ts); see [`test/plots/aapl-bollinger.ts`](./test/plots/aapl-bollinger.ts) for example. Unlike unit tests which only test individual methods, snapshot tests actually visualize data—they’re more representative of how we expect people will use Replot. Snapshot tests can also serve as examples of how to use the Replot API, though note that some of the examples intentionally test edge case of the API and may not embody best practices. Each snapshot test defines a plot by exporting a default async function. For example, here’s a line chart using BLS unemployment data:
 
 ```ts
-import * as Plot from "replot";
+import * as Plot from "@dave-hillier/replot";
 import * as d3 from "d3";
 
 export async function lineUnemployment() {

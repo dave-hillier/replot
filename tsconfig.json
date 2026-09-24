@@ -8,8 +8,8 @@
     "baseUrl": "./src",
     "jsx": "react-jsx",
     "paths": {
-      "replot": ["index"],
-      "replot/react": ["react/api"],
+      "@dave-hillier/replot": ["./index.ts"],
+      "@dave-hillier/replot/react": ["./react/api.tsx"],
       "react": ["../node_modules/@types/react"],
       "react/jsx-runtime": ["../node_modules/@types/react/jsx-runtime"],
       "react-dom": ["../node_modules/@types/react-dom"],

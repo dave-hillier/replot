@@ -4,10 +4,10 @@ import penguins from "./data/penguins.ts";
 
 Replot provides a native React component API. You compose charts declaratively with JSX using the `<Replot>` root component and mark components like `<Dot>`, `<Line>`, `<BarY>`, and others. Replot is built on a core that is compatible with [Observable Plot](https://observablehq.com/plot/), so Plot’s concepts of marks, scales, and transforms carry over directly.
 
-All components are imported from `replot/react`. Transforms are components too — `<BinX>`, `<GroupX>`, `<StackY>`, and friends wrap marks to transform them; the underlying transform functions (`binX`, `groupX`, `stackY`, ...) are also re-exported from the same entry point.
+All components are imported from `@dave-hillier/replot/react`. Transforms are components too — `<BinX>`, `<GroupX>`, `<StackY>`, and friends wrap marks to transform them; the underlying transform functions (`binX`, `groupX`, `stackY`, ...) are also re-exported from the same entry point.
 
 ```jsx
-import {Replot, Dot, Line, BarY, BinX, StackY} from "replot/react";
+import {Replot, Dot, Line, BarY, BinX, StackY} from "@dave-hillier/replot/react";
 ```
 
 ## Scatterplot
@@ -246,7 +246,7 @@ Compose multiple marks in a single chart by nesting them inside `<Replot>`.
 React components work naturally with React state and hooks:
 
 ```jsx
-import {Replot, Dot} from "replot/react";
+import {Replot, Dot} from "@dave-hillier/replot/react";
 import {useState} from "react";
 
 function FilterableChart({data}) {

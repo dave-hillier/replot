@@ -1,4 +1,11 @@
 Copyright 2020-2025 Observable, Inc.
+Copyright 2025-2026 Dave Hillier
+
+Replot is a derivative work of Observable Plot
+(https://github.com/observablehq/plot), which is distributed under the ISC
+license reproduced below. Observable's copyright notice is retained; the second
+line covers the modifications made in porting Plot to React. Both are licensed
+under the same terms.
 
 Permission to use, copy, modify, and/or distribute this software for any purpose
 with or without fee is hereby granted, provided that the above copyright notice

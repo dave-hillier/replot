@@ -1,4 +1,4 @@
-import {initializer} from "replot";
+import {initializer} from "@dave-hillier/replot";
 
 export function remap(outputs = {}, options) {
   return initializer(options, (data, facets, channels, scales) => {

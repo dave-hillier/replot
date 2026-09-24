@@ -1,4 +1,4 @@
-import * as Plot from "replot";
+import * as Plot from "@dave-hillier/replot";
 import * as assert from "assert";
 import it from "./jsdom.js";
 
