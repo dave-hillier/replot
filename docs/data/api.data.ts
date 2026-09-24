@@ -36,6 +36,7 @@ function isInternalMethod(name: string): boolean {
     name === "maybeGroup" ||
     name === "maybeStackX" ||
     name === "maybeStackY" ||
+    name === "maybeTreeAnchor" ||
     name === "normalizeScale" ||
     name === "outerDimensions" ||
     name === "ox" ||
