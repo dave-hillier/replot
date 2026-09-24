@@ -27,7 +27,18 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
       - run: yarn --frozen-lockfile
+      # The snapshot oracle is byte comparison against committed files, and one
+      # plot is not byte-stable across V8 lines: projectionDomainRatioNC renders
+      # the same polygon starting from a different vertex on Node 24 than on 22,
+      # because d3-geo's clipping is sensitive to floating-point differences in
+      # the V8 the tests run on. The baselines are therefore generated and
+      # checked on the primary line only, and the other lines run everything
+      # except the snapshot harness, so a Node-specific breakage in the library
+      # still shows up here.
       - run: yarn test:mocha
+        if: matrix.node-version == 22
+      - run: yarn test:units
+        if: matrix.node-version != 22
       - run: yarn test:tsc
       - run: yarn test:lint
       - run: yarn test:prettier

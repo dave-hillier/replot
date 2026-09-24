@@ -56,6 +56,7 @@
     "test:coverage": "c8 yarn test:mocha",
     "test:smoke": "node scripts/smoke-test.mjs",
     "test:mocha": "mkdir -p test/output && TZ=America/Los_Angeles tsx node_modules/.bin/mocha 'test/**/*-test.*' 'test/plot.*'",
+    "test:units": "mkdir -p test/output && TZ=America/Los_Angeles tsx node_modules/.bin/mocha 'test/**/*-test.*'",
     "test:lint": "eslint src test",
     "test:prettier": "prettier --check src test",
     "test:tsc": "tsc",
