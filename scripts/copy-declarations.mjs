@@ -14,11 +14,6 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const source = join(root, "src");
 const target = join(root, "dist", "types");
 
-// src/react/index.d.ts is a stub that re-exports "./index.js" (the sibling
-// index.tsx). Copying it would clobber the real generated entry point with a
-// self-referential export.
-const skip = new Set([join("react", "index.d.ts")]);
-
 async function* declarations(dir) {
   for (const entry of await readdir(dir, {withFileTypes: true})) {
     const path = join(dir, entry.name);
@@ -30,7 +25,6 @@ async function* declarations(dir) {
 let count = 0;
 for await (const path of declarations(source)) {
   const name = relative(source, path);
-  if (skip.has(name)) continue;
   const destination = join(target, name);
   await mkdir(dirname(destination), {recursive: true});
   await copyFile(path, destination);
