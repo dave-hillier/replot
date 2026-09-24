@@ -1,3 +1,4 @@
+import {plotStyleSheetElement} from "./plotStyles.js";
 import {cloneElement, createElement as h, Fragment, isValidElement, type ReactElement, type ReactNode} from "react";
 import {
   renderMarksWith,
@@ -5,7 +6,6 @@ import {
   defaultPointerEventsNone,
   promoteFacetChild,
   plainIndex,
-  plotStyleSheet,
   plotSvgAttributes,
   pointerIndex,
   type FacetCell
@@ -47,7 +47,7 @@ export function buildStaticPlotSvg(computed: any, classNameProp?: string): React
   return h(
     "svg",
     plotSvgAttributes(computed, classNameProp),
-    h("style", null, plotStyleSheet(computed.className)),
+    plotStyleSheetElement(computed.className),
     ...clipReg.defs,
     ...marks
   );
