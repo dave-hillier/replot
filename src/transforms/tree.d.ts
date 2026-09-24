@@ -114,3 +114,15 @@ export function treeNode<T>(options?: T & TreeTransformOptions): Transformed<T>;
  * passed two node arguments, the child and the parent.
  */
 export function treeLink<T>(options?: T & TreeTransformOptions): Transformed<T>;
+
+/**
+ * The layout a tree mark anchors against: *left* (default) or *right*. Each
+ * carries the **frameAnchor** the mark defaults to, the **dx** its labels are
+ * offset by, and the **position** that maps a laid-out node onto the *x* and *y*
+ * channel arrays.
+ */
+export function maybeTreeAnchor(anchor?: "left" | "right"): {
+  frameAnchor: "left" | "right";
+  dx: number;
+  position: (point: {x: number; y: number}, i: number, X: number[], Y: number[]) => void;
+};

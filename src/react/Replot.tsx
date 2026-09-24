@@ -27,6 +27,7 @@ import {buildAutoLegends, LegendDisplay, resolveLegendElement} from "./legends/L
 import {createClipRegistry, registerClips, type ClipRegistry} from "./clip.js";
 import {domToJsx, isDomNode, parseStyleString} from "./domToJsx.js";
 import {datumIndexOf} from "./perDatum.js";
+import {plotStyleSheetElement} from "./plotStyles.js";
 import {hasRenderTransform, renderTransformJSX} from "./renderTransform.js";
 import {FigureLayout} from "./FigureLayout.js";
 import {warningIndicatorElement} from "./warningIndicator.js";
@@ -935,26 +936,6 @@ function WarningIndicator({computed, serverRender}: {computed: any; serverRender
 // other. The shell is what the two renderers have in common; what differs is
 // how the marks inside it are rendered, which is what each path still owns.
 //
-// The stylesheet, which is the plot's only forced CSS: it makes the svg scale
-// with its container and stops text being collapsed, all through :where() so
-// the selectors carry no specificity a user's own rules have to fight. The
-// class name is the plot's (meant to be unique per plot); upstream writes the
-// same two rules in style.js, with a comment that changing them means changing
-// defaultClassName there too.
-export function plotStyleSheet(className: string): string {
-  return `:where(.${className}) {
-  --plot-background: white;
-  display: block;
-  height: auto;
-  height: intrinsic;
-  max-width: 100%;
-}
-:where(.${className} text),
-:where(.${className} tspan) {
-  white-space: pre;
-}`;
-}
-
 // The shell's attributes, in the order they are written to the element — the
 // order React writes them in for the JSX path, and the order the markup
 // serializes in on both. `style` is deliberately NOT here: the JSX path passes
@@ -1013,7 +994,7 @@ function PlotSvg({
   registerClips(computed, clipReg);
   const inner = (
     <>
-      <style>{plotStyleSheet(computed.className)}</style>
+      {plotStyleSheetElement(computed.className)}
       {clipReg.defs}
       {renderMarks(computed, clipReg, getHandlers)}
       <WarningIndicator computed={computed} serverRender={serverRender} />
