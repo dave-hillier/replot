@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {act} from "react";
 import jsdomit from "./jsdom.js";
-import * as Plot from "../src/index.ts";
+import * as Plot from "../src/replot.ts";
 import {Replot as PlotComponent, Geo} from "../src/react/api.js";
 
 async function renderSvg(node) {

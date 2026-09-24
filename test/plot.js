@@ -7,7 +7,7 @@ import ReactDOM from "react-dom/client";
 import {act} from "react";
 import assert from "./assert.js";
 import it from "./jsdom.js";
-import * as plots from "./plots/index.ts"; // TODO index.js
+import * as plots from "./plots/registry.ts";
 
 // Detect if a value is a React element
 function isReactElement(value) {

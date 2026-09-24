@@ -8,7 +8,7 @@
 // nothing at all, and a frame title — having no group — lands on the <svg>.
 import assert from "assert";
 import it from "./jsdom.js";
-import * as Plot from "../src/index.ts";
+import * as Plot from "../src/replot.ts";
 
 // Every <title> under `root` must be a child of `parent`.
 function assertTitlesAreChildrenOf(root, parent, what) {

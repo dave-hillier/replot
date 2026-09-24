@@ -3,7 +3,7 @@ import {scaleBand, scaleOrdinal, scalePoint, scaleImplicit} from "d3";
 import {ascendingDefined} from "../defined.js";
 import {isNoneish, map, maybeRangeInterval} from "../options.js";
 import {maybeSymbol} from "../symbol.js";
-import {registry, color, opacity, position, symbol} from "./index.js";
+import {registry, color, opacity, position, symbol} from "./registry.js";
 import {maybeBooleanRange, ordinalScheme, quantitativeScheme} from "./schemes.js";
 
 // This denotes an implicitly ordinal color scale: the scale type was not set,

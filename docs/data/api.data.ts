@@ -146,7 +146,7 @@ export default {
     project.addSourceFilesAtPaths("src/**/*.d.ts");
     const allMethods: {name: string; comment: string; href: string}[] = [];
     const allOptions: {name: string; context: {name: string; href: string}}[] = [];
-    const index = project.getSourceFile("src/index.d.ts")!;
+    const index = project.getSourceFile("src/replot.d.ts")!;
     for (const [name, declarations] of index.getExportedDeclarations()) {
       if (isInternalMethod(name) || isUndocumentedImperative(name)) continue;
       for (const declaration of declarations) {

@@ -8,7 +8,7 @@ import {Replot} from "../../src/react/api.js";
 // onValue> prop reports those same value changes and ordinary state carries
 // them to the textarea, so nothing reaches for a DOM handle.
 //
-// Deliberately NOT listed in ./index.ts: that module's exports are each run as
+// Deliberately NOT listed in ./registry.ts: that module's exports are each run as
 // a test plot, and this one is a component.
 export function PointerViewof({title, children}: {title?: string; children: ReactNode}) {
   const [value, setValue] = useState<unknown>(null);

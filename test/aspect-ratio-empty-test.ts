@@ -1,7 +1,7 @@
 import assert from "assert";
 import {warns} from "./assert.js";
 import it from "./jsdom.js";
-import * as Plot from "../src/index.js";
+import * as Plot from "../src/replot.js";
 
 describe("aspectRatio with empty data", () => {
   // Upstream computes a NaN height here and writes it to the <svg>
