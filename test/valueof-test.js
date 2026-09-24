@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import * as Arrow from "apache-arrow";
-import {valueof} from "../src/index.js";
+import {valueof} from "../src/replot.js";
 
 describe("valueof(data, value, type)", () => {
   it("allows data to be an Arrow Table", () => {

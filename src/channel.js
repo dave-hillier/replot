@@ -1,7 +1,7 @@
 import {InternSet, rollups} from "d3";
 import {ascendingDefined, descendingDefined} from "./defined.js";
 import {first, isColor, isEvery, isIterable, isOpacity, labelof, map, maybeValue, range, valueof} from "./options.js";
-import {registry} from "./scales/index.js";
+import {registry} from "./scales/registry.js";
 import {isSymbol, maybeSymbol} from "./symbol.js";
 import {maybeReduce} from "./transforms/group.js";
 

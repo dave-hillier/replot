@@ -14,7 +14,7 @@ import {dataify, lengthof, map, yes, maybeIntervalTransform} from "./options.js"
 import {createProjection, getGeometryChannels, hasProjection, xyProjection} from "./projection.js";
 import {createScales, createScaleFunctions, autoScaleRange, exposeScales} from "./scales.js";
 import {innerDimensions, outerDimensions} from "./scales.js";
-import {isPosition, registry as scaleRegistry} from "./scales/index.js";
+import {isPosition, registry as scaleRegistry} from "./scales/registry.js";
 import {maybeClassName} from "./style.js";
 import {initializer} from "./transforms/basic.js";
 import {consumeWarnings, warn} from "./warnings.js";

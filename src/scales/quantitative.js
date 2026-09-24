@@ -26,7 +26,7 @@ import {
 import {finite, negative, positive} from "../defined.js";
 import {arrayify, constant, maybeNiceInterval, maybeRangeInterval, slice} from "../options.js";
 import {orderof} from "../order.js";
-import {color, length, opacity, radius, registry, hasNumericRange} from "./index.js";
+import {color, length, opacity, radius, registry, hasNumericRange} from "./registry.js";
 import {ordinalRange, quantitativeScheme} from "./schemes.js";
 
 export const flip = (i) => (t) => i(1 - t);

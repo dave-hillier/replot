@@ -11,7 +11,7 @@ import {
 import {negative, positive} from "../defined.js";
 import {arrayify} from "../options.js";
 import {warn} from "../warnings.js";
-import {color, registry} from "./index.js";
+import {color, registry} from "./registry.js";
 import {flip, inferDomain, interpolatePiecewise, maybeInterpolator} from "./quantitative.js";
 import {quantitativeScheme} from "./schemes.js";
 

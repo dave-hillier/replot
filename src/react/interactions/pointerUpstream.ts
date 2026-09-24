@@ -7,9 +7,9 @@ import * as pointer from "../../interactions/pointer.js";
 //
 // They are deliberately NOT declared in src/interactions/pointer.d.ts. That
 // file is upstream's, so a future re-sync of it should be a zero-hunk diff;
-// and src/index.d.ts does `export * from "./interactions/pointer.js"`, so a
+// and src/replot.d.ts does `export * from "./interactions/pointer.js"`, so a
 // declaration there would advertise these internals as part of the package's
-// public type surface even though src/index.ts exports only pointer, pointerX
+// public type surface even though src/replot.ts exports only pointer, pointerX
 // and pointerY at runtime. Upstream keeps such internals undeclared — which is
 // why src/marks/tip.ts reaches anchorX/anchorY through an @ts-expect-error.
 interface PointerInternals {

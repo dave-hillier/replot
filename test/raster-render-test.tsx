@@ -8,7 +8,7 @@
 import assert from "assert";
 import {createCanvas, loadImage} from "canvas";
 import jsdomit from "./jsdom.js";
-import * as Plot from "../src/index.ts";
+import * as Plot from "../src/replot.ts";
 
 // The 1×1 canvas a colour converter reads is not exposed by any snapshot, so
 // these tests observe the canvas API itself: the counts and arguments the mark

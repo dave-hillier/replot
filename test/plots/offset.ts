@@ -1,4 +1,4 @@
-import {plot, axisX, axisY, rect, bin} from "../../src/index.js";
+import {plot, axisX, axisY, rect, bin} from "../../src/replot.js";
 import {setOffset} from "../../src/style.js";
 import * as d3 from "d3";
 

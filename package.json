@@ -7,15 +7,15 @@
   },
   "license": "ISC",
   "type": "module",
-  "main": "dist/esm/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/esm/replot.js",
+  "module": "dist/esm/replot.js",
   "jsdelivr": "dist/replot.umd.min.js",
   "unpkg": "dist/replot.umd.min.js",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/types/replot.d.ts",
       "umd": "./dist/replot.umd.min.js",
-      "default": "./dist/esm/index.js"
+      "default": "./dist/esm/replot.js"
     },
     "./react": {
       "types": "./dist/types/react/api.d.ts",
@@ -23,7 +23,7 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "dist/types/index.d.ts",
+  "types": "dist/types/replot.d.ts",
   "keywords": [
     "react",
     "charts",
@@ -71,7 +71,7 @@
     "parity": "tsx scripts/parity.ts"
   },
   "sideEffects": [
-    "./dist/esm/index.js"
+    "./dist/esm/replot.js"
   ],
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",

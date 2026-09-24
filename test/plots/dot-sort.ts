@@ -1,4 +1,4 @@
-import * as Plot from "../../src/index.js";
+import * as Plot from "../../src/replot.js";
 import {html} from "htl";
 
 export async function dotSort() {
