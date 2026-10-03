@@ -1,6 +1,6 @@
 # Replot - Changelog
 
-## Unreleased
+## 0.1.0
 
 The pointer transform now reports the focused datum the way Observable Plot does: the plot element (the `<figure>` when there is one, else the `<svg>`) carries the focused datum as its `value`, and a bubbling *input* event fires whenever that value changes. The **onValue** prop follows the same contract and is called once per value change, rather than once per pointer-driven mark.
 

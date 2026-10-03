@@ -194,9 +194,9 @@ npm install @dave-hillier/replot
 ```
 
 Replot is published as a scoped package because the bare name `replot` is taken
-on npm by an unrelated project. While the API is still settling, releases are
-prereleases published under the `next` dist-tag, so install
-`@dave-hillier/replot@next` until 0.1.0 is out.
+on npm by an unrelated project. Replot is on 0.x while the API settles, so a
+minor version can contain breaking changes; the [changelog](./CHANGELOG.md) lists
+them.
 
 Then import the React API:
 

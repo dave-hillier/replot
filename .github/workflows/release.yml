@@ -18,10 +18,14 @@
 #      publisher is updated to match.
 #   3. Keep the npm CLI recent (>= 11.5.1); older versions do not support OIDC.
 #
-# The dist-tag comes from publishConfig.tag in package.json (currently "next"),
-# so prereleases do not become `latest`. It is passed to npm explicitly rather
-# than left implicit: npm 10 ignores publishConfig.tag and resolves `latest`
-# regardless, which would publish a prerelease as the default install.
+# The dist-tag comes from publishConfig.tag in package.json, defaulting to
+# `latest`. It is passed to npm explicitly rather than left implicit: npm 10
+# ignores publishConfig.tag and resolves `latest` regardless.
+#
+# After publishing, the workflow creates the GitHub release for the tag, with
+# the matching CHANGELOG.md section as its notes. Both the version check and
+# the notes are taken before publishing, so a tag that disagrees with
+# package.json, or has no changelog section, fails without publishing anything.
 
 name: Release
 
@@ -34,7 +38,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +52,20 @@ jobs:
       - run: npm install -g npm@latest
       - run: yarn --frozen-lockfile
       - run: yarn test
+      # The release notes are the CHANGELOG.md section headed with the version.
+      - name: Check the version and extract the release notes
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+          awk -v heading="## $version" '$0 == heading {found=1; next} found && /^## / {exit} found' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/release-notes.md"; then
+            echo "CHANGELOG.md has no section headed '## $version'" >&2
+            exit 1
+          fi
       # package.json stays the single source of truth for the dist-tag; reading
       # it here just stops npm from silently falling back to `latest`.
       - id: disttag
@@ -55,3 +73,14 @@ jobs:
           tag=$(node -p "require('./package.json').publishConfig?.tag || 'latest'")
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
       - run: npm publish --tag "${{ steps.disttag.outputs.tag }}"
+      # A version with a prerelease suffix, such as 1.0.0-rc.1, is marked as a
+      # prerelease on GitHub too.
+      - name: Create the GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          prerelease=""
+          case "$version" in *-*) prerelease="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" --title "$version" --notes-file "$RUNNER_TEMP/release-notes.md" $prerelease
