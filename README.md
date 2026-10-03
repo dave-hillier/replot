@@ -1,6 +1,8 @@
 # Replot
 
-**Replot** is a React component library for exploratory data visualization, based on [Observable Plot](https://observablehq.com/plot/). It provides a declarative JSX API featuring [scales](https://observablehq.com/plot/features/scales) and [layered marks](https://observablehq.com/plot/features/marks) in the *grammar of graphics* style.
+**Replot** is a React component library for exploratory data visualization, based on [Observable Plot](https://observablehq.com/plot/). It provides a declarative JSX API featuring [scales](https://dave-hillier.github.io/replot/features/scales) and [layered marks](https://dave-hillier.github.io/replot/features/marks) in the *grammar of graphics* style.
+
+**[Documentation and examples](https://dave-hillier.github.io/replot/)**
 
 ---
 
@@ -220,7 +222,7 @@ prop on `<Replot>`.
 
 ## Based on Observable Plot
 
-Replot is a fork of [Observable Plot](https://observablehq.com/plot/), ported to provide a first-class React component API. See the [Observable Plot documentation](https://observablehq.com/plot/) for full details on scales, marks, transforms, and projections.
+Replot is a fork of [Observable Plot](https://observablehq.com/plot/), ported to provide a first-class React component API. The [Replot documentation](https://dave-hillier.github.io/replot/) covers scales, marks, transforms, and projections as JSX; the concepts are shared with Plot, so the [Observable Plot documentation](https://observablehq.com/plot/) and gallery are useful too.
 
 ## Contributing
 
