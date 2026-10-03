@@ -1,7 +1,7 @@
 {
   "name": "@dave-hillier/replot",
   "description": "A React port of Observable Plot: grammar-of-graphics charts as JSX components, rendered natively in the React tree.",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "author": {
     "name": "Dave Hillier"
   },
@@ -141,7 +141,6 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "next"
+    "access": "public"
   }
 }
