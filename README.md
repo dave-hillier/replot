@@ -4,6 +4,26 @@
 
 **[Documentation and examples](https://dave-hillier.github.io/replot/)**
 
+<table>
+  <tr>
+    <td><a href="https://dave-hillier.github.io/replot/marks/density"><img src="img/gallery/density-map.png" alt="Density contours over a map of US Walmart stores" width="100%"><br>Density</a></td>
+    <td><a href="https://dave-hillier.github.io/replot/transforms/hexbin"><img src="img/gallery/hexbin-map.png" alt="Hexagonal bins of US Walmart stores, coloured by the year the first one opened" width="100%"><br>Hexbin</a></td>
+    <td><a href="https://dave-hillier.github.io/replot/marks/raster"><img src="img/gallery/water-vapour.png" alt="World raster of water vapour on an Equal Earth projection" width="100%"><br>Raster</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://dave-hillier.github.io/replot/features/interactions"><img src="img/gallery/tooltip.png" alt="Scatterplot of Olympic athletes with a tooltip showing one athlete" width="100%"><br>Tooltips</a></td>
+    <td><a href="https://dave-hillier.github.io/replot/features/legends"><img src="img/gallery/temperature-anomaly.png" alt="Global temperature anomaly over time on a diverging colour scale" width="100%"><br>Legends</a></td>
+    <td><a href="https://dave-hillier.github.io/replot/transforms/stack"><img src="img/gallery/revenue-stack.png" alt="Normalised stacked areas of music revenue by format" width="100%"><br>Stack</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://dave-hillier.github.io/replot/marks/line"><img src="img/gallery/unemployment-lines.png" alt="Unemployment rate by metro area, one line per series" width="100%"><br>Line</a></td>
+    <td><a href="https://dave-hillier.github.io/replot/features/facets"><img src="img/gallery/penguin-facets.png" alt="Penguin measurements faceted by species and sex" width="100%"><br>Facets</a></td>
+    <td><a href="https://dave-hillier.github.io/replot/marks/cell"><img src="img/gallery/temperature-heatmap.png" alt="Heatmap of daily temperature by month and day" width="100%"><br>Cell</a></td>
+  </tr>
+</table>
+
+Every chart above is JSX; follow a link to see its code.
+
 ---
 
 ## Motivation
